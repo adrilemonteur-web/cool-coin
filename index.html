@@ -16,6 +16,7 @@
       --danger: #e74c3c;
       --blue: #3498db;
       --ticket: #27ae60;
+      --bank: #f39c12;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
@@ -35,7 +36,7 @@
       border-radius: 8px; color: var(--text); font-size: 1rem; transition: border 0.2s;
     }
     input:focus { outline: none; border-color: var(--gold); }
-    
+
     .btn { display: block; width: 100%; padding: 13px; margin-top: 20px; background: var(--gold); color: #000; font-weight: 700; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.85; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -43,14 +44,15 @@
     .btn.secondary { background: #2a2a3e; color: var(--text); }
     .btn.blue { background: var(--blue); color: white; }
     .btn.ticket { background: var(--ticket); color: white; }
+    .btn.bank { background: var(--bank); color: #000; }
     .btn.small { padding: 8px 14px; font-size: 0.85rem; margin-top: 0; width: auto; display: inline-block; }
     .btn.mini { padding: 5px 10px; font-size: 0.78rem; margin-top: 0; width: auto; display: inline-block; border-radius: 6px; }
-    
+
     .msg { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; display: none; }
     .msg.error { background: rgba(231,76,60,0.15); color: var(--danger); border: 1px solid var(--danger); }
     .msg.success { background: rgba(46,204,113,0.15); color: var(--success); border: 1px solid var(--success); }
     .msg.info { background: rgba(52,152,219,0.15); color: var(--blue); border: 1px solid var(--blue); }
-    
+
     #app-screen { display: none; min-height: 100vh; }
     .topbar { background: var(--card); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a3e; position: sticky; top: 0; z-index: 10; }
     .topbar-left { display: flex; align-items: center; gap: 10px; }
@@ -58,18 +60,24 @@
     .topbar-user { font-size: 0.85rem; color: var(--sub); }
     .logout-btn { background: none; border: 1px solid #333; color: var(--sub); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
     .logout-btn:hover { border-color: var(--accent); color: var(--accent); }
-    
+
     .content { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .balance-card { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #f5c51844; border-radius: 16px; padding: 28px; margin-bottom: 24px; text-align: center; }
-    .balance-label { color: var(--sub); font-size: 0.9rem; margin-bottom: 8px; }
+
+    /* Dashboard Stats */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+    .balance-card { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #f5c51844; border-radius: 16px; padding: 20px; text-align: center; grid-column: 1 / -1; }
+    .stat-card { background: var(--card); border: 1px solid #2a2a3e; border-radius: 12px; padding: 15px; text-align: center; }
+    .balance-label { color: var(--sub); font-size: 0.9rem; margin-bottom: 4px; }
     .balance-amount { font-size: 3rem; font-weight: 900; color: var(--gold); }
-    .balance-unit { font-size: 1rem; color: var(--sub); margin-top: 4px; }
+    .stat-amount { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+    .stat-amount.debt { color: var(--danger); }
+    .stat-amount.invest { color: var(--blue); }
     .infinite-badge { display: inline-block; background: var(--gold); color: #000; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-top: 8px; }
-    
+
     .section { margin-bottom: 24px; }
     .section-title { font-size: 1rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
     .form-card { background: var(--card); border-radius: 12px; padding: 20px; }
-    
+
     /* Transactions */
     .tx-list { display: flex; flex-direction: column; gap: 8px; }
     .tx-item { background: var(--card); border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
@@ -78,6 +86,7 @@
     .tx-item.gov { border-left-color: #a78bfa; }
     .tx-item.market { border-left-color: var(--blue); }
     .tx-item.ticket { border-left-color: var(--ticket); }
+    .tx-item.bank { border-left-color: var(--bank); }
     .tx-left { display: flex; flex-direction: column; gap: 3px; }
     .tx-who { font-size: 0.95rem; font-weight: 600; }
     .tx-date { font-size: 0.75rem; color: var(--sub); }
@@ -88,24 +97,37 @@
     .tx-amount.gov { color: #a78bfa; }
     .tx-amount.market { color: var(--blue); }
     .tx-amount.ticket { color: var(--ticket); }
-    
+    .tx-amount.bank { color: var(--bank); }
+
     /* Tickets */
     .ticket-card { background: linear-gradient(135deg, #27ae6022, #1a1a2e); border: 1px dashed var(--ticket); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
     .ticket-left { display: flex; flex-direction: column; gap: 4px; }
     .ticket-code { font-size: 1.5rem; font-weight: 900; letter-spacing: 4px; color: var(--text); }
     .ticket-info { font-size: 0.8rem; color: var(--sub); }
     .ticket-amount { font-size: 1.4rem; font-weight: 800; color: var(--ticket); }
-    
+
+    /* Bourse / Stocks */
+    .stock-grid { display: flex; flex-direction: column; gap: 12px; }
+    .stock-card { background: var(--card); border: 1px solid #2a2a3e; border-radius: 12px; padding: 16px; }
+    .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .stock-name { font-weight: 800; font-size: 1.1rem; }
+    .stock-price { font-weight: 800; color: var(--blue); font-size: 1.2rem; }
+    .stock-owned { font-size: 0.85rem; color: var(--sub); margin-bottom: 12px; }
+    .stock-actions { display: flex; gap: 8px; }
+    .stock-actions input { flex: 1; padding: 8px; margin: 0; text-align: center; }
+    .stock-actions button { flex: 1; padding: 8px; margin: 0; font-size: 0.9rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; }
+    .btn-buy { background: var(--success); color: white; }
+    .btn-sell { background: var(--danger); color: white; }
+    .next-update { font-size: 0.75rem; text-align: center; color: var(--sub); margin-top: 10px; font-style: italic; }
+
     /* Marketplace / Devoirs */
     .hw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 480px) { .hw-grid { grid-template-columns: 1fr; } }
     .hw-card { background: var(--card); border: 1px solid #2a2a3e; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
     .hw-img-container { width: 100%; height: 140px; background: #0d0d0d; display: flex; align-items: center; justify-content: center; position: relative; }
     .hw-img-container img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
-    
     .hw-img-container img.blurred { filter: blur(15px); }
     .lock-icon { position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.8); text-shadow: 0 2px 10px rgba(0,0,0,0.5); pointer-events: none; z-index: 2; }
-    
     .hw-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
     .hw-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; word-break: break-word; }
     .hw-seller { font-size: 0.75rem; color: var(--sub); margin-bottom: 8px; }
@@ -115,19 +137,22 @@
     .hw-buy-btn:hover { opacity: 0.8; }
     .hw-delete-btn { background: var(--danger); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
     .hw-bought-btn { background: var(--success); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: default; }
-    
+
     #image-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     #image-modal img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
     .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
-    
+
     .admin-badge { display: inline-block; background: var(--accent); color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; }
     .gov-badge { display: inline-block; background: #a78bfa; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 6px; }
+
+    .users-table-wrapper { overflow-x: auto; }
     .users-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; }
-    .users-table th { background: #2a2a3e; padding: 12px 16px; text-align: left; font-size: 0.85rem; color: var(--sub); text-transform: uppercase; }
-    .users-table td { padding: 10px 16px; border-top: 1px solid #2a2a3e; font-size: 0.9rem; vertical-align: middle; }
+    .users-table th { background: #2a2a3e; padding: 12px 16px; text-align: left; font-size: 0.85rem; color: var(--sub); text-transform: uppercase; white-space: nowrap; }
+    .users-table td { padding: 10px 16px; border-top: 1px solid #2a2a3e; font-size: 0.9rem; vertical-align: middle; white-space: nowrap; }
     .users-table tr:hover td { background: #1f1f35; }
     .edit-balance-row { display: flex; gap: 6px; align-items: center; }
     .edit-balance-row input { width: 80px; padding: 5px 8px; font-size: 0.85rem; margin: 0; }
+
     .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #2a2a3e; padding-bottom: 0; flex-wrap: wrap; }
     .nav-tab { padding: 10px 18px; border: none; background: none; color: var(--sub); cursor: pointer; font-size: 0.95rem; border-bottom: 2px solid transparent; transition: all 0.2s; margin-bottom: -1px; }
     .nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 700; }
@@ -137,9 +162,12 @@
     select:focus { outline: none; border-color: var(--gold); }
     .empty { text-align: center; color: var(--sub); padding: 30px; font-size: 0.9rem; grid-column: 1 / -1; }
     option.gov-option { color: #a78bfa; font-weight: bold; }
-    
-    /* Code d'encaissement gros */
+
     .big-input { font-size: 2rem !important; letter-spacing: 6px; text-align: center; font-weight: 800; padding: 16px !important; }
+
+    /* Indicateur capacité emprunt */
+    .borrow-capacity { font-size: 0.85rem; font-weight: 700; color: var(--gold); margin-top: 4px; display: block; }
+    .interest-note { font-size: 0.75rem; color: var(--danger); font-weight: 700; display: block; margin-top: 4px; }
   </style>
 </head>
 <body>
@@ -189,30 +217,70 @@
     <div class="nav-tabs" id="nav-tabs">
       <button class="nav-tab active" onclick="showPage('dashboard', event)">Accueil</button>
       <button class="nav-tab" onclick="showPage('send', event)">Envoyer</button>
+      <button class="nav-tab" onclick="showPage('bank', event)">🏦 Banque & Bourse</button>
       <button class="nav-tab" onclick="showPage('tickets', event)">💸 Billets</button>
       <button class="nav-tab" onclick="showPage('market', event)">📚 Devoirs</button>
-      <button class="nav-tab" onclick="showPage('history', event)">Historique</button>
-      <button class="nav-tab" onclick="showPage('settings', event)">Paramètres</button>
       <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin', event)">⚙️ Admin</button>
     </div>
 
     <!-- DASHBOARD -->
     <div id="page-dashboard" class="page active">
-      <div class="balance-card">
-        <div class="balance-label">Ton solde</div>
-        <div class="balance-amount" id="balance-display">0</div>
-        <div class="balance-unit">Cool Coins 🪙</div>
-        <div id="admin-infinite" class="infinite-badge" style="display:none">∞ Argent infini</div>
+      <div class="stats-grid">
+        <div class="balance-card">
+          <div class="balance-label">Ton solde</div>
+          <div class="balance-amount"><span id="balance-display">0</span> 🪙</div>
+          <div id="admin-infinite" class="infinite-badge" style="display:none">∞ Argent infini</div>
+        </div>
+        <div class="stat-card">
+          <div class="balance-label">Dette Bancaire</div>
+          <div class="stat-amount debt" id="debt-display">0 🪙</div>
+        </div>
+        <div class="stat-card">
+          <div class="balance-label">Valeur Bourse</div>
+          <div class="stat-amount invest" id="invest-display">0 🪙</div>
+        </div>
       </div>
+
       <div class="section">
         <div class="section-title">Dernières transactions</div>
         <div class="tx-list" id="dashboard-txs"><div class="empty">Aucune transaction pour l'instant</div></div>
       </div>
     </div>
 
+    <!-- BANQUE ET BOURSE -->
+    <div id="page-bank" class="page">
+      <div class="section">
+        <div class="section-title">🏦 Emprunt Bancaire</div>
+        <div class="form-card">
+          <p style="font-size:0.85rem; color:var(--sub); margin-bottom:6px;">Emprunte des liquidités. Capacité max : 200% de ton solde actuel.</p>
+          <span class="interest-note">⚠️ Attention : 5% d'intérêts ajoutés à ta dette tous les jours !</span>
+          <br>
+          <div style="display:flex; gap:10px; margin-bottom: 10px;">
+            <div style="flex:1">
+              <label>Montant (CC) <span id="capacity-display" class="borrow-capacity">Capacité restante : 0 CC</span></label>
+              <input type="number" id="bank-amount" placeholder="Ex: 100" min="1" />
+            </div>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn bank" style="margin-top:0;" onclick="borrowMoney()">Emprunter 🏦</button>
+            <button class="btn secondary" style="margin-top:0;" onclick="repayMoney()">Rembourser 💸</button>
+          </div>
+          <div id="bank-msg" class="msg"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📈 La Bourse (Actualisée toutes les 5 min)</div>
+        <div class="stock-grid" id="stocks-list">
+          <div class="empty">Chargement du marché...</div>
+        </div>
+        <div class="next-update">Les prix fluctuent aléatoirement entre -10% et +10%.</div>
+        <div id="bourse-msg" class="msg" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
     <!-- TICKETS (BILLETS) -->
     <div id="page-tickets" class="page">
-      
       <div class="section">
         <div class="section-title">Encaisser un billet</div>
         <div class="form-card">
@@ -226,7 +294,7 @@
       <div class="section">
         <div class="section-title">Créer un billet (Imprimer)</div>
         <div class="form-card">
-          <p style="font-size:0.85rem; color:var(--sub); margin-bottom:14px;">Génère un code que tu pourras noter sur un bout de papier et donner à quelqu'un. L'argent est retiré de ton compte immédiatement.</p>
+          <p style="font-size:0.85rem; color:var(--sub); margin-bottom:14px;">Génère un code que tu pourras noter sur un papier. L'argent est retiré de ton compte immédiatement.</p>
           <label>Valeur du billet (CC)</label>
           <input type="number" id="ticket-amount" placeholder="Ex: 10" min="1" />
           <button class="btn" onclick="createTicket()">Générer le code 🖨️</button>
@@ -237,10 +305,9 @@
       <div class="section">
         <div class="section-title" id="my-tickets-title">Billets actifs</div>
         <div id="active-tickets-list">
-          <div class="empty">Tu n'as aucun billet en attente d'encaissement.</div>
+          <div class="empty">Tu n'as aucun billet en attente.</div>
         </div>
       </div>
-
     </div>
 
     <!-- MARKET (DEVOIRS) -->
@@ -284,29 +351,6 @@
       </div>
     </div>
 
-    <!-- HISTORY -->
-    <div id="page-history" class="page">
-      <div class="section">
-        <div class="section-title">Toutes mes transactions</div>
-        <div class="tx-list" id="all-txs"><div class="empty">Aucune transaction</div></div>
-      </div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div id="page-settings" class="page">
-      <div class="section">
-        <div class="section-title">Changer de mot de passe</div>
-        <div class="form-card">
-          <label>Nouveau mot de passe</label>
-          <input type="password" id="new-password" placeholder="Min. 6 caractères" />
-          <label>Confirmer le mot de passe</label>
-          <input type="password" id="confirm-password" placeholder="Répète le mot de passe" />
-          <button class="btn" onclick="changePassword()">Mettre à jour</button>
-          <div id="pw-msg" class="msg"></div>
-        </div>
-      </div>
-    </div>
-
     <!-- ADMIN -->
     <div id="page-admin" class="page">
       <div class="section">
@@ -327,17 +371,19 @@
 
       <div class="section">
         <div class="section-title">Tous les comptes</div>
-        <table class="users-table" id="users-table">
-          <thead>
-            <tr>
-              <th>Pseudo</th>
-              <th>Email</th>
-              <th>Solde</th>
-              <th>Modifier</th>
-            </tr>
-          </thead>
-          <tbody id="users-tbody"></tbody>
-        </table>
+        <div class="users-table-wrapper">
+          <table class="users-table" id="users-table">
+            <thead>
+              <tr>
+                <th>Pseudo</th>
+                <th>Solde</th>
+                <th>Dette</th>
+                <th>Modifier Solde</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
         <div id="edit-balance-msg" class="msg" style="margin-top:10px"></div>
       </div>
 
@@ -369,7 +415,6 @@
     onSnapshot, serverTimestamp, updateDoc
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  // 🔥 CONFIG FIREBASE
   const firebaseConfig = {
     apiKey: "AIzaSyBUkRD8mgeE6Yo1rL1eJF8BJAdQWx-jCJ0",
     authDomain: "cool-coin-600be.firebaseapp.com",
@@ -379,10 +424,7 @@
     appId: "1:589056712037:web:04b734b130811ad28b558c"
   };
 
-  // 🔑 EMAIL ADMIN CORRIGE
   const ADMIN_EMAIL = "adminadri@coolteam.com";
-  
-  // 🔑 IMGBB API KEY (Verrouillée)
   const IMGBB_API_KEY = "b88a5919ae8a6a77e62c73a6339ff5b3"; 
 
   const app = initializeApp(firebaseConfig);
@@ -392,26 +434,16 @@
   let currentUser = null;
   let currentUserData = null;
   let adminUid = null;
+  let currentStocksData = null; 
 
-  window.login = login;
-  window.register = register;
-  window.logout = logout;
-  window.sendCoins = sendCoins;
-  window.switchAuthTab = switchAuthTab;
-  window.showPage = showPage;
-  window.changePassword = changePassword;
-  window.adminCreateUser = adminCreateUser;
-  window.adminSaveBalance = adminSaveBalance;
-  window.uploadHomework = uploadHomework;
-  window.buyHomework = buyHomework;
-  window.deleteHomework = deleteHomework;
-  window.openImageModal = openImageModal;
-  window.closeImageModal = closeImageModal;
-  
-  // Fonctions Billets
-  window.createTicket = createTicket;
-  window.redeemTicket = redeemTicket;
-  window.cancelTicket = cancelTicket;
+  window.login = login; window.register = register; window.logout = logout; window.sendCoins = sendCoins;
+  window.switchAuthTab = switchAuthTab; window.showPage = showPage; window.changePassword = changePassword;
+  window.adminCreateUser = adminCreateUser; window.adminSaveBalance = adminSaveBalance;
+  window.uploadHomework = uploadHomework; window.buyHomework = buyHomework; window.deleteHomework = deleteHomework;
+  window.openImageModal = openImageModal; window.closeImageModal = closeImageModal;
+  window.createTicket = createTicket; window.redeemTicket = redeemTicket; window.cancelTicket = cancelTicket;
+  window.borrowMoney = borrowMoney; window.repayMoney = repayMoney;
+  window.buyStock = buyStock; window.sellStock = sellStock;
 
   async function fetchAdminUid() {
     const snap = await getDocs(query(collection(db, "users"), where("email", "==", ADMIN_EMAIL)));
@@ -422,7 +454,7 @@
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
-      await loadUserData();
+      listenUserData();
       showApp();
     } else {
       currentUser = null;
@@ -431,11 +463,74 @@
     }
   });
 
-  async function loadUserData() {
-    const snap = await getDoc(doc(db, "users", currentUser.uid));
-    if (snap.exists()) {
-      currentUserData = snap.data();
-      renderDashboard();
+  function listenUserData() {
+    onSnapshot(doc(db, "users", currentUser.uid), (snap) => {
+      if (snap.exists()) {
+        currentUserData = snap.data();
+        if(!currentUserData.debt) currentUserData.debt = 0;
+        if(!currentUserData.portfolio) currentUserData.portfolio = {};
+
+        // CHECK INTERESTS
+        applyDailyInterestIfNeeded();
+
+        renderDashboard();
+        updateBorrowCapacity();
+        if(currentStocksData) renderBourse();
+      }
+    });
+  }
+
+  // --- NOUVEAU: APPLICATION DES INTERETS (5% / jour) ---
+  async function applyDailyInterestIfNeeded() {
+    if (currentUser.email === ADMIN_EMAIL || (currentUserData.debt || 0) === 0) return;
+
+    const now = new Date();
+    // Normaliser la date actuelle (ex: "2026-03-12")
+    const todayString = now.toISOString().split('T')[0]; 
+    const lastInterestDate = currentUserData.lastInterestDate || "1970-01-01";
+
+    if (todayString !== lastInterestDate) {
+      // Calcul des intérêts (5%, arrondi sup, mini 1)
+      const currentDebt = currentUserData.debt;
+      let interest = Math.ceil(currentDebt * 0.05);
+      if (interest < 1) interest = 1;
+
+      try {
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          debt: currentDebt + interest,
+          lastInterestDate: todayString
+        });
+
+        // On met à jour la variable locale pour éviter les boucles avant le retour du snapshot
+        currentUserData.debt = currentDebt + interest;
+        currentUserData.lastInterestDate = todayString;
+
+        // Log
+        await addDoc(collection(db, "transactions"), {
+          fromUid: "system", fromUsername: "🏦 Intérêts Bancaires",
+          toUid: currentUser.uid, toUsername: currentUserData.username,
+          amount: interest, note: "+5% de pénalité de dette",
+          participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp()
+        });
+
+      } catch(e) { console.error("Erreur calcul interets", e); }
+    }
+  }
+
+  function updateBorrowCapacity() {
+    if (!currentUserData || currentUser.email === ADMIN_EMAIL) return;
+    const balance = currentUserData.balance || 0;
+    const debt = currentUserData.debt || 0;
+    const maxAllowedDebt = balance * 2; // Capacité max : 200% du solde
+    const capacity = maxAllowedDebt - debt;
+
+    const el = document.getElementById("capacity-display");
+    if (capacity > 0) {
+      el.textContent = `Capacité d'emprunt : ${capacity} CC`;
+      el.style.color = "var(--gold)";
+    } else {
+      el.textContent = `Capacité d'emprunt atteinte.`;
+      el.style.color = "var(--danger)";
     }
   }
 
@@ -451,13 +546,14 @@
     const email = document.getElementById("reg-email").value.trim();
     const pass = document.getElementById("reg-password").value;
     if (!username) return showMsg("reg-msg", "error", "Entre un pseudo !");
-    if (pass.length < 6) return showMsg("reg-msg", "error", "Mot de passe trop court (min. 6 caractères).");
+    if (pass.length < 6) return showMsg("reg-msg", "error", "Mot de passe trop court.");
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       await setDoc(doc(db, "users", cred.user.uid), {
-        username, email, balance: 100, isAdmin: false, createdAt: serverTimestamp()
+        username, email, balance: 100, debt: 0, portfolio: {}, isAdmin: false, createdAt: serverTimestamp(),
+        lastInterestDate: new Date().toISOString().split('T')[0] // Pour ne pas facturer le jour 1
       });
-    } catch (e) { showMsg("reg-msg", "error", translateError(e.code)); }
+    } catch (e) { showMsg("reg-msg", "error", "Erreur lors de l'inscription."); }
   }
 
   async function logout() { await signOut(auth); }
@@ -468,17 +564,16 @@
     const isAdmin = currentUser.email === ADMIN_EMAIL;
     document.getElementById("topbar-user").textContent = currentUserData?.username || currentUser.email;
     document.getElementById("admin-tab").style.display = isAdmin ? "block" : "none";
-    
-    // Titre des billets pour admin vs user
-    document.getElementById("my-tickets-title").textContent = isAdmin ? "Tous les billets actifs (Gouvernement)" : "Mes billets en attente";
+    document.getElementById("my-tickets-title").textContent = isAdmin ? "Tous les billets actifs (Admin)" : "Mes billets en attente";
 
     renderDashboard();
+    updateBorrowCapacity();
     loadSendPage();
     listenMarket();
     listenTickets();
+    listenStocks();
     if (isAdmin) loadAdminPage();
     listenTransactions();
-    cleanOldHomeworks();
   }
 
   function showAuthScreen() {
@@ -489,14 +584,195 @@
   function renderDashboard() {
     if (!currentUserData) return;
     const isAdmin = currentUser.email === ADMIN_EMAIL;
+
     if (isAdmin) {
       document.getElementById("balance-display").textContent = "∞";
       document.getElementById("admin-infinite").style.display = "inline-block";
+      document.getElementById("debt-display").textContent = "0 🪙";
+      document.getElementById("invest-display").textContent = "0 🪙";
     } else {
       document.getElementById("balance-display").textContent = currentUserData.balance ?? 0;
       document.getElementById("admin-infinite").style.display = "none";
+      document.getElementById("debt-display").textContent = (currentUserData.debt || 0) + " 🪙";
+
+      let totalInvest = 0;
+      if (currentStocksData && currentUserData.portfolio) {
+        for (let stockId in currentUserData.portfolio) {
+           const shares = currentUserData.portfolio[stockId];
+           const price = currentStocksData.prices[stockId] || 0;
+           totalInvest += (shares * price);
+        }
+      }
+      document.getElementById("invest-display").textContent = totalInvest + " 🪙";
     }
   }
+
+  // ================= BANQUE =================
+  async function borrowMoney() {
+    const amount = parseInt(document.getElementById("bank-amount").value);
+    if (!amount || amount <= 0) return showMsg("bank-msg", "error", "Montant invalide.");
+    if (currentUser.email === ADMIN_EMAIL) return showMsg("bank-msg", "error", "L'admin a déjà l'argent infini.");
+
+    const balance = currentUserData.balance || 0;
+    const currentDebt = currentUserData.debt || 0;
+    const maxAllowedDebt = balance * 2; // 200% du solde
+    const capacity = maxAllowedDebt - currentDebt;
+
+    if (amount > capacity) {
+      return showMsg("bank-msg", "error", `Refusé ! Tu ne peux emprunter que ${capacity > 0 ? capacity : 0} CC max.`);
+    }
+
+    try {
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        balance: balance + amount,
+        debt: currentDebt + amount
+      });
+
+      await addDoc(collection(db, "transactions"), {
+        fromUid: "bank", fromUsername: "🏦 Banque",
+        toUid: currentUser.uid, toUsername: currentUserData.username,
+        amount: amount, note: "Emprunt",
+        participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp()
+      });
+
+      document.getElementById("bank-amount").value = "";
+      showMsg("bank-msg", "success", `✅ Emprunt de ${amount} CC accordé !`);
+    } catch(e) { showMsg("bank-msg", "error", "Erreur."); }
+  }
+
+  async function repayMoney() {
+    const amount = parseInt(document.getElementById("bank-amount").value);
+    if (!amount || amount <= 0) return showMsg("bank-msg", "error", "Montant invalide.");
+    if (currentUser.email === ADMIN_EMAIL) return;
+
+    if ((currentUserData.debt || 0) === 0) return showMsg("bank-msg", "info", "Tu n'as aucune dette !");
+    if (amount > (currentUserData.debt || 0)) return showMsg("bank-msg", "error", "Tu essaies de rembourser plus que ta dette.");
+    if (amount > (currentUserData.balance || 0)) return showMsg("bank-msg", "error", "Solde insuffisant pour rembourser ça.");
+
+    try {
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        balance: currentUserData.balance - amount,
+        debt: currentUserData.debt - amount
+      });
+
+      await addDoc(collection(db, "transactions"), {
+        fromUid: currentUser.uid, fromUsername: currentUserData.username,
+        toUid: "bank", toUsername: "🏦 Banque",
+        amount: amount, note: "Remboursement dette",
+        participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp()
+      });
+
+      document.getElementById("bank-amount").value = "";
+      showMsg("bank-msg", "success", `✅ Remboursement de ${amount} CC effectué !`);
+    } catch(e) { showMsg("bank-msg", "error", "Erreur."); }
+  }
+
+  // ================= BOURSE =================
+  let isUpdatingStocks = false;
+  function listenStocks() {
+    onSnapshot(doc(db, "system", "stocks"), async (snap) => {
+      if (!snap.exists()) {
+         if(currentUser.email === ADMIN_EMAIL){
+            await setDoc(doc(db, "system", "stocks"), {
+              prices: { coolcorp: 100, devoirsinc: 50, crypto: 200, gold: 150, snack: 20 },
+              names: { coolcorp: "CoolCorp Inc.", devoirsinc: "Devoirs Ltd", crypto: "Cool Crypto", gold: "Or Virtuel", snack: "Snack Index" },
+              lastUpdate: serverTimestamp()
+            });
+         }
+         return;
+      }
+      const data = snap.data();
+      currentStocksData = data;
+      const now = new Date();
+      const last = data.lastUpdate ? data.lastUpdate.toDate() : new Date();
+      const diffMs = now - last;
+
+      // 5 minutes
+      if (diffMs > 300000 && !isUpdatingStocks) {
+         isUpdatingStocks = true;
+         const newPrices = {...data.prices};
+         for (let key in newPrices) {
+            const change = 1 + (Math.random() * 0.2 - 0.1); 
+            newPrices[key] = Math.max(1, Math.round(newPrices[key] * change));
+         }
+         try {
+             await updateDoc(doc(db, "system", "stocks"), { prices: newPrices, lastUpdate: serverTimestamp() });
+             setTimeout(() => isUpdatingStocks = false, 5000); 
+             return; 
+         } catch(e) { isUpdatingStocks = false; }
+      }
+      renderBourse();
+      renderDashboard(); 
+    });
+  }
+
+  function renderBourse() {
+    if (!currentStocksData) return;
+    const el = document.getElementById("stocks-list");
+    const prices = currentStocksData.prices;
+    const names = currentStocksData.names;
+    const portfolio = currentUserData?.portfolio || {};
+    let html = "";
+    for (let key in prices) {
+      const owned = portfolio[key] || 0;
+      html += `
+        <div class="stock-card">
+          <div class="stock-header">
+            <span class="stock-name">${names[key]}</span>
+            <span class="stock-price">${prices[key]} 🪙</span>
+          </div>
+          <div class="stock-owned">Possédé : <strong>${owned} action(s)</strong></div>
+          <div class="stock-actions">
+            <input type="number" id="qty-${key}" placeholder="Qté" min="1" />
+            <button class="btn-buy" onclick="buyStock('${key}')">Acheter</button>
+            <button class="btn-sell" onclick="sellStock('${key}')">Vendre</button>
+          </div>
+        </div>
+      `;
+    }
+    el.innerHTML = html;
+  }
+
+  async function buyStock(stockId) {
+    const qty = parseInt(document.getElementById(`qty-${stockId}`).value);
+    if (!qty || qty <= 0) return showMsg("bourse-msg", "error", "Quantité invalide.");
+    if (currentUser.email === ADMIN_EMAIL) return;
+
+    const price = currentStocksData.prices[stockId];
+    const totalCost = price * qty;
+    if ((currentUserData.balance || 0) < totalCost) return showMsg("bourse-msg", "error", `Fonds insuffisants.`);
+
+    try {
+      const newPortfolio = { ...currentUserData.portfolio };
+      newPortfolio[stockId] = (newPortfolio[stockId] || 0) + qty;
+      await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - totalCost, portfolio: newPortfolio });
+      await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bourse", toUsername: "📈 Bourse", amount: totalCost, note: `Achat ${qty} x ${currentStocksData.names[stockId]}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
+      showMsg("bourse-msg", "success", `✅ Acheté !`);
+    } catch(e) { showMsg("bourse-msg", "error", "Erreur."); }
+  }
+
+  async function sellStock(stockId) {
+    const qty = parseInt(document.getElementById(`qty-${stockId}`).value);
+    if (!qty || qty <= 0) return showMsg("bourse-msg", "error", "Quantité invalide.");
+    if (currentUser.email === ADMIN_EMAIL) return;
+
+    const owned = currentUserData.portfolio?.[stockId] || 0;
+    if (qty > owned) return showMsg("bourse-msg", "error", "Tu ne possèdes pas assez d'actions.");
+
+    const price = currentStocksData.prices[stockId];
+    const totalGain = price * qty;
+
+    try {
+      const newPortfolio = { ...currentUserData.portfolio };
+      newPortfolio[stockId] -= qty;
+      await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + totalGain, portfolio: newPortfolio });
+      await addDoc(collection(db, "transactions"), { fromUid: "bourse", fromUsername: "📈 Bourse", toUid: currentUser.uid, toUsername: currentUserData.username, amount: totalGain, note: `Vente ${qty} x ${currentStocksData.names[stockId]}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
+      showMsg("bourse-msg", "success", `✅ Vendu !`);
+    } catch(e) { showMsg("bourse-msg", "error", "Erreur."); }
+  }
+
+
+  // ================= RESTE DU CODE (Transactions, Billets, Devoirs, Admin) =================
 
   function listenTransactions() {
     const q = query(collection(db, "transactions"), where("participants", "array-contains", currentUser.uid), orderBy("createdAt", "desc"));
@@ -515,501 +791,228 @@
       const isGov = tx.toUid === adminUid && isSent;
       const isMarket = tx.type === "market";
       const isTicket = tx.type === "ticket_create" || tx.type === "ticket_redeem" || tx.type === "ticket_cancel";
-      
-      let who = "";
-      if (isSent) {
-          who = isGov ? `→ 🏛️ Gouvernement` : `→ ${tx.toUsername}`;
-      } else {
-          who = (tx.fromUid === adminUid) ? `← 🏛️ Gouvernement` : `← ${tx.fromUsername}`;
-      }
-      
+      const isBank = tx.type === "bank";
+
+      let who = isSent ? `→ ${tx.toUsername}` : `← ${tx.fromUsername}`;
+      if(isSent && isGov) who = `→ 🏛️ Gouvernement`;
+      if(!isSent && tx.fromUid === "system") who = `← ${tx.fromUsername}`; 
+
       let amt = isSent ? `-${tx.amount}` : `+${tx.amount}`;
       let cls = isSent ? "sent" : "received";
-      
+
       if (isGov) cls = "gov";
       if (isMarket) cls = "market";
       if (isTicket) cls = "ticket";
-      
+      if (isBank) cls = "bank";
+      if (!isSent && tx.fromUid === "system" && tx.note.includes("pénalité")) cls = "sent"; // Intérêts sont débités
+
       let icon = "";
       if(isMarket) icon = '📚';
       if(isTicket) icon = '💸';
+      if(isBank) icon = '🏦';
 
       const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
-      
       return `<div class="tx-item ${cls}">
         <div class="tx-left">
           <span class="tx-who">${who} ${icon}</span>
           ${tx.note ? `<span class="tx-note">"${tx.note}"</span>` : ""}
           <span class="tx-date">${date}</span>
         </div>
-        <span class="tx-amount ${cls}">${amt} 🪙</span>
+        <span class="tx-amount ${cls}">${(tx.note.includes("pénalité") && !isSent) ? `-${tx.amount}` : amt} 🪙</span>
       </div>`;
     }).join("");
   }
 
-  // ================= BILLETS (TICKETS) =================
+  // TICKETS
   async function createTicket() {
     const amount = parseInt(document.getElementById("ticket-amount").value);
     if (!amount || amount <= 0) return showMsg("create-ticket-msg", "error", "Montant invalide.");
-    
     const isAdmin = currentUser.email === ADMIN_EMAIL;
-    if (!isAdmin && (currentUserData.balance ?? 0) < amount) {
-      return showMsg("create-ticket-msg", "error", "Solde insuffisant.");
-    }
-
-    // Generate random 6-digit code
+    if (!isAdmin && (currentUserData.balance ?? 0) < amount) return showMsg("create-ticket-msg", "error", "Solde insuffisant.");
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-
     try {
-      // Deduct balance
-      if (!isAdmin) {
-        await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance - amount) });
-      }
-
-      // Add to DB
-      await addDoc(collection(db, "tickets"), {
-        code: code,
-        amount: amount,
-        creatorUid: currentUser.uid,
-        creatorUsername: currentUserData.username,
-        createdAt: serverTimestamp()
-      });
-
-      // Log transaction
-      await addDoc(collection(db, "transactions"), {
-        fromUid: currentUser.uid,
-        fromUsername: currentUserData.username,
-        toUid: "system",
-        toUsername: "Impression Billet",
-        amount: amount,
-        note: `Code : ${code}`,
-        participants: [currentUser.uid],
-        type: "ticket_create",
-        createdAt: serverTimestamp()
-      });
-
+      if (!isAdmin) await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance - amount) });
+      await addDoc(collection(db, "tickets"), { code, amount, creatorUid: currentUser.uid, creatorUsername: currentUserData.username, createdAt: serverTimestamp() });
+      await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "system", toUsername: "Impression", amount, note: `Billet: ${code}`, participants: [currentUser.uid], type: "ticket_create", createdAt: serverTimestamp() });
       document.getElementById("ticket-amount").value = "";
       showMsg("create-ticket-msg", "success", `✅ Billet généré ! Code: ${code}`);
-      renderDashboard();
-    } catch(e) {
-      showMsg("create-ticket-msg", "error", "Erreur lors de la création.");
-    }
+    } catch(e) {}
   }
-
   async function redeemTicket() {
     const code = document.getElementById("redeem-code").value.trim();
-    if (code.length !== 6) return showMsg("redeem-msg", "error", "Le code doit faire 6 chiffres.");
-
+    if (code.length !== 6) return showMsg("redeem-msg", "error", "Le code fait 6 chiffres.");
     try {
-      const q = query(collection(db, "tickets"), where("code", "==", code));
-      const snap = await getDocs(q);
-
-      if (snap.empty) {
-        return showMsg("redeem-msg", "error", "❌ Billet introuvable ou déjà utilisé.");
-      }
-
-      const ticketDoc = snap.docs[0];
-      const ticket = ticketDoc.data();
-
-      // Add balance
+      const snap = await getDocs(query(collection(db, "tickets"), where("code", "==", code)));
+      if (snap.empty) return showMsg("redeem-msg", "error", "❌ Billet introuvable.");
+      const tDoc = snap.docs[0]; const t = tDoc.data();
       const isAdmin = currentUser.email === ADMIN_EMAIL;
-      if (!isAdmin) {
-        await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance + ticket.amount) });
-      }
-
-      // Log transaction
-      await addDoc(collection(db, "transactions"), {
-        fromUid: "system",
-        fromUsername: `Billet (${ticket.creatorUsername})`,
-        toUid: currentUser.uid,
-        toUsername: currentUserData.username,
-        amount: ticket.amount,
-        note: `Code encaissé`,
-        participants: [currentUser.uid],
-        type: "ticket_redeem",
-        createdAt: serverTimestamp()
-      });
-
-      // Delete the ticket
-      await deleteDoc(ticketDoc.ref);
-
+      if (!isAdmin) await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance + t.amount) });
+      await addDoc(collection(db, "transactions"), { fromUid: "system", fromUsername: `Billet (${t.creatorUsername})`, toUid: currentUser.uid, toUsername: currentUserData.username, amount: t.amount, note: `Encaissé`, participants: [currentUser.uid], type: "ticket_redeem", createdAt: serverTimestamp() });
+      await deleteDoc(tDoc.ref);
       document.getElementById("redeem-code").value = "";
-      showMsg("redeem-msg", "success", `✅ Billet encaissé ! +${ticket.amount} CC`);
-      renderDashboard();
-
-    } catch (e) {
-      showMsg("redeem-msg", "error", "Erreur réseau.");
-    }
+      showMsg("redeem-msg", "success", `✅ Billet encaissé ! +${t.amount} CC`);
+    } catch (e) {}
   }
-
   function listenTickets() {
     const isAdmin = currentUser.email === ADMIN_EMAIL;
-    // On requête tout et on filtre/trie en JS pour éviter de créer un nouvel index Firebase
-    const q = query(collection(db, "tickets"));
-    onSnapshot(q, (snap) => {
+    onSnapshot(query(collection(db, "tickets")), (snap) => {
       const el = document.getElementById("active-tickets-list");
       let tickets = [];
-      
       snap.forEach(d => {
         const t = d.data();
-        if (isAdmin || t.creatorUid === currentUser.uid) {
-          tickets.push({ id: d.id, ...t });
-        }
+        if (isAdmin || t.creatorUid === currentUser.uid) tickets.push({ id: d.id, ...t });
       });
-
-      // Tri du plus récent au plus ancien
       tickets.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
-      if (tickets.length === 0) {
-        el.innerHTML = '<div class="empty">Tu n\'as aucun billet en attente d\'encaissement.</div>';
-        return;
-      }
-
-      el.innerHTML = tickets.map(t => {
-        const date = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short"}) : "";
-        const creatorInfo = isAdmin ? `Par ${t.creatorUsername} • ` : "";
-        return `
+      if (!tickets.length) { el.innerHTML = '<div class="empty">Tu n'as aucun billet en attente.</div>'; return; }
+      el.innerHTML = tickets.map(t => `
           <div class="ticket-card">
             <div class="ticket-left">
               <div class="ticket-code">${t.code}</div>
-              <div class="ticket-info">${creatorInfo}${date}</div>
+              <div class="ticket-info">${isAdmin ? `Par ${t.creatorUsername} • ` : ""}${t.createdAt?.toDate ? t.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short"}) : ""}</div>
             </div>
             <div style="text-align: right;">
               <div class="ticket-amount">${t.amount} 🪙</div>
               <button class="btn mini danger" style="margin-top:6px" onclick="cancelTicket('${t.id}', '${t.creatorUid}', ${t.amount})">Annuler</button>
             </div>
           </div>
-        `;
-      }).join("");
+        `).join("");
     });
   }
-
   async function cancelTicket(ticketId, creatorUid, amount) {
-    if (!confirm("Veux-tu annuler ce billet et recréditer l'argent au créateur ?")) return;
-
+    if (!confirm("Annuler et recréditer ?")) return;
     try {
       await deleteDoc(doc(db, "tickets", ticketId));
-      
-      // Rembourser le créateur
-      const creatorSnap = await getDoc(doc(db, "users", creatorUid));
-      if (creatorSnap.exists() && creatorSnap.data().email !== ADMIN_EMAIL) {
-         await updateDoc(doc(db, "users", creatorUid), { balance: creatorSnap.data().balance + amount });
-      }
-
-      // Log transaction
-      await addDoc(collection(db, "transactions"), {
-        fromUid: "system",
-        fromUsername: "Billet annulé",
-        toUid: creatorUid,
-        toUsername: "Remboursement",
-        amount: amount,
-        note: "Annulation de billet",
-        participants: [creatorUid],
-        type: "ticket_cancel",
-        createdAt: serverTimestamp()
-      });
-
-    } catch(e) {
-      alert("Erreur lors de l'annulation.");
-    }
+      const cSnap = await getDoc(doc(db, "users", creatorUid));
+      if (cSnap.exists() && cSnap.data().email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", creatorUid), { balance: cSnap.data().balance + amount });
+      await addDoc(collection(db, "transactions"), { fromUid: "system", fromUsername: "Annulation", toUid: creatorUid, toUsername: "Remboursement", amount, note: "Billet annulé", participants: [creatorUid], type: "ticket_cancel", createdAt: serverTimestamp() });
+    } catch(e) {}
   }
-  // ================= FIN BILLETS =================
 
-
-  // ---- MARKET (DEVOIRS) ----
+  // MARKET DEVOIRS
   async function uploadHomework() {
     const title = document.getElementById("hw-title").value.trim();
     const price = parseInt(document.getElementById("hw-price").value);
     const fileInput = document.getElementById("hw-file");
     const file = fileInput.files[0];
-
-    if (!title) return showMsg("hw-msg", "error", "Le titre est requis.");
-    if (!price || price < 1) return showMsg("hw-msg", "error", "Le prix doit être d'au moins 1 CC.");
-    if (!file) return showMsg("hw-msg", "error", "Tu dois ajouter une photo.");
-    if (file.size > 5 * 1024 * 1024) return showMsg("hw-msg", "error", "L'image est trop lourde (max 5 Mo).");
-
+    if (!title || !price || !file) return showMsg("hw-msg", "error", "Remplis tout !");
     const btn = document.getElementById("btn-upload-hw");
-    btn.disabled = true;
-    btn.textContent = "Upload en cours...";
-
+    btn.disabled = true; btn.textContent = "Upload...";
     try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-        method: "POST",
-        body: formData
-      });
-      const data = await response.json();
-
-      if (!data.success) throw new Error(data.error?.message || "Erreur upload ImgBB");
-
-      const photoURL = data.data.url;
-      const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 7);
-
-      await addDoc(collection(db, "homeworks"), {
-        title,
-        price,
-        photoURL,
-        sellerUid: currentUser.uid,
-        sellerUsername: currentUserData.username,
-        buyers: [],
-        createdAt: serverTimestamp(),
-        expiresAt: expiresAt
-      });
-
-      showMsg("hw-msg", "success", "✅ Devoir mis en vente !");
-      document.getElementById("hw-title").value = "";
-      document.getElementById("hw-price").value = "";
-      fileInput.value = "";
-    } catch (e) {
-      showMsg("hw-msg", "error", "Erreur : " + e.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Mettre en vente";
-    }
+      const formData = new FormData(); formData.append("image", file);
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: formData });
+      const data = await res.json();
+      if (!data.success) throw new Error("Erreur");
+      const expiresAt = new Date(); expiresAt.setDate(expiresAt.getDate() + 7);
+      await addDoc(collection(db, "homeworks"), { title, price, photoURL: data.data.url, sellerUid: currentUser.uid, sellerUsername: currentUserData.username, buyers: [], createdAt: serverTimestamp(), expiresAt });
+      showMsg("hw-msg", "success", "✅ Mis en vente !");
+      document.getElementById("hw-title").value = ""; document.getElementById("hw-price").value = ""; fileInput.value = "";
+    } catch (e) { showMsg("hw-msg", "error", "Erreur"); }
+    finally { btn.disabled = false; btn.textContent = "Mettre en vente"; }
   }
-
   function listenMarket() {
-    const q = query(collection(db, "homeworks"), orderBy("createdAt", "desc"));
-    onSnapshot(q, (snap) => {
-      const el = document.getElementById("hw-list");
-      const docs = [];
-      snap.forEach(d => {
-        const data = d.data();
-        if (!data.expiresAt || data.expiresAt.toDate() > new Date()) {
-          docs.push({ id: d.id, ...data });
-        }
-      });
-
-      if (!docs.length) { el.innerHTML = '<div class="empty">Aucun devoir en vente actuellement.</div>'; return; }
-      
+    onSnapshot(query(collection(db, "homeworks"), orderBy("createdAt", "desc")), (snap) => {
+      const el = document.getElementById("hw-list"); const docs = [];
+      snap.forEach(d => { const data = d.data(); if (!data.expiresAt || data.expiresAt.toDate() > new Date()) docs.push({ id: d.id, ...data }); });
+      if (!docs.length) { el.innerHTML = '<div class="empty">Aucun devoir en vente.</div>'; return; }
       el.innerHTML = docs.map(hw => {
-        const isMine = hw.sellerUid === currentUser.uid;
-        const isAdmin = currentUser.email === ADMIN_EMAIL;
-        const hasBought = hw.buyers && hw.buyers.includes(currentUser.uid);
-        const hasAccess = isMine || isAdmin || hasBought;
-
-        let actionBtn = "";
-        if (isMine || isAdmin) {
-          actionBtn = `<button class="hw-delete-btn" onclick="deleteHomework('${hw.id}')">🗑️ Supprimer</button>`;
-        } else if (hasBought) {
-          actionBtn = `<button class="hw-bought-btn">✅ Acheté</button>`;
-        } else {
-          actionBtn = `<button class="hw-buy-btn" onclick="buyHomework('${hw.id}', '${hw.sellerUid}', '${hw.sellerUsername}', ${hw.price}, '${hw.title.replace(/'/g, "\\'")}')">Acheter</button>`;
-        }
-
-        const imgClass = hasAccess ? "" : "blurred";
-        const lockIcon = hasAccess ? "" : `<div class="lock-icon">🔒</div>`;
-        const clickAction = hasAccess ? `onclick="openImageModal('${hw.photoURL}')"` : `onclick="alert('Achète ce devoir pour enlever le flou et voir la photo complète !')"`;
-
-        return `
-          <div class="hw-card">
-            <div class="hw-img-container">
-              ${lockIcon}
-              <img src="${hw.photoURL}" class="${imgClass}" alt="Devoir" ${clickAction} />
-            </div>
-            <div class="hw-info">
-              <div class="hw-title">${hw.title}</div>
-              <div class="hw-seller">par ${hw.sellerUsername}</div>
-              <div class="hw-bottom">
-                <span class="hw-price">${hw.price} 🪙</span>
-                ${actionBtn}
-              </div>
-            </div>
-          </div>
-        `;
+        const isMine = hw.sellerUid === currentUser.uid; const isAdmin = currentUser.email === ADMIN_EMAIL;
+        const hasBought = hw.buyers?.includes(currentUser.uid); const hasAccess = isMine || isAdmin || hasBought;
+        let actionBtn = isMine || isAdmin ? `<button class="hw-delete-btn" onclick="deleteHomework('${hw.id}')">🗑️</button>` : hasBought ? `<button class="hw-bought-btn">✅ Acheté</button>` : `<button class="hw-buy-btn" onclick="buyHomework('${hw.id}', '${hw.sellerUid}', '${hw.sellerUsername}', ${hw.price}, '${hw.title.replace(/'/g, "\'")}')">Acheter</button>`;
+        const imgClass = hasAccess ? "" : "blurred"; const lockIcon = hasAccess ? "" : `<div class="lock-icon">🔒</div>`;
+        const clickAction = hasAccess ? `onclick="openImageModal('${hw.photoURL}')"` : `onclick="alert('Achète ce devoir !')"`;
+        return `<div class="hw-card"><div class="hw-img-container">${lockIcon}<img src="${hw.photoURL}" class="${imgClass}" ${clickAction} /></div><div class="hw-info"><div class="hw-title">${hw.title}</div><div class="hw-seller">par ${hw.sellerUsername}</div><div class="hw-bottom"><span class="hw-price">${hw.price} 🪙</span>${actionBtn}</div></div></div>`;
       }).join("");
     });
   }
-
   async function buyHomework(hwId, sellerUid, sellerName, price, title) {
     const isAdmin = currentUser.email === ADMIN_EMAIL;
-    if (!isAdmin && (currentUserData.balance ?? 0) < price) {
-      alert("Solde insuffisant pour acheter ce devoir !"); return;
-    }
-    const conf = confirm(`Veux-tu acheter "${title}" pour ${price} CC ?`);
-    if (!conf) return;
-
+    if (!isAdmin && (currentUserData.balance ?? 0) < price) return alert("Solde insuffisant !");
+    if (!confirm(`Acheter pour ${price} CC ?`)) return;
     try {
-      if (!isAdmin) {
-        await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance - price) });
-        currentUserData.balance -= price;
-      }
+      if (!isAdmin) { await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - price }); }
       const sellerSnap = await getDoc(doc(db, "users", sellerUid));
-      if (sellerSnap.exists()) {
-        await updateDoc(doc(db, "users", sellerUid), { balance: (sellerSnap.data().balance + price) });
-      }
-
-      await addDoc(collection(db, "transactions"), {
-        fromUid: currentUser.uid, fromUsername: currentUserData.username,
-        toUid: sellerUid, toUsername: sellerName,
-        amount: price, note: `Achat devoir: ${title}`, type: "market",
-        participants: [currentUser.uid, sellerUid], createdAt: serverTimestamp()
-      });
-
+      if (sellerSnap.exists()) await updateDoc(doc(db, "users", sellerUid), { balance: sellerSnap.data().balance + price });
+      await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: sellerUid, toUsername: sellerName, amount: price, note: `Devoir: ${title}`, type: "market", participants: [currentUser.uid, sellerUid], createdAt: serverTimestamp() });
       await updateDoc(doc(db, "homeworks", hwId), { buyers: arrayUnion(currentUser.uid) });
-
-      alert("✅ Achat réussi ! L'image est maintenant débloquée.");
-      renderDashboard();
-    } catch(e) { alert("Erreur lors de l'achat."); }
-  }
-
-  async function deleteHomework(hwId) {
-    if (!confirm("Es-tu sûr de vouloir supprimer ce devoir ?")) return;
-    try { await deleteDoc(doc(db, "homeworks", hwId)); } catch(e) {}
-  }
-
-  async function cleanOldHomeworks() {
-    if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
-    try {
-      const q = query(collection(db, "homeworks"), where("expiresAt", "<", new Date()));
-      const snap = await getDocs(q);
-      snap.forEach(async (d) => { await deleteDoc(doc(db, "homeworks", d.id)); });
+      alert("✅ Débloqué !");
     } catch(e) {}
   }
+  async function deleteHomework(hwId) { if (confirm("Supprimer ?")) await deleteDoc(doc(db, "homeworks", hwId)); }
+  function openImageModal(url) { document.getElementById("modal-img").src = url; document.getElementById("image-modal").style.display = "flex"; }
+  function closeImageModal() { document.getElementById("image-modal").style.display = "none"; document.getElementById("modal-img").src = ""; }
 
-  function openImageModal(url) {
-    document.getElementById("modal-img").src = url;
-    document.getElementById("image-modal").style.display = "flex";
-  }
-  function closeImageModal() {
-    document.getElementById("image-modal").style.display = "none";
-    document.getElementById("modal-img").src = "";
-  }
-
-  // ---- SEND ----
+  // ENVOYER
   async function loadSendPage() {
     const snap = await getDocs(collection(db, "users"));
-    const sel = document.getElementById("send-to");
-    sel.innerHTML = '<option value="">-- Choisir --</option>';
+    const sel = document.getElementById("send-to"); sel.innerHTML = '<option value="">-- Choisir --</option>';
     snap.forEach(d => { if (d.data().email === ADMIN_EMAIL) sel.innerHTML += `<option value="${d.id}" class="gov-option">🏛️ Gouvernement</option>`; });
     snap.forEach(d => { if (d.id !== currentUser.uid && d.data().email !== ADMIN_EMAIL) sel.innerHTML += `<option value="${d.id}">${d.data().username}</option>`; });
   }
-
   async function sendCoins() {
-    const toUid = document.getElementById("send-to").value;
-    const amount = parseInt(document.getElementById("send-amount").value);
-    const note = document.getElementById("send-note").value.trim();
-
-    if (!toUid) return showMsg("send-msg", "error", "Choisis un destinataire.");
-    if (!amount || amount <= 0) return showMsg("send-msg", "error", "Montant invalide.");
-
+    const toUid = document.getElementById("send-to").value; const amount = parseInt(document.getElementById("send-amount").value);
+    if (!toUid || !amount || amount <= 0) return showMsg("send-msg", "error", "Invalide.");
     const isAdmin = currentUser.email === ADMIN_EMAIL;
     if (!isAdmin && (currentUserData.balance ?? 0) < amount) return showMsg("send-msg", "error", "Solde insuffisant !");
-
-    const toSnap = await getDoc(doc(db, "users", toUid));
-    const toData = toSnap.data();
-    const toName = toData.email === ADMIN_EMAIL ? "Gouvernement 🏛️" : toData.username;
-
-    if (!isAdmin) {
-      await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance - amount) });
-      currentUserData.balance -= amount;
-    }
-    if (toData.email !== ADMIN_EMAIL) {
-      await updateDoc(doc(db, "users", toUid), { balance: (toData.balance + amount) });
-    }
-
-    await addDoc(collection(db, "transactions"), {
-      fromUid: currentUser.uid, fromUsername: currentUserData.username,
-      toUid, toUsername: toName, amount, note: note || "",
-      participants: [currentUser.uid, toUid], createdAt: serverTimestamp()
-    });
-
-    renderDashboard();
-    document.getElementById("send-amount").value = "";
-    document.getElementById("send-note").value = "";
-    showMsg("send-msg", "success", `✅ ${amount} CC envoyés à ${toName} !`);
+    const toSnap = await getDoc(doc(db, "users", toUid)); const toData = toSnap.data(); const toName = toData.email === ADMIN_EMAIL ? "Gouvernement 🏛️" : toData.username;
+    if (!isAdmin) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amount });
+    if (toData.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", toUid), { balance: toData.balance + amount });
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid, toUsername: toName, amount, note: document.getElementById("send-note").value.trim(), participants: [currentUser.uid, toUid], createdAt: serverTimestamp() });
+    document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = "";
+    showMsg("send-msg", "success", `✅ Envoyé !`);
   }
 
-  // ---- ADMIN & SETTINGS ----
+  // ADMIN & SETTINGS
   async function changePassword() {
-    const np = document.getElementById("new-password").value;
-    const cp = document.getElementById("confirm-password").value;
-    if (np.length < 6) return showMsg("pw-msg", "error", "Mot de passe trop court.");
-    if (np !== cp) return showMsg("pw-msg", "error", "Les mots de passe ne correspondent pas.");
-    try { await updatePassword(currentUser, np); showMsg("pw-msg", "success", "✅ Mot de passe mis à jour !"); } 
-    catch (e) { showMsg("pw-msg", "error", "Erreur : " + e.message); }
+    const np = document.getElementById("new-password").value; const cp = document.getElementById("confirm-password").value;
+    if (np.length < 6 || np !== cp) return showMsg("pw-msg", "error", "Erreur.");
+    try { await updatePassword(currentUser, np); showMsg("pw-msg", "success", "✅ Fait !"); } catch (e) {}
   }
-
   async function adminCreateUser() {
-    const username = document.getElementById("admin-username").value.trim();
-    const email = document.getElementById("admin-email").value.trim();
-    const pass = document.getElementById("admin-password").value;
-    const balance = parseInt(document.getElementById("admin-balance").value) || 100;
-    if (!username || !email || !pass) return showMsg("admin-create-msg", "error", "Remplis tous les champs.");
+    const username = document.getElementById("admin-username").value.trim(); const email = document.getElementById("admin-email").value.trim();
+    const pass = document.getElementById("admin-password").value; const balance = parseInt(document.getElementById("admin-balance").value) || 100;
+    if (!username || !email || !pass) return;
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      await setDoc(doc(db, "users", cred.user.uid), { username, email, balance, isAdmin: false, createdAt: serverTimestamp() });
-      showMsg("admin-create-msg", "success", `✅ Compte "${username}" créé ! Reconnecte-toi en tant qu'admin.`);
-      await signOut(auth);
-    } catch (e) { showMsg("admin-create-msg", "error", translateError(e.code)); }
+      await setDoc(doc(db, "users", cred.user.uid), { username, email, balance, debt: 0, portfolio: {}, isAdmin: false, createdAt: serverTimestamp(), lastInterestDate: new Date().toISOString().split('T')[0] });
+      showMsg("admin-create-msg", "success", `✅ Créé !`); await signOut(auth);
+    } catch (e) {}
   }
-
   async function adminSaveBalance(uid, inputId) {
-    const newBalance = parseInt(document.getElementById(inputId).value);
-    if (isNaN(newBalance) || newBalance < 0) return showMsg("edit-balance-msg", "error", "Montant invalide.");
-    await updateDoc(doc(db, "users", uid), { balance: newBalance });
-    showMsg("edit-balance-msg", "success", "✅ Solde mis à jour !");
+    const nb = parseInt(document.getElementById(inputId).value);
+    if (isNaN(nb) || nb < 0) return;
+    await updateDoc(doc(db, "users", uid), { balance: nb }); showMsg("edit-balance-msg", "success", "✅ Modifié !");
   }
-
   function loadAdminPage() {
     onSnapshot(collection(db, "users"), (snap) => {
-      const tbody = document.getElementById("users-tbody");
-      tbody.innerHTML = "";
+      const tbody = document.getElementById("users-tbody"); tbody.innerHTML = "";
       snap.forEach(d => {
-        const u = d.data();
-        const isGov = u.email === ADMIN_EMAIL;
-        const balanceDisplay = isGov ? "∞" : (u.balance ?? 0);
-        const inputId = `balance-input-${d.id}`;
-        const editCell = isGov ? `<td>—</td>` : `<td><div class="edit-balance-row"><input type="number" id="${inputId}" value="${u.balance ?? 0}" min="0" /><button class="btn mini" onclick="adminSaveBalance('${d.id}', '${inputId}')">✓</button></div></td>`;
-        tbody.innerHTML += `<tr><td>${u.username}${isGov ? ' <span class="gov-badge">GOV</span>' : ''}</td><td>${u.email}</td><td>${balanceDisplay} 🪙</td>${editCell}</tr>`;
+        const u = d.data(); const isGov = u.email === ADMIN_EMAIL;
+        const bal = isGov ? "∞" : (u.balance ?? 0); const debt = isGov ? "0" : (u.debt ?? 0);
+        const inp = `balance-input-${d.id}`;
+        const edit = isGov ? `<td>—</td>` : `<td><div class="edit-balance-row"><input type="number" id="${inp}" value="${bal}" min="0" /><button class="btn mini" onclick="adminSaveBalance('${d.id}', '${inp}')">✓</button></div></td>`;
+        tbody.innerHTML += `<tr><td>${u.username}${isGov ? ' <span class="gov-badge">GOV</span>' : ''}</td><td>${bal} 🪙</td><td><span style="color:var(--danger)">${debt} 🪙</span></td>${edit}</tr>`;
       });
     });
-
-    const q = query(collection(db, "transactions"), orderBy("createdAt", "desc"));
-    onSnapshot(q, (snap) => {
-      const el = document.getElementById("admin-all-txs");
-      if (!snap.docs.length) { el.innerHTML = '<div class="empty">Aucune transaction</div>'; return; }
-      el.innerHTML = snap.docs.map(d => {
-        const tx = d.data();
-        const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
-        const isGovTx = tx.toUsername === "Gouvernement 🏛️" || tx.fromUsername === "Gouvernement 🏛️";
-        return `<div class="tx-item ${isGovTx ? 'gov' : 'sent'}"><div class="tx-left"><span class="tx-who">${tx.fromUsername} → ${tx.toUsername}</span>${tx.note ? `<span class="tx-note">"${tx.note}"</span>` : ""}<span class="tx-date">${date}</span></div><span class="tx-amount ${isGovTx ? 'gov' : 'sent'}">${tx.amount} 🪙</span></div>`;
+    onSnapshot(query(collection(db, "transactions"), orderBy("createdAt", "desc")), (snap) => {
+      document.getElementById("admin-all-txs").innerHTML = snap.docs.map(d => {
+        const tx = d.data(); const isGovTx = tx.toUsername === "Gouvernement 🏛️" || tx.fromUsername === "Gouvernement 🏛️";
+        return `<div class="tx-item ${isGovTx ? 'gov' : 'sent'}"><div class="tx-left"><span class="tx-who">${tx.fromUsername} → ${tx.toUsername}</span>${tx.note ? `<span class="tx-note">"${tx.note}"</span>` : ""}<span class="tx-date">${tx.createdAt?.toDate().toLocaleDateString("fr-FR", {month:"short",day:"2-digit",hour:"2-digit",minute:"2-digit"})}</span></div><span class="tx-amount ${isGovTx ? 'gov' : 'sent'}">${tx.amount} 🪙</span></div>`;
       }).join("");
     });
   }
 
   function showPage(page, evt) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".page, .nav-tab").forEach(e => e.classList.remove("active"));
     document.getElementById("page-" + page).classList.add("active");
     if (evt && evt.target) evt.target.classList.add("active");
-    if (page === "send") loadSendPage();
-    if (page === "admin") loadAdminPage();
   }
-
   function switchAuthTab(tab) {
-    document.querySelectorAll(".auth-tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
-    document.getElementById("tab-" + tab).classList.add("active");
-    event.target.classList.add("active");
+    document.querySelectorAll(".auth-tab, .tab-content").forEach(e => e.classList.remove("active"));
+    document.getElementById("tab-" + tab).classList.add("active"); event.target.classList.add("active");
   }
-
   function showMsg(id, type, text) {
-    const el = document.getElementById(id);
-    el.className = "msg " + type;
-    el.textContent = text;
-    el.style.display = "block";
+    const el = document.getElementById(id); el.className = "msg " + type; el.textContent = text; el.style.display = "block";
     setTimeout(() => { el.style.display = "none"; }, 4000);
-  }
-
-  function translateError(code) {
-    if (code === "auth/email-already-in-use") return "Cet email est déjà utilisé.";
-    if (code === "auth/invalid-email") return "Email invalide.";
-    if (code === "auth/weak-password") return "Mot de passe trop court (min. 6 caractères).";
-    return "Une erreur est survenue.";
   }
 </script>
 </body>
