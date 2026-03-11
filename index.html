@@ -259,7 +259,7 @@
         <div class="stock-grid" id="stocks-list">
           <div class="empty">Chargement du marché...</div>
         </div>
-        <div class="next-update">Les prix fluctuent de -10% à +10%.</div>
+        <div class="next-update">Les prix fluctuent de -10% à +10% (avec une chance de +20% !).</div>
         <div id="bourse-msg" class="msg" style="margin-top:10px;"></div>
       </div>
     </div>
@@ -488,7 +488,6 @@
       }
       document.getElementById("invest-display").textContent = totalInvest + " 🪙";
       
-      // FIX INFINITE MONEY GLITCH: Base capacity on (Balance - Debt)
       const trueWealth = (currentUserData.balance || 0) - (currentUserData.debt || 0);
       const maxDebt = trueWealth > 0 ? trueWealth * 2 : 0;
       let cap = maxDebt - (currentUserData.debt || 0);
@@ -525,7 +524,6 @@
     if (!amount || amount <= 0) return;
     if (currentUser.email === ADMIN_EMAIL) return showMsg("bank-msg", "error", "L'admin a argent infini.");
     
-    // FIX INFINITE MONEY GLITCH
     const trueWealth = (currentUserData.balance || 0) - (currentUserData.debt || 0);
     const maxDebt = trueWealth > 0 ? trueWealth * 2 : 0;
     let cap = maxDebt - (currentUserData.debt || 0);
@@ -584,10 +582,23 @@
       if ((new Date() - last) > 300000 && !updatingStocks) {
         updatingStocks = true;
         let newPrices = {...currentStocksData.prices};
+        
         for(let k in newPrices) {
-          let change = 1 + (Math.random() * 0.2 - 0.1); 
+          // BOURSE UPDATE LOGIC WITH 1/21 CHANCE FOR +20%
+          const luckyDraw = Math.floor(Math.random() * 21); // Random number between 0 and 20
+          let change;
+          
+          if (luckyDraw === 20) {
+            // 1 out of 21 chance: BOOM! +20%
+            change = 1.20; 
+          } else {
+            // The rest of the time: normal fluctuation between -10% and +10%
+            change = 1 + (Math.random() * 0.2 - 0.1); 
+          }
+          
           newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
         }
+        
         try {
           await updateDoc(doc(db, "system", "stocks"), { prices: newPrices, lastUpdate: serverTimestamp() });
           setTimeout(() => updatingStocks = false, 5000);
