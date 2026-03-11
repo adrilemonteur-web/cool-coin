@@ -36,7 +36,7 @@
       border-radius: 8px; color: var(--text); font-size: 1rem; transition: border 0.2s;
     }
     input:focus { outline: none; border-color: var(--gold); }
-
+    
     .btn { display: block; width: 100%; padding: 13px; margin-top: 20px; background: var(--gold); color: #000; font-weight: 700; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.85; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -47,12 +47,12 @@
     .btn.bank { background: var(--bank); color: #000; }
     .btn.small { padding: 8px 14px; font-size: 0.85rem; margin-top: 0; width: auto; display: inline-block; }
     .btn.mini { padding: 5px 10px; font-size: 0.78rem; margin-top: 0; width: auto; display: inline-block; border-radius: 6px; }
-
+    
     .msg { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; display: none; }
     .msg.error { background: rgba(231,76,60,0.15); color: var(--danger); border: 1px solid var(--danger); }
     .msg.success { background: rgba(46,204,113,0.15); color: var(--success); border: 1px solid var(--success); }
     .msg.info { background: rgba(52,152,219,0.15); color: var(--blue); border: 1px solid var(--blue); }
-
+    
     #app-screen { display: none; min-height: 100vh; }
     .topbar { background: var(--card); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a3e; position: sticky; top: 0; z-index: 10; }
     .topbar-left { display: flex; align-items: center; gap: 10px; }
@@ -60,9 +60,9 @@
     .topbar-user { font-size: 0.85rem; color: var(--sub); }
     .logout-btn { background: none; border: 1px solid #333; color: var(--sub); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
     .logout-btn:hover { border-color: var(--accent); color: var(--accent); }
-
+    
     .content { max-width: 600px; margin: 0 auto; padding: 20px; }
-
+    
     /* Dashboard Stats */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
     .balance-card { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #f5c51844; border-radius: 16px; padding: 20px; text-align: center; grid-column: 1 / -1; }
@@ -73,11 +73,11 @@
     .stat-amount.debt { color: var(--danger); }
     .stat-amount.invest { color: var(--blue); }
     .infinite-badge { display: inline-block; background: var(--gold); color: #000; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-top: 8px; }
-
+    
     .section { margin-bottom: 24px; }
     .section-title { font-size: 1rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
     .form-card { background: var(--card); border-radius: 12px; padding: 20px; }
-
+    
     /* Transactions */
     .tx-list { display: flex; flex-direction: column; gap: 8px; }
     .tx-item { background: var(--card); border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
@@ -98,14 +98,14 @@
     .tx-amount.market { color: var(--blue); }
     .tx-amount.ticket { color: var(--ticket); }
     .tx-amount.bank { color: var(--bank); }
-
+    
     /* Tickets */
     .ticket-card { background: linear-gradient(135deg, #27ae6022, #1a1a2e); border: 1px dashed var(--ticket); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
     .ticket-left { display: flex; flex-direction: column; gap: 4px; }
     .ticket-code { font-size: 1.5rem; font-weight: 900; letter-spacing: 4px; color: var(--text); }
     .ticket-info { font-size: 0.8rem; color: var(--sub); }
     .ticket-amount { font-size: 1.4rem; font-weight: 800; color: var(--ticket); }
-
+    
     /* Bourse / Stocks */
     .stock-grid { display: flex; flex-direction: column; gap: 12px; }
     .stock-card { background: var(--card); border: 1px solid #2a2a3e; border-radius: 12px; padding: 16px; }
@@ -137,14 +137,14 @@
     .hw-buy-btn:hover { opacity: 0.8; }
     .hw-delete-btn { background: var(--danger); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
     .hw-bought-btn { background: var(--success); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: default; }
-
+    
     #image-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     #image-modal img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
     .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
-
+    
     .admin-badge { display: inline-block; background: var(--accent); color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; }
     .gov-badge { display: inline-block; background: #a78bfa; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 6px; }
-
+    
     .users-table-wrapper { overflow-x: auto; }
     .users-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; }
     .users-table th { background: #2a2a3e; padding: 12px 16px; text-align: left; font-size: 0.85rem; color: var(--sub); text-transform: uppercase; white-space: nowrap; }
@@ -152,7 +152,7 @@
     .users-table tr:hover td { background: #1f1f35; }
     .edit-balance-row { display: flex; gap: 6px; align-items: center; }
     .edit-balance-row input { width: 80px; padding: 5px 8px; font-size: 0.85rem; margin: 0; }
-
+    
     .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #2a2a3e; padding-bottom: 0; flex-wrap: wrap; }
     .nav-tab { padding: 10px 18px; border: none; background: none; color: var(--sub); cursor: pointer; font-size: 0.95rem; border-bottom: 2px solid transparent; transition: all 0.2s; margin-bottom: -1px; }
     .nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 700; }
@@ -162,10 +162,9 @@
     select:focus { outline: none; border-color: var(--gold); }
     .empty { text-align: center; color: var(--sub); padding: 30px; font-size: 0.9rem; grid-column: 1 / -1; }
     option.gov-option { color: #a78bfa; font-weight: bold; }
-
+    
     .big-input { font-size: 2rem !important; letter-spacing: 6px; text-align: center; font-weight: 800; padding: 16px !important; }
-
-    /* Indicateur capacité emprunt */
+    
     .borrow-capacity { font-size: 0.85rem; font-weight: 700; color: var(--gold); margin-top: 4px; display: block; }
     .interest-note { font-size: 0.75rem; color: var(--danger); font-weight: 700; display: block; margin-top: 4px; }
   </style>
@@ -435,6 +434,7 @@
   let currentUserData = null;
   let adminUid = null;
   let currentStocksData = null; 
+  let userDataListener = null;
 
   window.login = login; window.register = register; window.logout = logout; window.sendCoins = sendCoins;
   window.switchAuthTab = switchAuthTab; window.showPage = showPage; window.changePassword = changePassword;
@@ -455,42 +455,46 @@
     if (user) {
       currentUser = user;
       listenUserData();
-      showApp();
     } else {
       currentUser = null;
       currentUserData = null;
+      if (userDataListener) userDataListener();
       showAuthScreen();
     }
   });
 
   function listenUserData() {
-    onSnapshot(doc(db, "users", currentUser.uid), (snap) => {
+    userDataListener = onSnapshot(doc(db, "users", currentUser.uid), (snap) => {
       if (snap.exists()) {
         currentUserData = snap.data();
         if(!currentUserData.debt) currentUserData.debt = 0;
         if(!currentUserData.portfolio) currentUserData.portfolio = {};
-
-        // CHECK INTERESTS
+        
+        // CHECK INTERESTS (Seulement côté local pour éviter les boucles d'écriture si ça bug)
         applyDailyInterestIfNeeded();
 
+        // Affichage
+        if(document.getElementById("app-screen").style.display === "none") {
+            showApp();
+        }
         renderDashboard();
         updateBorrowCapacity();
         if(currentStocksData) renderBourse();
+      } else {
+        // L'utilisateur est connecté mais son doc n'existe pas
+        showApp();
       }
     });
   }
 
-  // --- NOUVEAU: APPLICATION DES INTERETS (5% / jour) ---
   async function applyDailyInterestIfNeeded() {
     if (currentUser.email === ADMIN_EMAIL || (currentUserData.debt || 0) === 0) return;
 
     const now = new Date();
-    // Normaliser la date actuelle (ex: "2026-03-12")
     const todayString = now.toISOString().split('T')[0]; 
     const lastInterestDate = currentUserData.lastInterestDate || "1970-01-01";
 
     if (todayString !== lastInterestDate) {
-      // Calcul des intérêts (5%, arrondi sup, mini 1)
       const currentDebt = currentUserData.debt;
       let interest = Math.ceil(currentDebt * 0.05);
       if (interest < 1) interest = 1;
@@ -501,19 +505,13 @@
           lastInterestDate: todayString
         });
 
-        // On met à jour la variable locale pour éviter les boucles avant le retour du snapshot
-        currentUserData.debt = currentDebt + interest;
-        currentUserData.lastInterestDate = todayString;
-
-        // Log
         await addDoc(collection(db, "transactions"), {
           fromUid: "system", fromUsername: "🏦 Intérêts Bancaires",
           toUid: currentUser.uid, toUsername: currentUserData.username,
           amount: interest, note: "+5% de pénalité de dette",
           participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp()
         });
-
-      } catch(e) { console.error("Erreur calcul interets", e); }
+      } catch(e) { console.error(e); }
     }
   }
 
@@ -521,15 +519,15 @@
     if (!currentUserData || currentUser.email === ADMIN_EMAIL) return;
     const balance = currentUserData.balance || 0;
     const debt = currentUserData.debt || 0;
-    const maxAllowedDebt = balance * 2; // Capacité max : 200% du solde
+    const maxAllowedDebt = balance * 2; 
     const capacity = maxAllowedDebt - debt;
-
+    
     const el = document.getElementById("capacity-display");
     if (capacity > 0) {
-      el.textContent = `Capacité d'emprunt : ${capacity} CC`;
+      el.textContent = `Capacité : ${capacity} CC`;
       el.style.color = "var(--gold)";
     } else {
-      el.textContent = `Capacité d'emprunt atteinte.`;
+      el.textContent = `Capacité atteinte.`;
       el.style.color = "var(--danger)";
     }
   }
@@ -551,7 +549,7 @@
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       await setDoc(doc(db, "users", cred.user.uid), {
         username, email, balance: 100, debt: 0, portfolio: {}, isAdmin: false, createdAt: serverTimestamp(),
-        lastInterestDate: new Date().toISOString().split('T')[0] // Pour ne pas facturer le jour 1
+        lastInterestDate: new Date().toISOString().split('T')[0]
       });
     } catch (e) { showMsg("reg-msg", "error", "Erreur lors de l'inscription."); }
   }
@@ -584,7 +582,7 @@
   function renderDashboard() {
     if (!currentUserData) return;
     const isAdmin = currentUser.email === ADMIN_EMAIL;
-
+    
     if (isAdmin) {
       document.getElementById("balance-display").textContent = "∞";
       document.getElementById("admin-infinite").style.display = "inline-block";
@@ -594,7 +592,7 @@
       document.getElementById("balance-display").textContent = currentUserData.balance ?? 0;
       document.getElementById("admin-infinite").style.display = "none";
       document.getElementById("debt-display").textContent = (currentUserData.debt || 0) + " 🪙";
-
+      
       let totalInvest = 0;
       if (currentStocksData && currentUserData.portfolio) {
         for (let stockId in currentUserData.portfolio) {
@@ -612,10 +610,10 @@
     const amount = parseInt(document.getElementById("bank-amount").value);
     if (!amount || amount <= 0) return showMsg("bank-msg", "error", "Montant invalide.");
     if (currentUser.email === ADMIN_EMAIL) return showMsg("bank-msg", "error", "L'admin a déjà l'argent infini.");
-
+    
     const balance = currentUserData.balance || 0;
     const currentDebt = currentUserData.debt || 0;
-    const maxAllowedDebt = balance * 2; // 200% du solde
+    const maxAllowedDebt = balance * 2;
     const capacity = maxAllowedDebt - currentDebt;
 
     if (amount > capacity) {
@@ -636,7 +634,7 @@
       });
 
       document.getElementById("bank-amount").value = "";
-      showMsg("bank-msg", "success", `✅ Emprunt de ${amount} CC accordé !`);
+      showMsg("bank-msg", "success", `✅ Emprunt accordé !`);
     } catch(e) { showMsg("bank-msg", "error", "Erreur."); }
   }
 
@@ -644,10 +642,10 @@
     const amount = parseInt(document.getElementById("bank-amount").value);
     if (!amount || amount <= 0) return showMsg("bank-msg", "error", "Montant invalide.");
     if (currentUser.email === ADMIN_EMAIL) return;
-
+    
     if ((currentUserData.debt || 0) === 0) return showMsg("bank-msg", "info", "Tu n'as aucune dette !");
     if (amount > (currentUserData.debt || 0)) return showMsg("bank-msg", "error", "Tu essaies de rembourser plus que ta dette.");
-    if (amount > (currentUserData.balance || 0)) return showMsg("bank-msg", "error", "Solde insuffisant pour rembourser ça.");
+    if (amount > (currentUserData.balance || 0)) return showMsg("bank-msg", "error", "Solde insuffisant.");
 
     try {
       await updateDoc(doc(db, "users", currentUser.uid), {
@@ -663,7 +661,7 @@
       });
 
       document.getElementById("bank-amount").value = "";
-      showMsg("bank-msg", "success", `✅ Remboursement de ${amount} CC effectué !`);
+      showMsg("bank-msg", "success", `✅ Remboursé !`);
     } catch(e) { showMsg("bank-msg", "error", "Erreur."); }
   }
 
@@ -686,8 +684,7 @@
       const now = new Date();
       const last = data.lastUpdate ? data.lastUpdate.toDate() : new Date();
       const diffMs = now - last;
-
-      // 5 minutes
+      
       if (diffMs > 300000 && !isUpdatingStocks) {
          isUpdatingStocks = true;
          const newPrices = {...data.prices};
@@ -771,7 +768,6 @@
     } catch(e) { showMsg("bourse-msg", "error", "Erreur."); }
   }
 
-
   // ================= RESTE DU CODE (Transactions, Billets, Devoirs, Admin) =================
 
   function listenTransactions() {
@@ -792,20 +788,20 @@
       const isMarket = tx.type === "market";
       const isTicket = tx.type === "ticket_create" || tx.type === "ticket_redeem" || tx.type === "ticket_cancel";
       const isBank = tx.type === "bank";
-
+      
       let who = isSent ? `→ ${tx.toUsername}` : `← ${tx.fromUsername}`;
       if(isSent && isGov) who = `→ 🏛️ Gouvernement`;
       if(!isSent && tx.fromUid === "system") who = `← ${tx.fromUsername}`; 
-
+      
       let amt = isSent ? `-${tx.amount}` : `+${tx.amount}`;
       let cls = isSent ? "sent" : "received";
-
+      
       if (isGov) cls = "gov";
       if (isMarket) cls = "market";
       if (isTicket) cls = "ticket";
       if (isBank) cls = "bank";
-      if (!isSent && tx.fromUid === "system" && tx.note.includes("pénalité")) cls = "sent"; // Intérêts sont débités
-
+      if (!isSent && tx.fromUid === "system" && tx.note.includes("pénalité")) cls = "sent"; 
+      
       let icon = "";
       if(isMarket) icon = '📚';
       if(isTicket) icon = '💸';
@@ -823,7 +819,6 @@
     }).join("");
   }
 
-  // TICKETS
   async function createTicket() {
     const amount = parseInt(document.getElementById("ticket-amount").value);
     if (!amount || amount <= 0) return showMsg("create-ticket-msg", "error", "Montant invalide.");
@@ -863,7 +858,7 @@
         if (isAdmin || t.creatorUid === currentUser.uid) tickets.push({ id: d.id, ...t });
       });
       tickets.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-      if (!tickets.length) { el.innerHTML = '<div class="empty">Tu n'as aucun billet en attente.</div>'; return; }
+      if (!tickets.length) { el.innerHTML = '<div class="empty">Tu n\'as aucun billet en attente.</div>'; return; }
       el.innerHTML = tickets.map(t => `
           <div class="ticket-card">
             <div class="ticket-left">
@@ -888,7 +883,6 @@
     } catch(e) {}
   }
 
-  // MARKET DEVOIRS
   async function uploadHomework() {
     const title = document.getElementById("hw-title").value.trim();
     const price = parseInt(document.getElementById("hw-price").value);
@@ -917,7 +911,7 @@
       el.innerHTML = docs.map(hw => {
         const isMine = hw.sellerUid === currentUser.uid; const isAdmin = currentUser.email === ADMIN_EMAIL;
         const hasBought = hw.buyers?.includes(currentUser.uid); const hasAccess = isMine || isAdmin || hasBought;
-        let actionBtn = isMine || isAdmin ? `<button class="hw-delete-btn" onclick="deleteHomework('${hw.id}')">🗑️</button>` : hasBought ? `<button class="hw-bought-btn">✅ Acheté</button>` : `<button class="hw-buy-btn" onclick="buyHomework('${hw.id}', '${hw.sellerUid}', '${hw.sellerUsername}', ${hw.price}, '${hw.title.replace(/'/g, "\'")}')">Acheter</button>`;
+        let actionBtn = isMine || isAdmin ? `<button class="hw-delete-btn" onclick="deleteHomework('${hw.id}')">🗑️</button>` : hasBought ? `<button class="hw-bought-btn">✅ Acheté</button>` : `<button class="hw-buy-btn" onclick="buyHomework('${hw.id}', '${hw.sellerUid}', '${hw.sellerUsername}', ${hw.price}, '${hw.title.replace(/'/g, "\\'")}')">Acheter</button>`;
         const imgClass = hasAccess ? "" : "blurred"; const lockIcon = hasAccess ? "" : `<div class="lock-icon">🔒</div>`;
         const clickAction = hasAccess ? `onclick="openImageModal('${hw.photoURL}')"` : `onclick="alert('Achète ce devoir !')"`;
         return `<div class="hw-card"><div class="hw-img-container">${lockIcon}<img src="${hw.photoURL}" class="${imgClass}" ${clickAction} /></div><div class="hw-info"><div class="hw-title">${hw.title}</div><div class="hw-seller">par ${hw.sellerUsername}</div><div class="hw-bottom"><span class="hw-price">${hw.price} 🪙</span>${actionBtn}</div></div></div>`;
@@ -941,7 +935,6 @@
   function openImageModal(url) { document.getElementById("modal-img").src = url; document.getElementById("image-modal").style.display = "flex"; }
   function closeImageModal() { document.getElementById("image-modal").style.display = "none"; document.getElementById("modal-img").src = ""; }
 
-  // ENVOYER
   async function loadSendPage() {
     const snap = await getDocs(collection(db, "users"));
     const sel = document.getElementById("send-to"); sel.innerHTML = '<option value="">-- Choisir --</option>';
@@ -961,7 +954,6 @@
     showMsg("send-msg", "success", `✅ Envoyé !`);
   }
 
-  // ADMIN & SETTINGS
   async function changePassword() {
     const np = document.getElementById("new-password").value; const cp = document.getElementById("confirm-password").value;
     if (np.length < 6 || np !== cp) return showMsg("pw-msg", "error", "Erreur.");
