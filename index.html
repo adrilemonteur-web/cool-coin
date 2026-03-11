@@ -15,6 +15,7 @@
       --success: #2ecc71;
       --danger: #e74c3c;
       --blue: #3498db;
+      --ticket: #27ae60;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
@@ -34,18 +35,22 @@
       border-radius: 8px; color: var(--text); font-size: 1rem; transition: border 0.2s;
     }
     input:focus { outline: none; border-color: var(--gold); }
+    
     .btn { display: block; width: 100%; padding: 13px; margin-top: 20px; background: var(--gold); color: #000; font-weight: 700; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.85; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn.danger { background: var(--danger); color: white; }
     .btn.secondary { background: #2a2a3e; color: var(--text); }
     .btn.blue { background: var(--blue); color: white; }
+    .btn.ticket { background: var(--ticket); color: white; }
     .btn.small { padding: 8px 14px; font-size: 0.85rem; margin-top: 0; width: auto; display: inline-block; }
     .btn.mini { padding: 5px 10px; font-size: 0.78rem; margin-top: 0; width: auto; display: inline-block; border-radius: 6px; }
+    
     .msg { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; display: none; }
     .msg.error { background: rgba(231,76,60,0.15); color: var(--danger); border: 1px solid var(--danger); }
     .msg.success { background: rgba(46,204,113,0.15); color: var(--success); border: 1px solid var(--success); }
     .msg.info { background: rgba(52,152,219,0.15); color: var(--blue); border: 1px solid var(--blue); }
+    
     #app-screen { display: none; min-height: 100vh; }
     .topbar { background: var(--card); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a3e; position: sticky; top: 0; z-index: 10; }
     .topbar-left { display: flex; align-items: center; gap: 10px; }
@@ -53,16 +58,18 @@
     .topbar-user { font-size: 0.85rem; color: var(--sub); }
     .logout-btn { background: none; border: 1px solid #333; color: var(--sub); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
     .logout-btn:hover { border-color: var(--accent); color: var(--accent); }
+    
     .content { max-width: 600px; margin: 0 auto; padding: 20px; }
     .balance-card { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid #f5c51844; border-radius: 16px; padding: 28px; margin-bottom: 24px; text-align: center; }
     .balance-label { color: var(--sub); font-size: 0.9rem; margin-bottom: 8px; }
     .balance-amount { font-size: 3rem; font-weight: 900; color: var(--gold); }
     .balance-unit { font-size: 1rem; color: var(--sub); margin-top: 4px; }
     .infinite-badge { display: inline-block; background: var(--gold); color: #000; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-top: 8px; }
+    
     .section { margin-bottom: 24px; }
     .section-title { font-size: 1rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
     .form-card { background: var(--card); border-radius: 12px; padding: 20px; }
-
+    
     /* Transactions */
     .tx-list { display: flex; flex-direction: column; gap: 8px; }
     .tx-item { background: var(--card); border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
@@ -70,6 +77,7 @@
     .tx-item.received { border-left-color: var(--success); }
     .tx-item.gov { border-left-color: #a78bfa; }
     .tx-item.market { border-left-color: var(--blue); }
+    .tx-item.ticket { border-left-color: var(--ticket); }
     .tx-left { display: flex; flex-direction: column; gap: 3px; }
     .tx-who { font-size: 0.95rem; font-weight: 600; }
     .tx-date { font-size: 0.75rem; color: var(--sub); }
@@ -79,18 +87,25 @@
     .tx-amount.received { color: var(--success); }
     .tx-amount.gov { color: #a78bfa; }
     .tx-amount.market { color: var(--blue); }
-
+    .tx-amount.ticket { color: var(--ticket); }
+    
+    /* Tickets */
+    .ticket-card { background: linear-gradient(135deg, #27ae6022, #1a1a2e); border: 1px dashed var(--ticket); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
+    .ticket-left { display: flex; flex-direction: column; gap: 4px; }
+    .ticket-code { font-size: 1.5rem; font-weight: 900; letter-spacing: 4px; color: var(--text); }
+    .ticket-info { font-size: 0.8rem; color: var(--sub); }
+    .ticket-amount { font-size: 1.4rem; font-weight: 800; color: var(--ticket); }
+    
     /* Marketplace / Devoirs */
     .hw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 480px) { .hw-grid { grid-template-columns: 1fr; } }
     .hw-card { background: var(--card); border: 1px solid #2a2a3e; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
     .hw-img-container { width: 100%; height: 140px; background: #0d0d0d; display: flex; align-items: center; justify-content: center; position: relative; }
     .hw-img-container img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
-
-    /* Le fameux flou pour ceux qui n'ont pas payé */
-    .hw-img-container img.blurred { filter: blur(15px); pointer-events: none; }
-    .lock-icon { position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.8); text-shadow: 0 2px 10px rgba(0,0,0,0.5); pointer-events: none; }
-
+    
+    .hw-img-container img.blurred { filter: blur(15px); }
+    .lock-icon { position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.8); text-shadow: 0 2px 10px rgba(0,0,0,0.5); pointer-events: none; z-index: 2; }
+    
     .hw-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
     .hw-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; word-break: break-word; }
     .hw-seller { font-size: 0.75rem; color: var(--sub); margin-bottom: 8px; }
@@ -100,12 +115,11 @@
     .hw-buy-btn:hover { opacity: 0.8; }
     .hw-delete-btn { background: var(--danger); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
     .hw-bought-btn { background: var(--success); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: default; }
-
-    /* Fullscreen Image Modal */
+    
     #image-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
     #image-modal img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
     .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
-
+    
     .admin-badge { display: inline-block; background: var(--accent); color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 8px; }
     .gov-badge { display: inline-block; background: #a78bfa; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-left: 6px; }
     .users-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; }
@@ -123,6 +137,9 @@
     select:focus { outline: none; border-color: var(--gold); }
     .empty { text-align: center; color: var(--sub); padding: 30px; font-size: 0.9rem; grid-column: 1 / -1; }
     option.gov-option { color: #a78bfa; font-weight: bold; }
+    
+    /* Code d'encaissement gros */
+    .big-input { font-size: 2rem !important; letter-spacing: 6px; text-align: center; font-weight: 800; padding: 16px !important; }
   </style>
 </head>
 <body>
@@ -171,8 +188,9 @@
   <div class="content">
     <div class="nav-tabs" id="nav-tabs">
       <button class="nav-tab active" onclick="showPage('dashboard', event)">Accueil</button>
-      <button class="nav-tab" onclick="showPage('market', event)">📚 Devoirs</button>
       <button class="nav-tab" onclick="showPage('send', event)">Envoyer</button>
+      <button class="nav-tab" onclick="showPage('tickets', event)">💸 Billets</button>
+      <button class="nav-tab" onclick="showPage('market', event)">📚 Devoirs</button>
       <button class="nav-tab" onclick="showPage('history', event)">Historique</button>
       <button class="nav-tab" onclick="showPage('settings', event)">Paramètres</button>
       <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin', event)">⚙️ Admin</button>
@@ -192,6 +210,39 @@
       </div>
     </div>
 
+    <!-- TICKETS (BILLETS) -->
+    <div id="page-tickets" class="page">
+      
+      <div class="section">
+        <div class="section-title">Encaisser un billet</div>
+        <div class="form-card">
+          <label>Code à 6 chiffres</label>
+          <input type="text" id="redeem-code" class="big-input" placeholder="000000" maxlength="6" />
+          <button class="btn ticket" onclick="redeemTicket()">Encaisser l'argent 📥</button>
+          <div id="redeem-msg" class="msg"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Créer un billet (Imprimer)</div>
+        <div class="form-card">
+          <p style="font-size:0.85rem; color:var(--sub); margin-bottom:14px;">Génère un code que tu pourras noter sur un bout de papier et donner à quelqu'un. L'argent est retiré de ton compte immédiatement.</p>
+          <label>Valeur du billet (CC)</label>
+          <input type="number" id="ticket-amount" placeholder="Ex: 10" min="1" />
+          <button class="btn" onclick="createTicket()">Générer le code 🖨️</button>
+          <div id="create-ticket-msg" class="msg"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title" id="my-tickets-title">Billets actifs</div>
+        <div id="active-tickets-list">
+          <div class="empty">Tu n'as aucun billet en attente d'encaissement.</div>
+        </div>
+      </div>
+
+    </div>
+
     <!-- MARKET (DEVOIRS) -->
     <div id="page-market" class="page">
       <div class="section">
@@ -203,7 +254,6 @@
           <input type="number" id="hw-price" placeholder="Ex: 20" min="1" />
           <label>Photo du devoir (obligatoire)</label>
           <input type="file" id="hw-file" accept="image/*" />
-          <p style="font-size:0.75rem; color:var(--sub); margin-top:6px;">L'image sera hébergée sur ImgBB (anonyme et gratuit).</p>
           <button class="btn blue" id="btn-upload-hw" onclick="uploadHomework()">Mettre en vente</button>
           <div id="hw-msg" class="msg"></div>
         </div>
@@ -329,10 +379,10 @@
     appId: "1:589056712037:web:04b734b130811ad28b558c"
   };
 
-  // 🔑 EMAIL ADMIN
+  // 🔑 EMAIL ADMIN CORRIGE
   const ADMIN_EMAIL = "adminadri@coolteam.com";
-
-  // 🔑 IMGBB API KEY (A MODIFIER PAR LA TIENNE)
+  
+  // 🔑 IMGBB API KEY (Verrouillée)
   const IMGBB_API_KEY = "b88a5919ae8a6a77e62c73a6339ff5b3"; 
 
   const app = initializeApp(firebaseConfig);
@@ -357,6 +407,11 @@
   window.deleteHomework = deleteHomework;
   window.openImageModal = openImageModal;
   window.closeImageModal = closeImageModal;
+  
+  // Fonctions Billets
+  window.createTicket = createTicket;
+  window.redeemTicket = redeemTicket;
+  window.cancelTicket = cancelTicket;
 
   async function fetchAdminUid() {
     const snap = await getDocs(query(collection(db, "users"), where("email", "==", ADMIN_EMAIL)));
@@ -413,12 +468,17 @@
     const isAdmin = currentUser.email === ADMIN_EMAIL;
     document.getElementById("topbar-user").textContent = currentUserData?.username || currentUser.email;
     document.getElementById("admin-tab").style.display = isAdmin ? "block" : "none";
+    
+    // Titre des billets pour admin vs user
+    document.getElementById("my-tickets-title").textContent = isAdmin ? "Tous les billets actifs (Gouvernement)" : "Mes billets en attente";
+
     renderDashboard();
     loadSendPage();
     listenMarket();
+    listenTickets();
     if (isAdmin) loadAdminPage();
     listenTransactions();
-    cleanOldHomeworks(); // Check expiration
+    cleanOldHomeworks();
   }
 
   function showAuthScreen() {
@@ -454,16 +514,31 @@
       const isSent = tx.fromUid === currentUser.uid;
       const isGov = tx.toUid === adminUid && isSent;
       const isMarket = tx.type === "market";
-      let who = isSent ? (isGov ? `→ 🏛️ Gouvernement` : `→ ${tx.toUsername}`) : ((tx.fromUid === adminUid) ? `← 🏛️ Gouvernement` : `← ${tx.fromUsername}`);
-      const amt = isSent ? `-${tx.amount}` : `+${tx.amount}`;
+      const isTicket = tx.type === "ticket_create" || tx.type === "ticket_redeem" || tx.type === "ticket_cancel";
+      
+      let who = "";
+      if (isSent) {
+          who = isGov ? `→ 🏛️ Gouvernement` : `→ ${tx.toUsername}`;
+      } else {
+          who = (tx.fromUid === adminUid) ? `← 🏛️ Gouvernement` : `← ${tx.fromUsername}`;
+      }
+      
+      let amt = isSent ? `-${tx.amount}` : `+${tx.amount}`;
       let cls = isSent ? "sent" : "received";
+      
       if (isGov) cls = "gov";
       if (isMarket) cls = "market";
-      const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
+      if (isTicket) cls = "ticket";
+      
+      let icon = "";
+      if(isMarket) icon = '📚';
+      if(isTicket) icon = '💸';
 
+      const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
+      
       return `<div class="tx-item ${cls}">
         <div class="tx-left">
-          <span class="tx-who">${who} ${isMarket ? '📚' : ''}</span>
+          <span class="tx-who">${who} ${icon}</span>
           ${tx.note ? `<span class="tx-note">"${tx.note}"</span>` : ""}
           <span class="tx-date">${date}</span>
         </div>
@@ -472,7 +547,176 @@
     }).join("");
   }
 
-  // ---- MARKET (DEVOIRS avec BLUR) ----
+  // ================= BILLETS (TICKETS) =================
+  async function createTicket() {
+    const amount = parseInt(document.getElementById("ticket-amount").value);
+    if (!amount || amount <= 0) return showMsg("create-ticket-msg", "error", "Montant invalide.");
+    
+    const isAdmin = currentUser.email === ADMIN_EMAIL;
+    if (!isAdmin && (currentUserData.balance ?? 0) < amount) {
+      return showMsg("create-ticket-msg", "error", "Solde insuffisant.");
+    }
+
+    // Generate random 6-digit code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+    try {
+      // Deduct balance
+      if (!isAdmin) {
+        await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance - amount) });
+      }
+
+      // Add to DB
+      await addDoc(collection(db, "tickets"), {
+        code: code,
+        amount: amount,
+        creatorUid: currentUser.uid,
+        creatorUsername: currentUserData.username,
+        createdAt: serverTimestamp()
+      });
+
+      // Log transaction
+      await addDoc(collection(db, "transactions"), {
+        fromUid: currentUser.uid,
+        fromUsername: currentUserData.username,
+        toUid: "system",
+        toUsername: "Impression Billet",
+        amount: amount,
+        note: `Code : ${code}`,
+        participants: [currentUser.uid],
+        type: "ticket_create",
+        createdAt: serverTimestamp()
+      });
+
+      document.getElementById("ticket-amount").value = "";
+      showMsg("create-ticket-msg", "success", `✅ Billet généré ! Code: ${code}`);
+      renderDashboard();
+    } catch(e) {
+      showMsg("create-ticket-msg", "error", "Erreur lors de la création.");
+    }
+  }
+
+  async function redeemTicket() {
+    const code = document.getElementById("redeem-code").value.trim();
+    if (code.length !== 6) return showMsg("redeem-msg", "error", "Le code doit faire 6 chiffres.");
+
+    try {
+      const q = query(collection(db, "tickets"), where("code", "==", code));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        return showMsg("redeem-msg", "error", "❌ Billet introuvable ou déjà utilisé.");
+      }
+
+      const ticketDoc = snap.docs[0];
+      const ticket = ticketDoc.data();
+
+      // Add balance
+      const isAdmin = currentUser.email === ADMIN_EMAIL;
+      if (!isAdmin) {
+        await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance + ticket.amount) });
+      }
+
+      // Log transaction
+      await addDoc(collection(db, "transactions"), {
+        fromUid: "system",
+        fromUsername: `Billet (${ticket.creatorUsername})`,
+        toUid: currentUser.uid,
+        toUsername: currentUserData.username,
+        amount: ticket.amount,
+        note: `Code encaissé`,
+        participants: [currentUser.uid],
+        type: "ticket_redeem",
+        createdAt: serverTimestamp()
+      });
+
+      // Delete the ticket
+      await deleteDoc(ticketDoc.ref);
+
+      document.getElementById("redeem-code").value = "";
+      showMsg("redeem-msg", "success", `✅ Billet encaissé ! +${ticket.amount} CC`);
+      renderDashboard();
+
+    } catch (e) {
+      showMsg("redeem-msg", "error", "Erreur réseau.");
+    }
+  }
+
+  function listenTickets() {
+    const isAdmin = currentUser.email === ADMIN_EMAIL;
+    // On requête tout et on filtre/trie en JS pour éviter de créer un nouvel index Firebase
+    const q = query(collection(db, "tickets"));
+    onSnapshot(q, (snap) => {
+      const el = document.getElementById("active-tickets-list");
+      let tickets = [];
+      
+      snap.forEach(d => {
+        const t = d.data();
+        if (isAdmin || t.creatorUid === currentUser.uid) {
+          tickets.push({ id: d.id, ...t });
+        }
+      });
+
+      // Tri du plus récent au plus ancien
+      tickets.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+      if (tickets.length === 0) {
+        el.innerHTML = '<div class="empty">Tu n\'as aucun billet en attente d\'encaissement.</div>';
+        return;
+      }
+
+      el.innerHTML = tickets.map(t => {
+        const date = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short"}) : "";
+        const creatorInfo = isAdmin ? `Par ${t.creatorUsername} • ` : "";
+        return `
+          <div class="ticket-card">
+            <div class="ticket-left">
+              <div class="ticket-code">${t.code}</div>
+              <div class="ticket-info">${creatorInfo}${date}</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="ticket-amount">${t.amount} 🪙</div>
+              <button class="btn mini danger" style="margin-top:6px" onclick="cancelTicket('${t.id}', '${t.creatorUid}', ${t.amount})">Annuler</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    });
+  }
+
+  async function cancelTicket(ticketId, creatorUid, amount) {
+    if (!confirm("Veux-tu annuler ce billet et recréditer l'argent au créateur ?")) return;
+
+    try {
+      await deleteDoc(doc(db, "tickets", ticketId));
+      
+      // Rembourser le créateur
+      const creatorSnap = await getDoc(doc(db, "users", creatorUid));
+      if (creatorSnap.exists() && creatorSnap.data().email !== ADMIN_EMAIL) {
+         await updateDoc(doc(db, "users", creatorUid), { balance: creatorSnap.data().balance + amount });
+      }
+
+      // Log transaction
+      await addDoc(collection(db, "transactions"), {
+        fromUid: "system",
+        fromUsername: "Billet annulé",
+        toUid: creatorUid,
+        toUsername: "Remboursement",
+        amount: amount,
+        note: "Annulation de billet",
+        participants: [creatorUid],
+        type: "ticket_cancel",
+        createdAt: serverTimestamp()
+      });
+
+    } catch(e) {
+      alert("Erreur lors de l'annulation.");
+    }
+  }
+  // ================= FIN BILLETS =================
+
+
+  // ---- MARKET (DEVOIRS) ----
   async function uploadHomework() {
     const title = document.getElementById("hw-title").value.trim();
     const price = parseInt(document.getElementById("hw-price").value);
@@ -510,7 +754,7 @@
         photoURL,
         sellerUid: currentUser.uid,
         sellerUsername: currentUserData.username,
-        buyers: [], // Liste de ceux qui ont payé
+        buyers: [],
         createdAt: serverTimestamp(),
         expiresAt: expiresAt
       });
@@ -540,15 +784,11 @@
       });
 
       if (!docs.length) { el.innerHTML = '<div class="empty">Aucun devoir en vente actuellement.</div>'; return; }
-
+      
       el.innerHTML = docs.map(hw => {
         const isMine = hw.sellerUid === currentUser.uid;
         const isAdmin = currentUser.email === ADMIN_EMAIL;
-
-        // On vérifie si l'utilisateur a déjà acheté le devoir
         const hasBought = hw.buyers && hw.buyers.includes(currentUser.uid);
-
-        // Accès complet si on est le vendeur, l'admin, ou si on a payé
         const hasAccess = isMine || isAdmin || hasBought;
 
         let actionBtn = "";
@@ -557,10 +797,9 @@
         } else if (hasBought) {
           actionBtn = `<button class="hw-bought-btn">✅ Acheté</button>`;
         } else {
-          actionBtn = `<button class="hw-buy-btn" onclick="buyHomework('${hw.id}', '${hw.sellerUid}', '${hw.sellerUsername}', ${hw.price}, '${hw.title.replace(/'/g, "\'")}')">Acheter</button>`;
+          actionBtn = `<button class="hw-buy-btn" onclick="buyHomework('${hw.id}', '${hw.sellerUid}', '${hw.sellerUsername}', ${hw.price}, '${hw.title.replace(/'/g, "\\'")}')">Acheter</button>`;
         }
 
-        // Rendu de l'image (floue si pas d'accès)
         const imgClass = hasAccess ? "" : "blurred";
         const lockIcon = hasAccess ? "" : `<div class="lock-icon">🔒</div>`;
         const clickAction = hasAccess ? `onclick="openImageModal('${hw.photoURL}')"` : `onclick="alert('Achète ce devoir pour enlever le flou et voir la photo complète !')"`;
@@ -610,10 +849,7 @@
         participants: [currentUser.uid, sellerUid], createdAt: serverTimestamp()
       });
 
-      // Ajouter l'utilisateur à la liste des acheteurs de ce devoir
-      await updateDoc(doc(db, "homeworks", hwId), {
-        buyers: arrayUnion(currentUser.uid)
-      });
+      await updateDoc(doc(db, "homeworks", hwId), { buyers: arrayUnion(currentUser.uid) });
 
       alert("✅ Achat réussi ! L'image est maintenant débloquée.");
       renderDashboard();
@@ -621,9 +857,8 @@
   }
 
   async function deleteHomework(hwId) {
-    const conf = confirm("Es-tu sûr de vouloir supprimer ce devoir ?");
-    if (!conf) return;
-    try { await deleteDoc(doc(db, "homeworks", hwId)); } catch(e) { console.error(e); }
+    if (!confirm("Es-tu sûr de vouloir supprimer ce devoir ?")) return;
+    try { await deleteDoc(doc(db, "homeworks", hwId)); } catch(e) {}
   }
 
   async function cleanOldHomeworks() {
@@ -632,7 +867,7 @@
       const q = query(collection(db, "homeworks"), where("expiresAt", "<", new Date()));
       const snap = await getDocs(q);
       snap.forEach(async (d) => { await deleteDoc(doc(db, "homeworks", d.id)); });
-    } catch(e) { console.error("Erreur cleanup", e); }
+    } catch(e) {}
   }
 
   function openImageModal(url) {
@@ -740,7 +975,7 @@
       el.innerHTML = snap.docs.map(d => {
         const tx = d.data();
         const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
-        const isGovTx = tx.toUsername === "Gouvernement 🏛️";
+        const isGovTx = tx.toUsername === "Gouvernement 🏛️" || tx.fromUsername === "Gouvernement 🏛️";
         return `<div class="tx-item ${isGovTx ? 'gov' : 'sent'}"><div class="tx-left"><span class="tx-who">${tx.fromUsername} → ${tx.toUsername}</span>${tx.note ? `<span class="tx-note">"${tx.note}"</span>` : ""}<span class="tx-date">${date}</span></div><span class="tx-amount ${isGovTx ? 'gov' : 'sent'}">${tx.amount} 🪙</span></div>`;
       }).join("");
     });
