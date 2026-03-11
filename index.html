@@ -259,7 +259,7 @@
         <div class="stock-grid" id="stocks-list">
           <div class="empty">Chargement du marché...</div>
         </div>
-        <div class="next-update">Les prix fluctuent de -5% à +10% (avec une chance de +20% !). Rattrape le temps perdu si personne n'était connecté.</div>
+        <div class="next-update" style="line-height: 1.4;">Les prix fluctuent de -9.7% à +10.3%.<br><span style="font-size:0.7rem;">(Croissance moyenne : +1.5% par heure. Événements extrêmes possibles 📈📉).</span></div>
         <div id="bourse-msg" class="msg" style="margin-top:10px;"></div>
       </div>
     </div>
@@ -581,28 +581,36 @@
       const last = currentStocksData.lastUpdate ? currentStocksData.lastUpdate.toDate() : new Date();
       const timePassedMs = new Date() - last;
       
-      // Calculate how many 5-minute blocks have passed
       const periodsMissed = Math.floor(timePassedMs / 300000); // 300000ms = 5 minutes
       
       if (periodsMissed > 0 && !updatingStocks) {
         updatingStocks = true;
         let newPrices = {...currentStocksData.prices};
         
-        // CATCH-UP MECHANIC
         const maxCatchup = Math.min(periodsMissed, 288); 
         
         for (let i = 0; i < maxCatchup; i++) {
           for(let k in newPrices) {
-            const luckyDraw = Math.floor(Math.random() * 21); // 0 to 20
+            
+            // MATHÉMATIQUES EXACTES :
+            // Pour contrer le "Geometric Drag" et viser +1.5% d'évolution par heure (sur 12 tics)
+            const r = Math.random();
             let change;
-            if (luckyDraw === 20) {
-              change = 1.20; // +20%
+            
+            if (r < 0.0005) {
+              // 1 chance sur 2000 par tic de 5 minutes : CRASH (-50%)
+              // (Environ 0.6% de chance que ça arrive sur 1 heure)
+              change = 0.50; 
+            } else if (r < 0.0010) {
+              // 1 chance sur 2000 par tic de 5 minutes : MOON (+50%)
+              change = 1.50;
             } else {
-              // FIX: Les mathématiques des pourcentages ! 
-              // Si on fait -10% et +10%, l'action tend vers 0. (ex: 100 -10% = 90, 90 +10% = 99... on perd 1% !)
-              // Pour que ça monte naturellement, on déséquilibre : -5% à +10%
-              change = 1 + (Math.random() * 0.15 - 0.05); 
+              // 99.9% du temps : Fluctuation normale
+              // Pour avoir une espérance mathématique parfaite qui ne s'effondre pas, 
+              // la fourchette doit être très légèrement déséquilibrée vers le haut : de -9.69% à +10.31%
+              change = 1 + (Math.random() * 0.20 - 0.0969); 
             }
+            
             newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
           }
         }
