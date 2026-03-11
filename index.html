@@ -86,6 +86,11 @@
     .hw-card { background: var(--card); border: 1px solid #2a2a3e; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
     .hw-img-container { width: 100%; height: 140px; background: #0d0d0d; display: flex; align-items: center; justify-content: center; position: relative; }
     .hw-img-container img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+
+    /* Le fameux flou pour ceux qui n'ont pas payé */
+    .hw-img-container img.blurred { filter: blur(15px); pointer-events: none; }
+    .lock-icon { position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.8); text-shadow: 0 2px 10px rgba(0,0,0,0.5); pointer-events: none; }
+
     .hw-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
     .hw-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; word-break: break-word; }
     .hw-seller { font-size: 0.75rem; color: var(--sub); margin-bottom: 8px; }
@@ -94,6 +99,7 @@
     .hw-buy-btn { background: var(--blue); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
     .hw-buy-btn:hover { opacity: 0.8; }
     .hw-delete-btn { background: var(--danger); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+    .hw-bought-btn { background: var(--success); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: default; }
 
     /* Fullscreen Image Modal */
     #image-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
@@ -309,7 +315,7 @@
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import {
     getFirestore, doc, setDoc, getDoc, getDocs, deleteDoc,
-    collection, addDoc, query, where, orderBy,
+    collection, addDoc, query, where, orderBy, arrayUnion,
     onSnapshot, serverTimestamp, updateDoc
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -324,9 +330,9 @@
   };
 
   // 🔑 EMAIL ADMIN
-  const ADMIN_EMAIL = "admin@adricoolteam.com";
+  const ADMIN_EMAIL = "adminadri@coolteam.com";
 
-  // 🔑 IMGBB API KEY (Free Image Hosting)
+  // 🔑 IMGBB API KEY (A MODIFIER PAR LA TIENNE)
   const IMGBB_API_KEY = "b88a5919ae8a6a77e62c73a6339ff5b3"; 
 
   const app = initializeApp(firebaseConfig);
@@ -412,7 +418,7 @@
     listenMarket();
     if (isAdmin) loadAdminPage();
     listenTransactions();
-    cleanOldHomeworks(); // Check expiration (Firestore side only now)
+    cleanOldHomeworks(); // Check expiration
   }
 
   function showAuthScreen() {
@@ -466,7 +472,7 @@
     }).join("");
   }
 
-  // ---- MARKET (DEVOIRS avec ImgBB) ----
+  // ---- MARKET (DEVOIRS avec BLUR) ----
   async function uploadHomework() {
     const title = document.getElementById("hw-title").value.trim();
     const price = parseInt(document.getElementById("hw-price").value);
@@ -483,7 +489,6 @@
     btn.textContent = "Upload en cours...";
 
     try {
-      // Upload vers ImgBB via l'API publique (SANS PARAMETRE EXPIRATION POUR EVITER L'ERREUR)
       const formData = new FormData();
       formData.append("image", file);
 
@@ -493,12 +498,9 @@
       });
       const data = await response.json();
 
-      if (!data.success) {
-        throw new Error(data.error?.message || "Erreur upload ImgBB");
-      }
+      if (!data.success) throw new Error(data.error?.message || "Erreur upload ImgBB");
 
       const photoURL = data.data.url;
-
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 7);
 
@@ -508,6 +510,7 @@
         photoURL,
         sellerUid: currentUser.uid,
         sellerUsername: currentUserData.username,
+        buyers: [], // Liste de ceux qui ont payé
         createdAt: serverTimestamp(),
         expiresAt: expiresAt
       });
@@ -540,17 +543,33 @@
 
       el.innerHTML = docs.map(hw => {
         const isMine = hw.sellerUid === currentUser.uid;
+        const isAdmin = currentUser.email === ADMIN_EMAIL;
+
+        // On vérifie si l'utilisateur a déjà acheté le devoir
+        const hasBought = hw.buyers && hw.buyers.includes(currentUser.uid);
+
+        // Accès complet si on est le vendeur, l'admin, ou si on a payé
+        const hasAccess = isMine || isAdmin || hasBought;
+
         let actionBtn = "";
-        if (isMine || currentUser.email === ADMIN_EMAIL) {
-          actionBtn = `<button class="hw-delete-btn" onclick="deleteHomework('${hw.id}')">🗑️</button>`;
+        if (isMine || isAdmin) {
+          actionBtn = `<button class="hw-delete-btn" onclick="deleteHomework('${hw.id}')">🗑️ Supprimer</button>`;
+        } else if (hasBought) {
+          actionBtn = `<button class="hw-bought-btn">✅ Acheté</button>`;
         } else {
           actionBtn = `<button class="hw-buy-btn" onclick="buyHomework('${hw.id}', '${hw.sellerUid}', '${hw.sellerUsername}', ${hw.price}, '${hw.title.replace(/'/g, "\'")}')">Acheter</button>`;
         }
 
+        // Rendu de l'image (floue si pas d'accès)
+        const imgClass = hasAccess ? "" : "blurred";
+        const lockIcon = hasAccess ? "" : `<div class="lock-icon">🔒</div>`;
+        const clickAction = hasAccess ? `onclick="openImageModal('${hw.photoURL}')"` : `onclick="alert('Achète ce devoir pour enlever le flou et voir la photo complète !')"`;
+
         return `
           <div class="hw-card">
             <div class="hw-img-container">
-              <img src="${hw.photoURL}" alt="Devoir" onclick="openImageModal('${hw.photoURL}')" />
+              ${lockIcon}
+              <img src="${hw.photoURL}" class="${imgClass}" alt="Devoir" ${clickAction} />
             </div>
             <div class="hw-info">
               <div class="hw-title">${hw.title}</div>
@@ -591,7 +610,12 @@
         participants: [currentUser.uid, sellerUid], createdAt: serverTimestamp()
       });
 
-      alert("✅ Achat réussi ! Le vendeur a reçu l'argent.");
+      // Ajouter l'utilisateur à la liste des acheteurs de ce devoir
+      await updateDoc(doc(db, "homeworks", hwId), {
+        buyers: arrayUnion(currentUser.uid)
+      });
+
+      alert("✅ Achat réussi ! L'image est maintenant débloquée.");
       renderDashboard();
     } catch(e) { alert("Erreur lors de l'achat."); }
   }
