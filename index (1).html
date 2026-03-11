@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cool Coin 🪙</title>
+  <style>
+    :root {
+      --gold: #f5c518;
+      --dark: #0d0d0d;
+      --card: #1a1a2e;
+      --accent: #e94560;
+      --text: #eaeaea;
+      --sub: #888;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
+
+    /* ---- AUTH SCREEN ---- */
+    #auth-screen {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 100vh; padding: 20px;
+    }
+    .logo { font-size: 3rem; margin-bottom: 8px; }
+    .logo-title { font-size: 1.8rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+    .logo-sub { color: var(--sub); margin-bottom: 30px; font-size: 0.9rem; }
+
+    .auth-box {
+      background: var(--card); border-radius: 16px; padding: 32px;
+      width: 100%; max-width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .auth-tabs { display: flex; margin-bottom: 24px; gap: 8px; }
+    .auth-tab {
+      flex: 1; padding: 10px; border: none; border-radius: 8px;
+      background: #2a2a3e; color: var(--sub); cursor: pointer; font-size: 0.95rem; transition: all 0.2s;
+    }
+    .auth-tab.active { background: var(--gold); color: #000; font-weight: 700; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    label { display: block; font-size: 0.85rem; color: var(--sub); margin-bottom: 6px; margin-top: 14px; }
+    input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+      width: 100%; padding: 12px 14px; background: #0d0d0d; border: 1px solid #333;
+      border-radius: 8px; color: var(--text); font-size: 1rem; transition: border 0.2s;
+    }
+    input:focus { outline: none; border-color: var(--gold); }
+
+    .btn {
+      display: block; width: 100%; padding: 13px; margin-top: 20px;
+      background: var(--gold); color: #000; font-weight: 700; font-size: 1rem;
+      border: none; border-radius: 8px; cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn.danger { background: var(--danger); color: white; }
+    .btn.secondary { background: #2a2a3e; color: var(--text); }
+    .btn.small { padding: 8px 14px; font-size: 0.85rem; margin-top: 0; width: auto; }
+
+    .msg { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; display: none; }
+    .msg.error { background: rgba(231,76,60,0.15); color: var(--danger); border: 1px solid var(--danger); }
+    .msg.success { background: rgba(46,204,113,0.15); color: var(--success); border: 1px solid var(--success); }
+
+    /* ---- APP SCREEN ---- */
+    #app-screen { display: none; min-height: 100vh; }
+
+    .topbar {
+      background: var(--card); padding: 16px 20px; display: flex;
+      align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #2a2a3e; position: sticky; top: 0; z-index: 10;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
+    .topbar-logo { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+    .topbar-user { font-size: 0.85rem; color: var(--sub); }
+    .logout-btn {
+      background: none; border: 1px solid #333; color: var(--sub);
+      padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .logout-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .content { max-width: 600px; margin: 0 auto; padding: 20px; }
+
+    .balance-card {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 1px solid #f5c51844; border-radius: 16px; padding: 28px;
+      margin-bottom: 24px; text-align: center;
+    }
+    .balance-label { color: var(--sub); font-size: 0.9rem; margin-bottom: 8px; }
+    .balance-amount { font-size: 3rem; font-weight: 900; color: var(--gold); }
+    .balance-unit { font-size: 1rem; color: var(--sub); margin-top: 4px; }
+    .infinite-badge {
+      display: inline-block; background: var(--gold); color: #000;
+      padding: 3px 10px; border-radius: 20px; font-size: 0.75rem;
+      font-weight: 700; margin-top: 8px;
+    }
+
+    .section { margin-bottom: 24px; }
+    .section-title {
+      font-size: 1rem; font-weight: 700; color: var(--sub);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;
+    }
+
+    .form-card {
+      background: var(--card); border-radius: 12px; padding: 20px;
+    }
+
+    .row { display: flex; gap: 10px; align-items: flex-end; }
+    .row > div { flex: 1; }
+
+    /* Transactions */
+    .tx-list { display: flex; flex-direction: column; gap: 8px; }
+    .tx-item {
+      background: var(--card); border-radius: 10px; padding: 14px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-left: 3px solid transparent;
+    }
+    .tx-item.sent { border-left-color: var(--danger); }
+    .tx-item.received { border-left-color: var(--success); }
+    .tx-left { display: flex; flex-direction: column; gap: 3px; }
+    .tx-who { font-size: 0.95rem; font-weight: 600; }
+    .tx-date { font-size: 0.75rem; color: var(--sub); }
+    .tx-note { font-size: 0.8rem; color: var(--sub); font-style: italic; }
+    .tx-amount { font-weight: 800; font-size: 1.1rem; }
+    .tx-amount.sent { color: var(--danger); }
+    .tx-amount.received { color: var(--success); }
+
+    /* Admin panel */
+    .admin-badge {
+      display: inline-block; background: var(--accent); color: white;
+      padding: 3px 10px; border-radius: 20px; font-size: 0.75rem;
+      font-weight: 700; margin-left: 8px;
+    }
+    .users-table {
+      width: 100%; border-collapse: collapse; background: var(--card);
+      border-radius: 12px; overflow: hidden;
+    }
+    .users-table th {
+      background: #2a2a3e; padding: 12px 16px; text-align: left;
+      font-size: 0.85rem; color: var(--sub); text-transform: uppercase;
+    }
+    .users-table td { padding: 12px 16px; border-top: 1px solid #2a2a3e; font-size: 0.9rem; }
+    .users-table tr:hover td { background: #1f1f35; }
+
+    .nav-tabs {
+      display: flex; gap: 8px; margin-bottom: 20px;
+      border-bottom: 1px solid #2a2a3e; padding-bottom: 0;
+    }
+    .nav-tab {
+      padding: 10px 18px; border: none; background: none; color: var(--sub);
+      cursor: pointer; font-size: 0.95rem; border-bottom: 2px solid transparent;
+      transition: all 0.2s; margin-bottom: -1px;
+    }
+    .nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 700; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    select {
+      width: 100%; padding: 12px 14px; background: #0d0d0d; border: 1px solid #333;
+      border-radius: 8px; color: var(--text); font-size: 1rem;
+    }
+    select:focus { outline: none; border-color: var(--gold); }
+
+    .empty { text-align: center; color: var(--sub); padding: 30px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+<!-- ===================== AUTH SCREEN ===================== -->
+<div id="auth-screen">
+  <div class="logo">🪙</div>
+  <div class="logo-title">Cool Coin</div>
+  <div class="logo-sub">La monnaie de The Cool Team</div>
+
+  <div class="auth-box">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Connexion</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Créer un compte</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="tab-login" class="tab-content active">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="ton@email.com" />
+      <label>Mot de passe</label>
+      <input type="password" id="login-password" placeholder="••••••••" />
+      <button class="btn" onclick="login()">Se connecter</button>
+      <div id="login-msg" class="msg"></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="tab-register" class="tab-content">
+      <label>Pseudo (affiché aux autres)</label>
+      <input type="text" id="reg-username" placeholder="Ex: Lucas" />
+      <label>Email</label>
+      <input type="email" id="reg-email" placeholder="ton@email.com" />
+      <label>Mot de passe</label>
+      <input type="password" id="reg-password" placeholder="Min. 6 caractères" />
+      <button class="btn" onclick="register()">Créer mon compte</button>
+      <div id="reg-msg" class="msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== APP SCREEN ===================== -->
+<div id="app-screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">🪙 Cool Coin</span>
+      <span id="topbar-user" class="topbar-user"></span>
+    </div>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+  </div>
+
+  <div class="content">
+    <!-- NAV -->
+    <div class="nav-tabs" id="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('dashboard')">Accueil</button>
+      <button class="nav-tab" onclick="showPage('send')">Envoyer</button>
+      <button class="nav-tab" onclick="showPage('history')">Historique</button>
+      <button class="nav-tab" onclick="showPage('settings')">Paramètres</button>
+      <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin')">⚙️ Admin</button>
+    </div>
+
+    <!-- PAGE: DASHBOARD -->
+    <div id="page-dashboard" class="page active">
+      <div class="balance-card">
+        <div class="balance-label">Ton solde</div>
+        <div class="balance-amount" id="balance-display">0</div>
+        <div class="balance-unit">Cool Coins 🪙</div>
+        <div id="admin-infinite" class="infinite-badge" style="display:none">∞ Argent infini</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Dernières transactions</div>
+        <div class="tx-list" id="dashboard-txs">
+          <div class="empty">Aucune transaction pour l'instant</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: SEND -->
+    <div id="page-send" class="page">
+      <div class="section">
+        <div class="section-title">Envoyer des Cool Coins</div>
+        <div class="form-card">
+          <label>Destinataire</label>
+          <select id="send-to"></select>
+          <label>Montant (CC)</label>
+          <input type="number" id="send-amount" placeholder="Ex: 50" min="1" />
+          <label>Note (optionnel)</label>
+          <input type="text" id="send-note" placeholder="Ex: remboursement pizza" />
+          <button class="btn" onclick="sendCoins()">Envoyer 🪙</button>
+          <div id="send-msg" class="msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: HISTORY -->
+    <div id="page-history" class="page">
+      <div class="section">
+        <div class="section-title">Toutes mes transactions</div>
+        <div class="tx-list" id="all-txs">
+          <div class="empty">Aucune transaction</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: SETTINGS -->
+    <div id="page-settings" class="page">
+      <div class="section">
+        <div class="section-title">Changer de mot de passe</div>
+        <div class="form-card">
+          <label>Nouveau mot de passe</label>
+          <input type="password" id="new-password" placeholder="Min. 6 caractères" />
+          <label>Confirmer le mot de passe</label>
+          <input type="password" id="confirm-password" placeholder="Répète le mot de passe" />
+          <button class="btn" onclick="changePassword()">Mettre à jour</button>
+          <div id="pw-msg" class="msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: ADMIN -->
+    <div id="page-admin" class="page">
+      <div class="section">
+        <div class="section-title">Créer un compte <span class="admin-badge">ADMIN</span></div>
+        <div class="form-card">
+          <label>Pseudo</label>
+          <input type="text" id="admin-username" placeholder="Ex: Marie" />
+          <label>Email</label>
+          <input type="email" id="admin-email" placeholder="marie@email.com" />
+          <label>Mot de passe initial</label>
+          <input type="password" id="admin-password" placeholder="Min. 6 caractères" />
+          <label>Solde initial (CC)</label>
+          <input type="number" id="admin-balance" placeholder="Ex: 100" value="100" />
+          <button class="btn" onclick="adminCreateUser()">Créer le compte</button>
+          <div id="admin-create-msg" class="msg"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Tous les comptes</div>
+        <table class="users-table" id="users-table">
+          <thead>
+            <tr>
+              <th>Pseudo</th>
+              <th>Email</th>
+              <th>Solde</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Toutes les transactions</div>
+        <div class="tx-list" id="admin-all-txs">
+          <div class="empty">Aucune transaction</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== FIREBASE ===================== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+    signOut, onAuthStateChanged, updatePassword
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore, doc, setDoc, getDoc, getDocs,
+    collection, addDoc, query, where, orderBy,
+    onSnapshot, serverTimestamp, updateDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // =============================================
+  // 🔥 REMPLACE PAR TA CONFIG FIREBASE ICI 🔥
+  // =============================================
+  const firebaseConfig = {
+  apiKey: "AIzaSyBUkRD8mgeE6Yo1rL1eJF8BJAdQWx-jCJ0",
+  authDomain: "cool-coin-600be.firebaseapp.com",
+  projectId: "cool-coin-600be",
+  storageBucket: "cool-coin-600be.firebasestorage.app",
+  messagingSenderId: "589056712037",
+  appId: "1:589056712037:web:04b734b130811ad28b558c"
+};
+
+  // =============================================
+  // 🔑 EMAIL DU COMPTE ADMIN (à changer aussi)
+  // =============================================
+  const ADMIN_EMAIL = "adminadri@coolteam.com";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUser = null;
+  let currentUserData = null;
+
+  // ---- Expose functions to global scope ----
+  window.login = login;
+  window.register = register;
+  window.logout = logout;
+  window.sendCoins = sendCoins;
+  window.switchAuthTab = switchAuthTab;
+  window.showPage = showPage;
+  window.changePassword = changePassword;
+  window.adminCreateUser = adminCreateUser;
+
+  // ---- Auth state ----
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
+      await loadUserData();
+      showApp();
+    } else {
+      currentUser = null;
+      currentUserData = null;
+      showAuthScreen();
+    }
+  });
+
+  async function loadUserData() {
+    const snap = await getDoc(doc(db, "users", currentUser.uid));
+    if (snap.exists()) {
+      currentUserData = snap.data();
+      renderDashboard();
+    }
+  }
+
+  // ---- AUTH ----
+  async function login() {
+    const email = document.getElementById("login-email").value.trim();
+    const pass = document.getElementById("login-password").value;
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (e) {
+      showMsg("login-msg", "error", "Email ou mot de passe incorrect.");
+    }
+  }
+
+  async function register() {
+    const username = document.getElementById("reg-username").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const pass = document.getElementById("reg-password").value;
+    if (!username) return showMsg("reg-msg", "error", "Entre un pseudo !");
+    if (pass.length < 6) return showMsg("reg-msg", "error", "Mot de passe trop court (min. 6 caractères).");
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await setDoc(doc(db, "users", cred.user.uid), {
+        username, email, balance: 100, isAdmin: false, createdAt: serverTimestamp()
+      });
+    } catch (e) {
+      showMsg("reg-msg", "error", translateError(e.code));
+    }
+  }
+
+  async function logout() {
+    await signOut(auth);
+  }
+
+  // ---- RENDER APP ----
+  function showApp() {
+    document.getElementById("auth-screen").style.display = "none";
+    document.getElementById("app-screen").style.display = "block";
+    const isAdmin = currentUser.email === ADMIN_EMAIL;
+    document.getElementById("topbar-user").textContent = currentUserData?.username || currentUser.email;
+    document.getElementById("admin-tab").style.display = isAdmin ? "block" : "none";
+    renderDashboard();
+    loadSendPage();
+    if (isAdmin) loadAdminPage();
+    listenTransactions();
+  }
+
+  function showAuthScreen() {
+    document.getElementById("auth-screen").style.display = "flex";
+    document.getElementById("app-screen").style.display = "none";
+  }
+
+  function renderDashboard() {
+    if (!currentUserData) return;
+    const isAdmin = currentUser.email === ADMIN_EMAIL;
+    if (isAdmin) {
+      document.getElementById("balance-display").textContent = "∞";
+      document.getElementById("admin-infinite").style.display = "inline-block";
+    } else {
+      document.getElementById("balance-display").textContent = currentUserData.balance ?? 0;
+      document.getElementById("admin-infinite").style.display = "none";
+    }
+  }
+
+  // ---- TRANSACTIONS LISTENER ----
+  function listenTransactions() {
+    const q = query(
+      collection(db, "transactions"),
+      where("participants", "array-contains", currentUser.uid),
+      orderBy("createdAt", "desc")
+    );
+    onSnapshot(q, (snap) => {
+      const txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderTxList("dashboard-txs", txs.slice(0, 5));
+      renderTxList("all-txs", txs);
+    });
+  }
+
+  function renderTxList(containerId, txs) {
+    const el = document.getElementById(containerId);
+    if (!txs.length) { el.innerHTML = '<div class="empty">Aucune transaction</div>'; return; }
+    el.innerHTML = txs.map(tx => {
+      const isSent = tx.fromUid === currentUser.uid;
+      const who = isSent ? `→ ${tx.toUsername}` : `← ${tx.fromUsername}`;
+      const amt = isSent ? `-${tx.amount}` : `+${tx.amount}`;
+      const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
+      return `<div class="tx-item ${isSent ? 'sent' : 'received'}">
+        <div class="tx-left">
+          <span class="tx-who">${who}</span>
+          ${tx.note ? `<span class="tx-note">"${tx.note}"</span>` : ""}
+          <span class="tx-date">${date}</span>
+        </div>
+        <span class="tx-amount ${isSent ? 'sent' : 'received'}">${amt} 🪙</span>
+      </div>`;
+    }).join("");
+  }
+
+  // ---- SEND ----
+  async function loadSendPage() {
+    const snap = await getDocs(collection(db, "users"));
+    const sel = document.getElementById("send-to");
+    sel.innerHTML = '<option value="">-- Choisir --</option>';
+    snap.forEach(d => {
+      if (d.id !== currentUser.uid && d.data().email !== ADMIN_EMAIL) {
+        sel.innerHTML += `<option value="${d.id}">${d.data().username}</option>`;
+      }
+    });
+  }
+
+  async function sendCoins() {
+    const toUid = document.getElementById("send-to").value;
+    const amount = parseInt(document.getElementById("send-amount").value);
+    const note = document.getElementById("send-note").value.trim();
+
+    if (!toUid) return showMsg("send-msg", "error", "Choisis un destinataire.");
+    if (!amount || amount <= 0) return showMsg("send-msg", "error", "Montant invalide.");
+
+    const isAdmin = currentUser.email === ADMIN_EMAIL;
+    if (!isAdmin && (currentUserData.balance ?? 0) < amount)
+      return showMsg("send-msg", "error", "Solde insuffisant !");
+
+    const toSnap = await getDoc(doc(db, "users", toUid));
+    if (!toSnap.exists()) return showMsg("send-msg", "error", "Destinataire introuvable.");
+    const toData = toSnap.data();
+
+    // Update balances
+    if (!isAdmin) {
+      await updateDoc(doc(db, "users", currentUser.uid), { balance: (currentUserData.balance - amount) });
+      currentUserData.balance -= amount;
+    }
+    await updateDoc(doc(db, "users", toUid), { balance: (toData.balance + amount) });
+
+    // Record transaction
+    await addDoc(collection(db, "transactions"), {
+      fromUid: currentUser.uid,
+      fromUsername: currentUserData.username,
+      toUid,
+      toUsername: toData.username,
+      amount,
+      note: note || "",
+      participants: [currentUser.uid, toUid],
+      createdAt: serverTimestamp()
+    });
+
+    renderDashboard();
+    document.getElementById("send-amount").value = "";
+    document.getElementById("send-note").value = "";
+    showMsg("send-msg", "success", `✅ ${amount} CC envoyés à ${toData.username} !`);
+  }
+
+  // ---- SETTINGS ----
+  async function changePassword() {
+    const np = document.getElementById("new-password").value;
+    const cp = document.getElementById("confirm-password").value;
+    if (np.length < 6) return showMsg("pw-msg", "error", "Mot de passe trop court.");
+    if (np !== cp) return showMsg("pw-msg", "error", "Les mots de passe ne correspondent pas.");
+    try {
+      await updatePassword(currentUser, np);
+      showMsg("pw-msg", "success", "✅ Mot de passe mis à jour !");
+      document.getElementById("new-password").value = "";
+      document.getElementById("confirm-password").value = "";
+    } catch (e) {
+      if (e.code === "auth/requires-recent-login")
+        showMsg("pw-msg", "error", "Reconnecte-toi pour changer le mot de passe.");
+      else showMsg("pw-msg", "error", "Erreur : " + e.message);
+    }
+  }
+
+  // ---- ADMIN ----
+  async function adminCreateUser() {
+    const username = document.getElementById("admin-username").value.trim();
+    const email = document.getElementById("admin-email").value.trim();
+    const pass = document.getElementById("admin-password").value;
+    const balance = parseInt(document.getElementById("admin-balance").value) || 100;
+
+    if (!username || !email || !pass) return showMsg("admin-create-msg", "error", "Remplis tous les champs.");
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await setDoc(doc(db, "users", cred.user.uid), {
+        username, email, balance, isAdmin: false, createdAt: serverTimestamp()
+      });
+      // Re-sign in as admin (createUser auto-connects the new user)
+      // We reload the page to reconnect admin
+      showMsg("admin-create-msg", "success", `✅ Compte "${username}" créé ! Reconnecte-toi en tant qu'admin.`);
+      await signOut(auth);
+    } catch (e) {
+      showMsg("admin-create-msg", "error", translateError(e.code));
+    }
+  }
+
+  function loadAdminPage() {
+    // Listen all users
+    onSnapshot(collection(db, "users"), (snap) => {
+      const tbody = document.getElementById("users-tbody");
+      tbody.innerHTML = "";
+      snap.forEach(d => {
+        const u = d.data();
+        const balance = u.email === ADMIN_EMAIL ? "∞" : (u.balance ?? 0);
+        tbody.innerHTML += `<tr><td>${u.username}</td><td>${u.email}</td><td>${balance} 🪙</td></tr>`;
+      });
+    });
+
+    // Listen all transactions
+    const q = query(collection(db, "transactions"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snap) => {
+      const el = document.getElementById("admin-all-txs");
+      if (!snap.docs.length) { el.innerHTML = '<div class="empty">Aucune transaction</div>'; return; }
+      el.innerHTML = snap.docs.map(d => {
+        const tx = d.data();
+        const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
+        return `<div class="tx-item sent">
+          <div class="tx-left">
+            <span class="tx-who">${tx.fromUsername} → ${tx.toUsername}</span>
+            ${tx.note ? `<span class="tx-note">"${tx.note}"</span>` : ""}
+            <span class="tx-date">${date}</span>
+          </div>
+          <span class="tx-amount sent">-${tx.amount} 🪙</span>
+        </div>`;
+      }).join("");
+    });
+  }
+
+  // ---- UTILS ----
+  function showPage(page) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+    document.getElementById("page-" + page).classList.add("active");
+    event.target.classList.add("active");
+    if (page === "send") loadSendPage();
+    if (page === "admin") loadAdminPage();
+  }
+
+  function switchAuthTab(tab) {
+    document.querySelectorAll(".auth-tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+    document.getElementById("tab-" + tab).classList.add("active");
+    event.target.classList.add("active");
+  }
+
+  function showMsg(id, type, text) {
+    const el = document.getElementById(id);
+    el.className = "msg " + type;
+    el.textContent = text;
+    el.style.display = "block";
+    setTimeout(() => { el.style.display = "none"; }, 4000);
+  }
+
+  function translateError(code) {
+    if (code === "auth/email-already-in-use") return "Cet email est déjà utilisé.";
+    if (code === "auth/invalid-email") return "Email invalide.";
+    if (code === "auth/weak-password") return "Mot de passe trop court (min. 6 caractères).";
+    return "Une erreur est survenue.";
+  }
+</script>
+</body>
+</html>
