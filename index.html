@@ -241,7 +241,7 @@
       <div class="section">
         <div class="section-title">🏦 La Banque (Emprunts)</div>
         <div class="form-card">
-          <p style="font-size:0.85rem; color:var(--sub); margin-bottom:6px;">Capacité max : 200% de ton solde actuel.</p>
+          <p style="font-size:0.85rem; color:var(--sub); margin-bottom:6px;">Capacité max : 200% de ta VRAIE richesse (Solde - Dette).</p>
           <span class="interest-note">⚠️ 5% d'intérêts s'ajoutent à ta dette chaque jour.</span>
           <br>
           <label>Montant (CC) <span id="capacity-display" class="borrow-capacity">Capacité restante : 0 CC</span></label>
@@ -367,7 +367,6 @@
 </div>
 
 <script type="module">
-  // On revient sur la base stable, SANS requêtes asynchrones qui bloquent l'UI au démarrage.
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, setDoc, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc, getDoc, getDocs, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -393,7 +392,6 @@
   let adminUid = null;
   let currentStocksData = null;
 
-  // Window bindings
   window.login = login; window.register = register; window.logout = logout; window.sendCoins = sendCoins;
   window.switchAuthTab = switchAuthTab; window.showPage = showPage;
   window.borrowMoney = borrowMoney; window.repayMoney = repayMoney;
@@ -403,17 +401,13 @@
   window.openImageModal = openImageModal; window.closeImageModal = closeImageModal;
   window.adminCreateUser = adminCreateUser; window.adminSaveBalance = adminSaveBalance;
 
-  // Find Admin ID silently
   getDocs(query(collection(db, "users"), where("email", "==", ADMIN_EMAIL))).then(snap => {
       snap.forEach(d => adminUid = d.id);
   }).catch(()=>{});
 
-  // CORE FIX: Instant UI switch on Auth state change. No blocking getDoc() here!
   onAuthStateChanged(auth, (user) => {
     if (user) {
       currentUser = user;
-      
-      // INSTANT UI UPDATE
       document.getElementById("auth-screen").style.display = "none";
       document.getElementById("app-screen").style.display = "block";
       document.getElementById("topbar-user").textContent = user.email;
@@ -422,7 +416,6 @@
       document.getElementById("admin-tab").style.display = isAdmin ? "block" : "none";
       document.getElementById("my-tickets-title").textContent = isAdmin ? "Tous les billets actifs" : "Mes billets en attente";
 
-      // START BACKGROUND LISTENERS
       listenUserData();
       listenTransactions();
       listenStocks();
@@ -459,8 +452,6 @@
 
   function logout() { signOut(auth); }
 
-  // --- DATA LISTENERS ---
-  
   function listenUserData() {
     onSnapshot(doc(db, "users", currentUser.uid), (snap) => {
       if (snap.exists()) {
@@ -469,7 +460,7 @@
         if(!currentUserData.portfolio) currentUserData.portfolio = {};
         
         renderDashboard();
-        checkDailyInterest(); // Non blocking logic inside
+        checkDailyInterest();
       }
     });
   }
@@ -497,15 +488,18 @@
       }
       document.getElementById("invest-display").textContent = totalInvest + " 🪙";
       
-      // Update capacity display
-      const cap = (currentUserData.balance * 2) - currentUserData.debt;
+      // FIX INFINITE MONEY GLITCH: Base capacity on (Balance - Debt)
+      const trueWealth = (currentUserData.balance || 0) - (currentUserData.debt || 0);
+      const maxDebt = trueWealth > 0 ? trueWealth * 2 : 0;
+      let cap = maxDebt - (currentUserData.debt || 0);
+      if (cap < 0) cap = 0;
+      
       const capEl = document.getElementById("capacity-display");
       capEl.textContent = cap > 0 ? `Capacité : ${cap} CC` : "Capacité atteinte";
       capEl.style.color = cap > 0 ? "var(--gold)" : "var(--danger)";
     }
   }
 
-  // BANK LOGIC
   async function checkDailyInterest() {
     if (currentUser.email === ADMIN_EMAIL || currentUserData.debt <= 0) return;
     const today = new Date().toISOString().split('T')[0];
@@ -531,8 +525,13 @@
     if (!amount || amount <= 0) return;
     if (currentUser.email === ADMIN_EMAIL) return showMsg("bank-msg", "error", "L'admin a argent infini.");
     
-    const cap = (currentUserData.balance * 2) - currentUserData.debt;
-    if (amount > cap) return showMsg("bank-msg", "error", `Refusé. Max: ${cap > 0 ? cap : 0} CC`);
+    // FIX INFINITE MONEY GLITCH
+    const trueWealth = (currentUserData.balance || 0) - (currentUserData.debt || 0);
+    const maxDebt = trueWealth > 0 ? trueWealth * 2 : 0;
+    let cap = maxDebt - (currentUserData.debt || 0);
+    if (cap < 0) cap = 0;
+    
+    if (amount > cap) return showMsg("bank-msg", "error", `Refusé. Max: ${cap} CC`);
     
     await updateDoc(doc(db, "users", currentUser.uid), {
       balance: currentUserData.balance + amount, debt: currentUserData.debt + amount
@@ -564,7 +563,6 @@
     showMsg("bank-msg", "success", "Remboursement validé !");
   }
 
-  // BOURSE LOGIC
   let updatingStocks = false;
   function listenStocks() {
     onSnapshot(doc(db, "system", "stocks"), async (snap) => {
@@ -579,16 +577,15 @@
         return;
       }
       currentStocksData = snap.data();
-      renderDashboard(); // Updates invest value
+      renderDashboard(); 
       renderBourse();
       
-      // Auto price update check (only triggered if > 5min)
       const last = currentStocksData.lastUpdate ? currentStocksData.lastUpdate.toDate() : new Date();
       if ((new Date() - last) > 300000 && !updatingStocks) {
         updatingStocks = true;
         let newPrices = {...currentStocksData.prices};
         for(let k in newPrices) {
-          let change = 1 + (Math.random() * 0.2 - 0.1); // -10% to +10%
+          let change = 1 + (Math.random() * 0.2 - 0.1); 
           newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
         }
         try {
@@ -653,8 +650,6 @@
     showMsg("bourse-msg", "success", "Vente validée !");
   }
 
-  // --- REST OF APP LOGIC (Send, Transactions, Market, Tickets) ---
-
   function listenTransactions() {
     onSnapshot(query(collection(db, "transactions"), where("participants", "array-contains", currentUser.uid), orderBy("createdAt", "desc")), (snap) => {
       const txs = snap.docs.map(d => ({id: d.id, ...d.data()}));
@@ -662,7 +657,6 @@
       if(!txs.length) { el.innerHTML = '<div class="empty">Aucune transaction</div>'; return; }
       el.innerHTML = txs.slice(0, 10).map(tx => {
         let isSent = tx.fromUid === currentUser.uid;
-        let isBankOrSystem = tx.fromUid === "bank" || tx.fromUid === "system" || tx.fromUid === "bourse";
         let sign = isSent ? "-" : "+";
         if (!isSent && tx.note && tx.note.includes("Pénalité")) sign = "-"; 
         
@@ -788,7 +782,6 @@
   function openImageModal(url) { document.getElementById("modal-img").src = url; document.getElementById("image-modal").style.display = "flex"; }
   function closeImageModal() { document.getElementById("image-modal").style.display = "none"; }
 
-  // ADMIN
   function loadAdminPage() {
     onSnapshot(collection(db, "users"), (snap) => {
       document.getElementById("users-tbody").innerHTML = snap.docs.map(d => {
@@ -805,15 +798,12 @@
       }).join("");
     });
   }
-  async function adminCreateUser() {
-    // Note: requires secondary app to create user without logging out, skipping logic for brevity here or user re-logins.
-  }
+  async function adminCreateUser() {}
   async function adminSaveBalance(id) {
     const b = parseInt(document.getElementById("bal-"+id).value);
     if(b>=0) await updateDoc(doc(db, "users", id), {balance: b});
   }
 
-  // UTILS
   function showPage(p, e) {
     document.querySelectorAll(".page, .nav-tab").forEach(el => el.classList.remove("active"));
     document.getElementById("page-" + p).classList.add("active");
