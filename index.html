@@ -259,7 +259,7 @@
         <div class="stock-grid" id="stocks-list">
           <div class="empty">Chargement du marché...</div>
         </div>
-        <div class="next-update">Les prix fluctuent de -10% à +10% (avec une chance de +20% !). Rattrape le temps perdu si personne n'était connecté.</div>
+        <div class="next-update">Les prix fluctuent de -5% à +10% (avec une chance de +20% !). Rattrape le temps perdu si personne n'était connecté.</div>
         <div id="bourse-msg" class="msg" style="margin-top:10px;"></div>
       </div>
     </div>
@@ -588,8 +588,7 @@
         updatingStocks = true;
         let newPrices = {...currentStocksData.prices};
         
-        // CATCH-UP MECHANIC: Simulate the market for EVERY missed 5-minute period
-        // To avoid freezing the phone if someone connects after 3 months, we cap the catch-up to 288 periods (24 hours).
+        // CATCH-UP MECHANIC
         const maxCatchup = Math.min(periodsMissed, 288); 
         
         for (let i = 0; i < maxCatchup; i++) {
@@ -599,7 +598,10 @@
             if (luckyDraw === 20) {
               change = 1.20; // +20%
             } else {
-              change = 1 + (Math.random() * 0.2 - 0.1); // -10% to +10%
+              // FIX: Les mathématiques des pourcentages ! 
+              // Si on fait -10% et +10%, l'action tend vers 0. (ex: 100 -10% = 90, 90 +10% = 99... on perd 1% !)
+              // Pour que ça monte naturellement, on déséquilibre : -5% à +10%
+              change = 1 + (Math.random() * 0.15 - 0.05); 
             }
             newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
           }
