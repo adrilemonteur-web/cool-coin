@@ -259,7 +259,7 @@
         <div class="stock-grid" id="stocks-list">
           <div class="empty">Chargement du marché...</div>
         </div>
-        <div class="next-update">Les prix fluctuent de -10% à +10% (avec une chance de +20% !).</div>
+        <div class="next-update">Les prix fluctuent de -10% à +10% (avec une chance de +20% !). Rattrape le temps perdu si personne n'était connecté.</div>
         <div id="bourse-msg" class="msg" style="margin-top:10px;"></div>
       </div>
     </div>
@@ -579,24 +579,30 @@
       renderBourse();
       
       const last = currentStocksData.lastUpdate ? currentStocksData.lastUpdate.toDate() : new Date();
-      if ((new Date() - last) > 300000 && !updatingStocks) {
+      const timePassedMs = new Date() - last;
+      
+      // Calculate how many 5-minute blocks have passed
+      const periodsMissed = Math.floor(timePassedMs / 300000); // 300000ms = 5 minutes
+      
+      if (periodsMissed > 0 && !updatingStocks) {
         updatingStocks = true;
         let newPrices = {...currentStocksData.prices};
         
-        for(let k in newPrices) {
-          // BOURSE UPDATE LOGIC WITH 1/21 CHANCE FOR +20%
-          const luckyDraw = Math.floor(Math.random() * 21); // Random number between 0 and 20
-          let change;
-          
-          if (luckyDraw === 20) {
-            // 1 out of 21 chance: BOOM! +20%
-            change = 1.20; 
-          } else {
-            // The rest of the time: normal fluctuation between -10% and +10%
-            change = 1 + (Math.random() * 0.2 - 0.1); 
+        // CATCH-UP MECHANIC: Simulate the market for EVERY missed 5-minute period
+        // To avoid freezing the phone if someone connects after 3 months, we cap the catch-up to 288 periods (24 hours).
+        const maxCatchup = Math.min(periodsMissed, 288); 
+        
+        for (let i = 0; i < maxCatchup; i++) {
+          for(let k in newPrices) {
+            const luckyDraw = Math.floor(Math.random() * 21); // 0 to 20
+            let change;
+            if (luckyDraw === 20) {
+              change = 1.20; // +20%
+            } else {
+              change = 1 + (Math.random() * 0.2 - 0.1); // -10% to +10%
+            }
+            newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
           }
-          
-          newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
         }
         
         try {
