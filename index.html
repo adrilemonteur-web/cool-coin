@@ -17,9 +17,10 @@
       --blue: #3498db;
       --ticket: #27ae60;
       --bank: #f39c12;
+      --purple: #9b59b6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); min-height: 100vh; overflow-x: hidden; }
     #auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
     .logo { font-size: 3rem; margin-bottom: 8px; }
     .logo-title { font-size: 1.8rem; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
@@ -45,6 +46,7 @@
     .btn.blue { background: var(--blue); color: white; }
     .btn.ticket { background: var(--ticket); color: white; }
     .btn.bank { background: var(--bank); color: #000; }
+    .btn.purple { background: var(--purple); color: white; }
     .btn.small { padding: 8px 14px; font-size: 0.85rem; margin-top: 0; width: auto; display: inline-block; }
     .btn.mini { padding: 5px 10px; font-size: 0.78rem; margin-top: 0; width: auto; display: inline-block; border-radius: 6px; }
     
@@ -75,7 +77,7 @@
     
     .section { margin-bottom: 24px; }
     .section-title { font-size: 1rem; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
-    .form-card { background: var(--card); border-radius: 12px; padding: 20px; }
+    .form-card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
     
     /* Transactions */
     .tx-list { display: flex; flex-direction: column; gap: 8px; }
@@ -85,6 +87,7 @@
     .tx-item.gov { border-left-color: #a78bfa; }
     .tx-item.market { border-left-color: var(--blue); }
     .tx-item.bank { border-left-color: var(--bank); }
+    .tx-item.casino { border-left-color: var(--purple); }
     .tx-left { display: flex; flex-direction: column; gap: 3px; }
     .tx-who { font-size: 0.95rem; font-weight: 600; }
     .tx-date { font-size: 0.75rem; color: var(--sub); }
@@ -95,6 +98,7 @@
     .tx-amount.gov { color: #a78bfa; }
     .tx-amount.market { color: var(--blue); }
     .tx-amount.bank { color: var(--bank); }
+    .tx-amount.casino { color: var(--purple); }
     
     /* Bourse / Stocks */
     .stock-grid { display: flex; flex-direction: column; gap: 12px; }
@@ -110,39 +114,25 @@
     .btn-sell { background: var(--danger); color: white; }
     .next-update { font-size: 0.75rem; text-align: center; color: var(--sub); margin-top: 10px; font-style: italic; }
 
-    /* Billets */
-    .ticket-card { background: linear-gradient(135deg, #27ae6022, #1a1a2e); border: 1px dashed var(--ticket); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
-    .ticket-left { display: flex; flex-direction: column; gap: 4px; }
-    .ticket-code { font-size: 1.5rem; font-weight: 900; letter-spacing: 4px; color: var(--text); }
-    .ticket-info { font-size: 0.8rem; color: var(--sub); }
-    .ticket-amount { font-size: 1.4rem; font-weight: 800; color: var(--ticket); }
+    /* Casino */
+    .casino-box { background: linear-gradient(135deg, #2c3e50, #8e44ad); border-radius: 16px; padding: 25px; text-align: center; box-shadow: 0 8px 32px rgba(155, 89, 182, 0.2); }
+    .casino-title { font-size: 1.8rem; font-weight: 900; color: white; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; }
+    .casino-sub { color: #e0e0e0; font-size: 0.85rem; margin-bottom: 20px; }
+    .casino-slots { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    .slot { width: 60px; height: 60px; background: rgba(0,0,0,0.5); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; border: 2px solid var(--purple); }
+    .casino-controls { display: flex; flex-direction: column; gap: 10px; max-width: 250px; margin: 0 auto; }
+    .casino-odds { margin-top: 20px; font-size: 0.75rem; color: rgba(255,255,255,0.6); text-align: left; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;}
 
-    /* Devoirs */
-    .hw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 480px) { .hw-grid { grid-template-columns: 1fr; } }
-    .hw-card { background: var(--card); border: 1px solid #2a2a3e; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
-    .hw-img-container { width: 100%; height: 140px; background: #0d0d0d; display: flex; align-items: center; justify-content: center; position: relative; }
-    .hw-img-container img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
-    .hw-img-container img.blurred { filter: blur(15px); }
-    .lock-icon { position: absolute; font-size: 2.5rem; color: rgba(255,255,255,0.8); text-shadow: 0 2px 10px rgba(0,0,0,0.5); pointer-events: none; z-index: 2; }
-    .hw-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
-    .hw-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-    .hw-seller { font-size: 0.75rem; color: var(--sub); margin-bottom: 8px; }
-    .hw-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 10px; border-top: 1px solid #2a2a3e; }
-    .hw-price { font-weight: 800; color: var(--gold); }
-    .hw-buy-btn { background: var(--blue); border: none; color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
-    
-    #image-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-    #image-modal img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
-    .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
-
-    /* Admin Table */
-    .users-table-wrapper { overflow-x: auto; }
-    .users-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; }
-    .users-table th { background: #2a2a3e; padding: 12px 16px; text-align: left; font-size: 0.85rem; color: var(--sub); text-transform: uppercase; }
-    .users-table td { padding: 10px 16px; border-top: 1px solid #2a2a3e; font-size: 0.9rem; }
-    .edit-balance-row { display: flex; gap: 6px; align-items: center; }
-    .edit-balance-row input { width: 80px; padding: 5px 8px; font-size: 0.85rem; margin: 0; }
+    /* Admin Advanced */
+    .admin-stock-edit { display: flex; justify-content: space-between; align-items: center; background: #0d0d0d; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #333; }
+    .admin-stock-edit input { width: 80px; padding: 5px; margin: 0; }
+    .admin-user-card { background: #2a2a3e; border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #333;}
+    .admin-user-header { font-weight: 800; color: var(--gold); font-size: 1.1rem; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px; }
+    .admin-flex-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem;}
+    .admin-flex-row input { width: 90px; padding: 5px; font-size: 0.9rem; margin:0;}
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; background: #0d0d0d; padding: 10px; border-radius: 8px; }
+    .admin-grid-item { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; }
+    .admin-grid-item input { width: 100%; padding: 4px; }
     
     /* Navigation */
     .nav-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #2a2a3e; padding-bottom: 0; flex-wrap: wrap; }
@@ -207,8 +197,8 @@
       <button class="nav-tab active" onclick="showPage('dashboard', event)">Accueil</button>
       <button class="nav-tab" onclick="showPage('send', event)">Envoyer</button>
       <button class="nav-tab" onclick="showPage('bank', event)">🏦 Banque & Bourse</button>
+      <button class="nav-tab" onclick="showPage('casino', event)">🎰 Casino</button>
       <button class="nav-tab" onclick="showPage('tickets', event)">💸 Billets</button>
-      <button class="nav-tab" onclick="showPage('market', event)">📚 Devoirs</button>
       <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin', event)">⚙️ Admin</button>
     </div>
 
@@ -259,8 +249,38 @@
         <div class="stock-grid" id="stocks-list">
           <div class="empty">Chargement du marché...</div>
         </div>
-        <div class="next-update" style="line-height: 1.4;">Croissance moyenne : environ +0.25% par heure. <br><span style="font-size:0.7rem;">(Fluctuations de -5% à +5.04%, événements rares possibles 📈📉).</span></div>
+        <div class="next-update" style="line-height: 1.4;"><span id="bourse-info-text">Fluctuations contrôlées en temps réel par l'administration.</span></div>
         <div id="bourse-msg" class="msg" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- CASINO -->
+    <div id="page-casino" class="page">
+      <div class="section">
+        <div class="casino-box">
+          <div class="casino-title">Machine à Sous</div>
+          <div class="casino-sub">RTP Moyen : 95% (Désavantageux à long terme !)</div>
+          
+          <div class="casino-slots">
+            <div class="slot" id="slot-1">🍒</div>
+            <div class="slot" id="slot-2">🍋</div>
+            <div class="slot" id="slot-3">💎</div>
+          </div>
+          
+          <div class="casino-controls">
+            <input type="number" id="casino-bet" placeholder="Mise (CC)" min="1" style="text-align:center; font-size:1.2rem; padding:10px;" />
+            <button class="btn purple" id="btn-spin" onclick="playCasino()">🎰 Lancer (Miser)</button>
+          </div>
+          <div id="casino-msg" class="msg" style="margin-top:15px; background:rgba(0,0,0,0.5); border:none;"></div>
+          
+          <div class="casino-odds">
+            <strong>Règles & Probabilités :</strong><br>
+            • 60% de chance : Perdu (x0)<br>
+            • 35% de chance : Double (x2)<br>
+            • 5% de chance : Jackpot (x5)<br>
+            <em>La banque gagne toujours sur le long terme. Joue avec modération.</em>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -290,27 +310,6 @@
       </div>
     </div>
 
-    <!-- MARKET -->
-    <div id="page-market" class="page">
-      <div class="section">
-        <div class="section-title">Vendre un devoir</div>
-        <div class="form-card">
-          <label>Titre</label>
-          <input type="text" id="hw-title" placeholder="Ex: DM Maths Exo 3" />
-          <label>Prix (CC)</label>
-          <input type="number" id="hw-price" placeholder="Ex: 20" min="1" />
-          <label>Photo</label>
-          <input type="file" id="hw-file" accept="image/*" />
-          <button class="btn blue" id="btn-upload-hw" onclick="uploadHomework()">Mettre en vente</button>
-          <div id="hw-msg" class="msg"></div>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-title">Devoirs en vente</div>
-        <div class="hw-grid" id="hw-list"><div class="empty">Aucun devoir.</div></div>
-      </div>
-    </div>
-
     <!-- SEND -->
     <div id="page-send" class="page">
       <div class="section">
@@ -331,39 +330,36 @@
     <!-- ADMIN -->
     <div id="page-admin" class="page">
       <div class="section">
-        <div class="section-title">Créer un compte</div>
+        <div class="section-title">📈 Gérer la Bourse (Paramètres)</div>
         <div class="form-card">
-          <label>Pseudo</label>
-          <input type="text" id="admin-username" />
-          <label>Email</label>
-          <input type="email" id="admin-email" />
-          <label>Mot de passe</label>
-          <input type="password" id="admin-password" />
+          <label>Fluctuation Minimum (%) - Ex: -5</label>
+          <input type="number" id="admin-config-min" step="0.01" />
+          <label>Fluctuation Maximum (%) - Ex: 5.04</label>
+          <input type="number" id="admin-config-max" step="0.01" />
+          <button class="btn mini blue" style="margin-top:10px" onclick="adminSaveStockConfig()">Sauvegarder les pourcentages</button>
+          <hr style="border:0; border-top:1px solid #333; margin: 15px 0;">
+          <div id="admin-stocks-prices-list"></div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">👥 Gérer les Membres</div>
+        <div id="admin-users-advanced-list">
+           <div class="empty">Chargement des membres...</div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">Créer un compte rapidement</div>
+        <div class="form-card">
+          <input type="text" id="admin-username" placeholder="Pseudo"/>
+          <input type="email" id="admin-email" placeholder="Email" style="margin-top:6px;"/>
+          <input type="password" id="admin-password" placeholder="Mot de passe" style="margin-top:6px;"/>
           <button class="btn" onclick="adminCreateUser()">Créer</button>
-          <div id="admin-create-msg" class="msg"></div>
         </div>
-      </div>
-      <div class="section">
-        <div class="section-title">Tous les comptes</div>
-        <div class="users-table-wrapper">
-          <table class="users-table">
-            <thead><tr><th>Pseudo</th><th>Solde</th><th>Dette</th><th>Modifier</th></tr></thead>
-            <tbody id="users-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-title">Historique global</div>
-        <div class="tx-list" id="admin-all-txs"></div>
       </div>
     </div>
   </div>
-</div>
-
-<!-- Modal Image -->
-<div id="image-modal" onclick="closeImageModal()">
-  <button class="close-modal">&times;</button>
-  <img id="modal-img" src="" onclick="event.stopPropagation()" />
 </div>
 
 <script type="module">
@@ -381,7 +377,6 @@
   };
 
   const ADMIN_EMAIL = "adminadri@coolteam.com";
-  const IMGBB_API_KEY = "b88a5919ae8a6a77e62c73a6339ff5b3"; 
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -389,7 +384,6 @@
 
   let currentUser = null;
   let currentUserData = null;
-  let adminUid = null;
   let currentStocksData = null;
 
   window.login = login; window.register = register; window.logout = logout; window.sendCoins = sendCoins;
@@ -397,13 +391,10 @@
   window.borrowMoney = borrowMoney; window.repayMoney = repayMoney;
   window.buyStock = buyStock; window.sellStock = sellStock;
   window.createTicket = createTicket; window.redeemTicket = redeemTicket; window.cancelTicket = cancelTicket;
-  window.uploadHomework = uploadHomework; window.buyHomework = buyHomework; window.deleteHomework = deleteHomework;
-  window.openImageModal = openImageModal; window.closeImageModal = closeImageModal;
-  window.adminCreateUser = adminCreateUser; window.adminSaveBalance = adminSaveBalance;
-
-  getDocs(query(collection(db, "users"), where("email", "==", ADMIN_EMAIL))).then(snap => {
-      snap.forEach(d => adminUid = d.id);
-  }).catch(()=>{});
+  window.playCasino = playCasino;
+  window.adminCreateUser = adminCreateUser; 
+  window.adminSaveStockConfig = adminSaveStockConfig; window.adminSaveStockPrice = adminSaveStockPrice;
+  window.adminSaveUser = adminSaveUser;
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -420,7 +411,6 @@
       listenTransactions();
       listenStocks();
       listenTickets();
-      listenMarket();
       loadSendPage();
       if (isAdmin) loadAdminPage();
     } else {
@@ -519,6 +509,7 @@
     }
   }
 
+  /* BANK */
   async function borrowMoney() {
     const amount = parseInt(document.getElementById("bank-amount").value);
     if (!amount || amount <= 0) return;
@@ -531,36 +522,24 @@
     
     if (amount > cap) return showMsg("bank-msg", "error", `Refusé. Max: ${cap} CC`);
     
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      balance: currentUserData.balance + amount, debt: currentUserData.debt + amount
-    });
-    await addDoc(collection(db, "transactions"), {
-      fromUid: "bank", fromUsername: "🏦 Banque", toUid: currentUser.uid, toUsername: currentUserData.username,
-      amount: amount, note: "Emprunt bancaire", participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp()
-    });
-    document.getElementById("bank-amount").value = "";
-    showMsg("bank-msg", "success", "Emprunt validé !");
+    await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + amount, debt: currentUserData.debt + amount });
+    await addDoc(collection(db, "transactions"), { fromUid: "bank", fromUsername: "🏦 Banque", toUid: currentUser.uid, toUsername: currentUserData.username, amount: amount, note: "Emprunt bancaire", participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp() });
+    document.getElementById("bank-amount").value = ""; showMsg("bank-msg", "success", "Emprunt validé !");
   }
 
   async function repayMoney() {
     const amount = parseInt(document.getElementById("bank-amount").value);
-    if (!amount || amount <= 0) return;
-    if (currentUser.email === ADMIN_EMAIL) return;
+    if (!amount || amount <= 0 || currentUser.email === ADMIN_EMAIL) return;
     if (currentUserData.debt === 0) return showMsg("bank-msg", "info", "Aucune dette.");
     if (amount > currentUserData.debt) return showMsg("bank-msg", "error", "Montant supérieur à la dette.");
     if (amount > currentUserData.balance) return showMsg("bank-msg", "error", "Solde insuffisant.");
     
-    await updateDoc(doc(db, "users", currentUser.uid), {
-      balance: currentUserData.balance - amount, debt: currentUserData.debt - amount
-    });
-    await addDoc(collection(db, "transactions"), {
-      fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bank", toUsername: "🏦 Banque",
-      amount: amount, note: "Remboursement", participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp()
-    });
-    document.getElementById("bank-amount").value = "";
-    showMsg("bank-msg", "success", "Remboursement validé !");
+    await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amount, debt: currentUserData.debt - amount });
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bank", toUsername: "🏦 Banque", amount: amount, note: "Remboursement", participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp() });
+    document.getElementById("bank-amount").value = ""; showMsg("bank-msg", "success", "Remboursement validé !");
   }
 
+  /* BOURSE */
   let updatingStocks = false;
   function listenStocks() {
     onSnapshot(doc(db, "system", "stocks"), async (snap) => {
@@ -569,53 +548,45 @@
           setDoc(doc(db, "system", "stocks"), {
             prices: { coolcorp: 100, devoirsinc: 50, crypto: 200, gold: 150, snack: 20 },
             names: { coolcorp: "CoolCorp Inc.", devoirsinc: "Devoirs Ltd", crypto: "Cool Crypto", gold: "Or Virtuel", snack: "Snack Index" },
+            config: { min: -5.00, max: 5.04 },
             lastUpdate: serverTimestamp()
           });
         }
         return;
       }
       currentStocksData = snap.data();
+      if(!currentStocksData.config) currentStocksData.config = { min: -5.00, max: 5.04 };
+      
+      document.getElementById("bourse-info-text").textContent = `Fluctuations actuelles : de ${currentStocksData.config.min}% à +${currentStocksData.config.max}% toutes les 5min.`;
+      
       renderDashboard(); 
       renderBourse();
+      if(currentUser.email === ADMIN_EMAIL) renderAdminStocks();
       
       const last = currentStocksData.lastUpdate ? currentStocksData.lastUpdate.toDate() : new Date();
       const timePassedMs = new Date() - last;
-      
       const periodsMissed = Math.floor(timePassedMs / 300000); 
       
       if (periodsMissed > 0 && !updatingStocks) {
         updatingStocks = true;
         let newPrices = {...currentStocksData.prices};
-        
+        const conf = currentStocksData.config;
         const maxCatchup = Math.min(periodsMissed, 288); 
         
         for (let i = 0; i < maxCatchup; i++) {
           for(let k in newPrices) {
-            
-            // NOUVELLE FORMULE pour atteindre très exactement ~0.25% par HEURE.
-            // On veut un multiplicateur moyen de 1.000208 par tic de 5 minutes.
-            
             const r = Math.random();
             let change;
-            
-            if (r < 0.0005) {
-              // 1/2000 : Crash (-50%)
-              change = 0.50; 
-            } else if (r < 0.0010) {
-              // 1/2000 : Moon (+50%)
-              change = 1.50;
-            } else {
-              // Fluctuation entre -5.00% et +5.04%
-              // La moyenne fait +0.02% (soit +0.25% sur les 12 tics de l'heure).
-              // Pourquoi une plage de 10% (-5 à +5) ? Pour éviter le problème des arrondis ! 
-              // Si la plage est trop petite, les petites actions (ex: 20 CC) s'arrondiront toujours au même chiffre et resteront bloquées.
-              change = 1 + (Math.random() * 0.1004 - 0.05); 
+            if (r < 0.0005) { change = 0.50; } 
+            else if (r < 0.0010) { change = 1.50; } 
+            else {
+              let minMult = 1 + (conf.min / 100);
+              let maxMult = 1 + (conf.max / 100);
+              change = minMult + (Math.random() * (maxMult - minMult));
             }
-            
             newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
           }
         }
-        
         try {
           await updateDoc(doc(db, "system", "stocks"), { prices: newPrices, lastUpdate: serverTimestamp() });
           setTimeout(() => updatingStocks = false, 5000);
@@ -655,10 +626,7 @@
     
     let pf = {...currentUserData.portfolio}; pf[k] = (pf[k]||0) + qty;
     await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - cost, portfolio: pf });
-    await addDoc(collection(db, "transactions"), {
-      fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bourse", toUsername: "📈 Bourse",
-      amount: cost, note: `Achat ${qty} ${currentStocksData.names[k]}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp()
-    });
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bourse", toUsername: "📈 Bourse", amount: cost, note: `Achat ${qty} ${currentStocksData.names[k]}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
     showMsg("bourse-msg", "success", "Achat validé !");
   }
 
@@ -671,13 +639,74 @@
     
     let pf = {...currentUserData.portfolio}; pf[k] -= qty;
     await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + gain, portfolio: pf });
-    await addDoc(collection(db, "transactions"), {
-      fromUid: "bourse", fromUsername: "📈 Bourse", toUid: currentUser.uid, toUsername: currentUserData.username,
-      amount: gain, note: `Vente ${qty} ${currentStocksData.names[k]}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp()
-    });
+    await addDoc(collection(db, "transactions"), { fromUid: "bourse", fromUsername: "📈 Bourse", toUid: currentUser.uid, toUsername: currentUserData.username, amount: gain, note: `Vente ${qty} ${currentStocksData.names[k]}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
     showMsg("bourse-msg", "success", "Vente validée !");
   }
 
+  /* CASINO */
+  const emojis = ['🍒', '🍋', '💎', '🍉', '🔔', '7️⃣'];
+  async function playCasino() {
+    const bet = parseInt(document.getElementById("casino-bet").value);
+    if (!bet || bet <= 0) return;
+    if (currentUser.email === ADMIN_EMAIL) return alert("Admin ne joue pas.");
+    if (currentUserData.balance < bet) return showMsg("casino-msg", "error", "Solde insuffisant !");
+    
+    const btn = document.getElementById("btn-spin");
+    btn.disabled = true; btn.textContent = "🎰 Rotation...";
+    
+    // Animation visuelle rapide
+    let spinInterval = setInterval(() => {
+      document.getElementById("slot-1").textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      document.getElementById("slot-2").textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      document.getElementById("slot-3").textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    }, 100);
+
+    setTimeout(async () => {
+      clearInterval(spinInterval);
+      
+      // Logique mathématique stricte
+      const roll = Math.random();
+      let multiplier = 0;
+      let symbol1, symbol2, symbol3;
+
+      if (roll < 0.60) {
+        // 60% : Perdu x0 (3 symboles différents)
+        multiplier = 0;
+        symbol1 = emojis[0]; symbol2 = emojis[1]; symbol3 = emojis[2];
+      } else if (roll < 0.95) {
+        // 35% : Gagné x2 (2 symboles pareils)
+        multiplier = 2;
+        symbol1 = emojis[3]; symbol2 = emojis[3]; symbol3 = emojis[1];
+      } else {
+        // 5% : Jackpot x5 (3 symboles pareils - 💎)
+        multiplier = 5;
+        symbol1 = '💎'; symbol2 = '💎'; symbol3 = '💎';
+      }
+
+      document.getElementById("slot-1").textContent = symbol1;
+      document.getElementById("slot-2").textContent = symbol2;
+      document.getElementById("slot-3").textContent = symbol3;
+
+      const gain = Math.floor(bet * multiplier);
+      const profit = gain - bet; 
+
+      await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + profit });
+      
+      // Enregistrement transaction
+      if (profit > 0) {
+        await addDoc(collection(db, "transactions"), { fromUid: "casino", fromUsername: "🎰 Casino", toUid: currentUser.uid, toUsername: currentUserData.username, amount: profit, note: "Gains Machine à sous", participants: [currentUser.uid], type: "casino", createdAt: serverTimestamp() });
+        document.getElementById("casino-msg").innerHTML = `<span style="color:var(--success); font-weight:bold; font-size:1.2rem;">Gagné ! +${profit} CC 🤑</span>`;
+      } else {
+        await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "casino", toUsername: "🎰 Casino", amount: Math.abs(profit), note: "Pertes Machine à sous", participants: [currentUser.uid], type: "casino", createdAt: serverTimestamp() });
+        document.getElementById("casino-msg").innerHTML = `<span style="color:var(--danger); font-weight:bold;">Perdu ! -${bet} CC 💸</span>`;
+      }
+      
+      document.getElementById("casino-msg").style.display = "block";
+      btn.disabled = false; btn.textContent = "🎰 Lancer (Miser)";
+    }, 1500);
+  }
+
+  /* TRANSACTIONS & SEND */
   function listenTransactions() {
     onSnapshot(query(collection(db, "transactions"), where("participants", "array-contains", currentUser.uid), orderBy("createdAt", "desc")), (snap) => {
       const txs = snap.docs.map(d => ({id: d.id, ...d.data()}));
@@ -692,6 +721,7 @@
         let cls = isSent ? "sent" : "received";
         if (tx.type === "bank") cls = "bank";
         if (tx.type === "market") cls = "market";
+        if (tx.type === "casino") cls = "casino";
         
         const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
         return `<div class="tx-item ${cls}"><div class="tx-left"><span class="tx-who">${who}</span>${tx.note ? `<span class="tx-note">"${tx.note}"</span>`:""}<span class="tx-date">${date}</span></div><span class="tx-amount ${cls}">${sign}${tx.amount} 🪙</span></div>`;
@@ -718,14 +748,12 @@
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amt });
     if(toData.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", toUid), { balance: toData.balance + amt });
     
-    await addDoc(collection(db, "transactions"), {
-      fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: toUid, toUsername: toData.username,
-      amount: amt, note: document.getElementById("send-note").value, participants: [currentUser.uid, toUid], type: "transfer", createdAt: serverTimestamp()
-    });
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value, participants: [currentUser.uid, toUid], type: "transfer", createdAt: serverTimestamp() });
     document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = "";
     showMsg("send-msg", "success", "Envoyé !");
   }
 
+  /* TICKETS */
   function listenTickets() {
     const isAdmin = currentUser.email === ADMIN_EMAIL;
     onSnapshot(collection(db, "tickets"), (snap) => {
@@ -736,7 +764,6 @@
       el.innerHTML = tickets.map(t => `<div class="ticket-card"><div class="ticket-left"><div class="ticket-code">${t.code}</div><div class="ticket-info">${isAdmin ? `Par ${t.creatorUsername}` : "En attente"}</div></div><div style="text-align:right"><div class="ticket-amount">${t.amount} 🪙</div><button class="btn mini danger" onclick="cancelTicket('${t.id}','${t.creatorUid}',${t.amount})">Annuler</button></div></div>`).join("");
     });
   }
-
   async function createTicket() {
     const amt = parseInt(document.getElementById("ticket-amount").value);
     if(!amt || amt <= 0) return;
@@ -744,10 +771,8 @@
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amt });
     await addDoc(collection(db, "tickets"), { code, amount: amt, creatorUid: currentUser.uid, creatorUsername: currentUserData.username, createdAt: serverTimestamp() });
-    document.getElementById("ticket-amount").value = "";
-    showMsg("create-ticket-msg", "success", "Généré : " + code);
+    document.getElementById("ticket-amount").value = ""; showMsg("create-ticket-msg", "success", "Généré : " + code);
   }
-
   async function redeemTicket() {
     const code = document.getElementById("redeem-code").value.trim();
     if(code.length !== 6) return;
@@ -756,11 +781,8 @@
     const tDoc = snap.docs[0]; const t = tDoc.data();
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + t.amount });
     await addDoc(collection(db, "transactions"), { fromUid: "system", fromUsername: "Billet", toUid: currentUser.uid, toUsername: currentUserData.username, amount: t.amount, note: "Encaissé", participants: [currentUser.uid], type: "ticket", createdAt: serverTimestamp() });
-    await deleteDoc(tDoc.ref);
-    document.getElementById("redeem-code").value = "";
-    showMsg("redeem-msg", "success", `+ ${t.amount} CC !`);
+    await deleteDoc(tDoc.ref); document.getElementById("redeem-code").value = ""; showMsg("redeem-msg", "success", `+ ${t.amount} CC !`);
   }
-
   async function cancelTicket(id, creatorUid, amt) {
     if(!confirm("Annuler ce billet ?")) return;
     await deleteDoc(doc(db, "tickets", id));
@@ -768,69 +790,83 @@
     if(uDoc.exists() && uDoc.data().email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", creatorUid), { balance: uDoc.data().balance + amt });
   }
 
-  function listenMarket() {
-    onSnapshot(query(collection(db, "homeworks"), orderBy("createdAt", "desc")), (snap) => {
-      const el = document.getElementById("hw-list");
-      let docs = []; snap.forEach(d => docs.push({id: d.id, ...d.data()}));
-      if(!docs.length) { el.innerHTML = '<div class="empty">Aucun devoir.</div>'; return; }
-      el.innerHTML = docs.map(hw => {
-        const hasAccess = hw.sellerUid === currentUser.uid || currentUser.email === ADMIN_EMAIL || hw.buyers?.includes(currentUser.uid);
-        let btn = hasAccess ? (hw.sellerUid === currentUser.uid || currentUser.email === ADMIN_EMAIL ? `<button class="hw-delete-btn" style="background:var(--danger);border:none;padding:5px;border-radius:5px" onclick="deleteHomework('${hw.id}')">🗑️</button>` : `<button class="hw-buy-btn" style="background:var(--success)">Acheté</button>`) : `<button class="hw-buy-btn" onclick="buyHomework('${hw.id}','${hw.sellerUid}',${hw.price})">Acheter</button>`;
-        const img = hasAccess ? `<img src="${hw.photoURL}" onclick="openImageModal('${hw.photoURL}')"/>` : `<div class="lock-icon">🔒</div><img src="${hw.photoURL}" class="blurred"/>`;
-        return `<div class="hw-card"><div class="hw-img-container">${img}</div><div class="hw-info"><div class="hw-title">${hw.title}</div><div class="hw-seller">par ${hw.sellerUsername}</div><div class="hw-bottom"><span class="hw-price">${hw.price} 🪙</span>${btn}</div></div></div>`;
-      }).join("");
-    });
-  }
-
-  async function uploadHomework() {
-    const title = document.getElementById("hw-title").value; const price = parseInt(document.getElementById("hw-price").value); const f = document.getElementById("hw-file").files[0];
-    if(!title || !price || !f) return;
-    const btn = document.getElementById("btn-upload-hw"); btn.disabled = true; btn.textContent = "Upload...";
-    try {
-      const fd = new FormData(); fd.append("image", f);
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method:"POST", body:fd });
-      const data = await res.json();
-      await addDoc(collection(db, "homeworks"), { title, price, photoURL: data.data.url, sellerUid: currentUser.uid, sellerUsername: currentUserData.username, buyers: [], createdAt: serverTimestamp() });
-      document.getElementById("hw-title").value = ""; document.getElementById("hw-price").value = ""; document.getElementById("hw-file").value = "";
-      showMsg("hw-msg", "success", "En ligne !");
-    } catch(e) {}
-    btn.disabled = false; btn.textContent = "Mettre en vente";
-  }
-
-  async function buyHomework(hwId, sellerUid, price) {
-    if(currentUser.email !== ADMIN_EMAIL && currentUserData.balance < price) return alert("Solde insuffisant.");
-    if(!confirm("Acheter pour " + price + " CC ?")) return;
-    if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - price });
-    const sDoc = await getDoc(doc(db, "users", sellerUid));
-    if(sDoc.exists() && sDoc.data().email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", sellerUid), { balance: sDoc.data().balance + price });
-    await updateDoc(doc(db, "homeworks", hwId), { buyers: arrayUnion(currentUser.uid) });
-  }
-
-  async function deleteHomework(id) { if(confirm("Supprimer ?")) await deleteDoc(doc(db, "homeworks", id)); }
-  function openImageModal(url) { document.getElementById("modal-img").src = url; document.getElementById("image-modal").style.display = "flex"; }
-  function closeImageModal() { document.getElementById("image-modal").style.display = "none"; }
-
+  /* ADMIN SECTION AVANCEE */
   function loadAdminPage() {
     onSnapshot(collection(db, "users"), (snap) => {
-      document.getElementById("users-tbody").innerHTML = snap.docs.map(d => {
-        let u = d.data(); let isGov = u.email === ADMIN_EMAIL;
-        let bal = isGov ? "∞" : u.balance; let debt = isGov ? "0" : (u.debt||0);
-        let inp = `<div class="edit-balance-row"><input type="number" id="bal-${d.id}" value="${bal}"/><button class="btn mini" onclick="adminSaveBalance('${d.id}')">✓</button></div>`;
-        return `<tr><td>${u.username}</td><td>${bal}</td><td style="color:var(--danger)">${debt}</td><td>${isGov ? "—" : inp}</td></tr>`;
-      }).join("");
-    });
-    onSnapshot(query(collection(db, "transactions"), orderBy("createdAt", "desc")), (snap) => {
-      document.getElementById("admin-all-txs").innerHTML = snap.docs.map(d => {
-        let t = d.data();
-        return `<div class="tx-item sent"><div class="tx-left"><span class="tx-who">${t.fromUsername} → ${t.toUsername}</span></div><span class="tx-amount sent">${t.amount} 🪙</span></div>`;
-      }).join("");
+      let html = "";
+      snap.forEach(d => {
+        let u = d.data();
+        if(u.email === ADMIN_EMAIL) return; // Ne pas afficher l'admin
+        let pfHTML = "";
+        if(currentStocksData) {
+          for(let k in currentStocksData.names) {
+            let qty = (u.portfolio && u.portfolio[k]) ? u.portfolio[k] : 0;
+            pfHTML += `<div class="admin-grid-item"><span>${currentStocksData.names[k]}</span><input type="number" id="adm-pf-${d.id}-${k}" value="${qty}" /></div>`;
+          }
+        }
+        
+        html += `
+        <div class="admin-user-card">
+          <div class="admin-user-header">${u.username} <span style="font-size:0.75rem; color:#888; font-weight:normal;">(${u.email})</span></div>
+          <div class="admin-flex-row"><span>💰 Solde (CC):</span> <input type="number" id="adm-bal-${d.id}" value="${u.balance}"/></div>
+          <div class="admin-flex-row"><span>🏦 Dette (CC):</span> <input type="number" id="adm-debt-${d.id}" value="${u.debt||0}"/></div>
+          <div style="font-size:0.85rem; color:var(--sub); margin-top:8px;">📈 Actions possédées :</div>
+          <div class="admin-grid">${pfHTML}</div>
+          <button class="btn small" style="width:100%; margin-top:10px;" onclick="adminSaveUser('${d.id}')">💾 Sauvegarder les modifications</button>
+        </div>`;
+      });
+      document.getElementById("admin-users-advanced-list").innerHTML = html;
     });
   }
-  async function adminCreateUser() {}
-  async function adminSaveBalance(id) {
-    const b = parseInt(document.getElementById("bal-"+id).value);
-    if(b>=0) await updateDoc(doc(db, "users", id), {balance: b});
+
+  function renderAdminStocks() {
+    if(!currentStocksData) return;
+    if(document.getElementById("admin-config-min").value === "") {
+      document.getElementById("admin-config-min").value = currentStocksData.config.min;
+      document.getElementById("admin-config-max").value = currentStocksData.config.max;
+    }
+    let html = "<div style='font-size:0.85rem; color:var(--sub); margin-bottom:8px;'>Modifier directement les prix :</div>";
+    for(let k in currentStocksData.prices) {
+      html += `
+      <div class="admin-stock-edit">
+        <span style="font-weight:bold">${currentStocksData.names[k]}</span>
+        <div style="display:flex; gap:5px;">
+           <input type="number" id="adm-price-${k}" value="${currentStocksData.prices[k]}">
+           <button class="btn mini" style="margin:0" onclick="adminSaveStockPrice('${k}')">✓</button>
+        </div>
+      </div>`;
+    }
+    document.getElementById("admin-stocks-prices-list").innerHTML = html;
   }
+
+  async function adminSaveStockConfig() {
+    const minC = parseFloat(document.getElementById("admin-config-min").value);
+    const maxC = parseFloat(document.getElementById("admin-config-max").value);
+    await updateDoc(doc(db, "system", "stocks"), { "config.min": minC, "config.max": maxC });
+    alert("Pourcentages mis à jour !");
+  }
+
+  async function adminSaveStockPrice(k) {
+    const val = parseInt(document.getElementById(`adm-price-${k}`).value);
+    if(val > 0) {
+      await updateDoc(doc(db, "system", "stocks"), { [`prices.${k}`]: val });
+    }
+  }
+
+  async function adminSaveUser(uid) {
+    const bal = parseInt(document.getElementById(`adm-bal-${uid}`).value);
+    const debt = parseInt(document.getElementById(`adm-debt-${uid}`).value);
+    let newPf = {};
+    if(currentStocksData) {
+      for(let k in currentStocksData.names) {
+        newPf[k] = parseInt(document.getElementById(`adm-pf-${uid}-${k}`).value) || 0;
+      }
+    }
+    await updateDoc(doc(db, "users", uid), { balance: bal, debt: debt, portfolio: newPf });
+    alert("Utilisateur mis à jour !");
+  }
+
+  async function adminCreateUser() {} // Placeholder si besoin futur
 
   function showPage(p, e) {
     document.querySelectorAll(".page, .nav-tab").forEach(el => el.classList.remove("active"));
