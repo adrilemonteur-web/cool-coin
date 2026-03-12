@@ -123,6 +123,22 @@
     .casino-controls { display: flex; flex-direction: column; gap: 10px; max-width: 250px; margin: 0 auto; }
     .casino-odds { margin-top: 20px; font-size: 0.75rem; color: rgba(255,255,255,0.6); text-align: left; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;}
 
+    /* Devoirs */
+    .hw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .hw-grid { grid-template-columns: 1fr; } }
+    .hw-card { background: var(--card); border: 1px solid #2a2a3e; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+    .hw-img-container { width: 100%; height: 140px; background: #0d0d0d; display: flex; align-items: center; justify-content: center; position: relative; }
+    .hw-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
+    .hw-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .hw-seller { font-size: 0.75rem; color: var(--sub); margin-bottom: 8px; }
+    .hw-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 10px; border-top: 1px solid #2a2a3e; }
+    .hw-price { font-weight: 800; color: var(--gold); }
+    
+    #image-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+    #modal-img-container { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; max-height: 90vh; max-width: 90%; align-items: center; }
+    #modal-img-container img { max-width: 100%; border-radius: 8px; }
+    .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; z-index: 101;}
+
     /* Admin Advanced */
     .admin-stock-edit { display: flex; justify-content: space-between; align-items: center; background: #0d0d0d; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #333; }
     .admin-stock-edit input { width: 80px; padding: 5px; margin: 0; }
@@ -196,7 +212,8 @@
     <div class="nav-tabs" id="nav-tabs">
       <button class="nav-tab active" onclick="showPage('dashboard', event)">Accueil</button>
       <button class="nav-tab" onclick="showPage('send', event)">Envoyer</button>
-      <button class="nav-tab" onclick="showPage('bank', event)">🏦 Banque & Bourse</button>
+      <button class="nav-tab" onclick="showPage('bank', event)">🏦 Banque/Bourse</button>
+      <button class="nav-tab" onclick="showPage('market', event)">📚 Devoirs</button>
       <button class="nav-tab" onclick="showPage('casino', event)">🎰 Casino</button>
       <button class="nav-tab" onclick="showPage('tickets', event)">💸 Billets</button>
       <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin', event)">⚙️ Admin</button>
@@ -251,6 +268,27 @@
         </div>
         <div class="next-update" style="line-height: 1.4;"><span id="bourse-info-text">Fluctuations contrôlées en temps réel par l'administration.</span></div>
         <div id="bourse-msg" class="msg" style="margin-top:10px;"></div>
+      </div>
+    </div>
+    
+    <!-- MARKET (DEVOIRS) -->
+    <div id="page-market" class="page">
+      <div class="section">
+        <div class="section-title">Vendre un devoir</div>
+        <div class="form-card">
+          <label>Titre</label>
+          <input type="text" id="hw-title" placeholder="Ex: DM Maths Exo 3" />
+          <label>Prix (CC)</label>
+          <input type="number" id="hw-price" placeholder="Ex: 20" min="1" />
+          <label>Photo(s) (Sélectionne plusieurs si besoin)</label>
+          <input type="file" id="hw-file" accept="image/*" multiple />
+          <button class="btn blue" id="btn-upload-hw" onclick="uploadHomework()">Mettre en vente</button>
+          <div id="hw-msg" class="msg"></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">Devoirs en vente</div>
+        <div class="hw-grid" id="hw-list"><div class="empty">Aucun devoir.</div></div>
       </div>
     </div>
 
@@ -362,6 +400,12 @@
   </div>
 </div>
 
+<!-- Modal Image -->
+<div id="image-modal" onclick="closeImageModal()">
+  <button class="close-modal" onclick="closeImageModal()">&times;</button>
+  <div id="modal-img-container" onclick="event.stopPropagation()"></div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -377,6 +421,7 @@
   };
 
   const ADMIN_EMAIL = "adminadri@coolteam.com";
+  const IMGBB_API_KEY = "b88a5919ae8a6a77e62c73a6339ff5b3"; 
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -395,6 +440,8 @@
   window.adminCreateUser = adminCreateUser; 
   window.adminSaveStockConfig = adminSaveStockConfig; window.adminSaveStockPrice = adminSaveStockPrice;
   window.adminSaveUser = adminSaveUser;
+  window.uploadHomework = uploadHomework; window.buyHomework = buyHomework; window.deleteHomework = deleteHomework;
+  window.openImageModal = openImageModal; window.closeImageModal = closeImageModal;
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -411,6 +458,7 @@
       listenTransactions();
       listenStocks();
       listenTickets();
+      listenMarket();
       loadSendPage();
       if (isAdmin) loadAdminPage();
     } else {
@@ -643,6 +691,93 @@
     showMsg("bourse-msg", "success", "Vente validée !");
   }
 
+  /* MARKET (DEVOIRS) */
+  function listenMarket() {
+    onSnapshot(query(collection(db, "homeworks"), orderBy("createdAt", "desc")), (snap) => {
+      const el = document.getElementById("hw-list");
+      let docs = []; snap.forEach(d => docs.push({id: d.id, ...d.data()}));
+      if(!docs.length) { el.innerHTML = '<div class="empty">Aucun devoir.</div>'; return; }
+      
+      el.innerHTML = docs.map(hw => {
+        let urls = hw.photoURLs || (hw.photoURL ? [hw.photoURL] : []);
+        const hasAccess = hw.sellerUid === currentUser.uid || currentUser.email === ADMIN_EMAIL || (hw.buyers && hw.buyers.includes(currentUser.uid));
+        
+        let btn = hasAccess ? 
+          (hw.sellerUid === currentUser.uid || currentUser.email === ADMIN_EMAIL ? 
+            `<button class="btn mini danger" onclick="deleteHomework('${hw.id}')">🗑️</button>` : 
+            `<button class="btn mini" style="background:var(--success); color:white; border:none;">Acheté ✓</button>`) : 
+          `<button class="btn mini blue" onclick="buyHomework('${hw.id}','${hw.sellerUid}',${hw.price})">Acheter</button>`;
+        
+        let imgHtml = "";
+        if (hasAccess) {
+          let urlsStr = urls.join(',');
+          imgHtml = `<img src="${urls[0]}" onclick="openImageModal('${urlsStr}')" style="cursor:pointer; width:100%; height:100%; object-fit:cover;" />`;
+          if (urls.length > 1) {
+             imgHtml += `<div style="position:absolute; bottom:5px; right:5px; background:rgba(0,0,0,0.7); padding:3px 6px; border-radius:4px; font-size:0.75rem; color:white;">1/${urls.length}</div>`;
+          }
+        } else {
+          imgHtml = `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='400' height='300' fill='%232a2a3e'/><text x='50%' y='50%' font-size='40' text-anchor='middle' alignment-baseline='middle'>🔒</text></svg>" style="width:100%; height:100%; object-fit:cover;" />`;
+        }
+        
+        return `<div class="hw-card"><div class="hw-img-container">${imgHtml}</div><div class="hw-info"><div class="hw-title">${hw.title}</div><div class="hw-seller">par ${hw.sellerUsername}</div><div class="hw-bottom"><span class="hw-price">${hw.price} 🪙</span>${btn}</div></div></div>`;
+      }).join("");
+    });
+  }
+
+  async function uploadHomework() {
+    const title = document.getElementById("hw-title").value; 
+    const price = parseInt(document.getElementById("hw-price").value); 
+    const files = document.getElementById("hw-file").files;
+    
+    if(!title || !price || files.length === 0) return;
+    
+    const btn = document.getElementById("btn-upload-hw"); 
+    btn.disabled = true; btn.textContent = "Upload en cours...";
+    
+    try {
+      let uploadedURLs = [];
+      for(let i = 0; i < files.length; i++) {
+        const fd = new FormData(); fd.append("image", files[i]);
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method:"POST", body:fd });
+        const data = await res.json();
+        uploadedURLs.push(data.data.url);
+      }
+      
+      await addDoc(collection(db, "homeworks"), { 
+        title, price, photoURLs: uploadedURLs, 
+        sellerUid: currentUser.uid, sellerUsername: currentUserData.username, 
+        buyers: [], createdAt: serverTimestamp() 
+      });
+      
+      document.getElementById("hw-title").value = ""; 
+      document.getElementById("hw-price").value = ""; 
+      document.getElementById("hw-file").value = "";
+      showMsg("hw-msg", "success", "En ligne !");
+    } catch(e) {
+      showMsg("hw-msg", "error", "Erreur d'upload.");
+    }
+    btn.disabled = false; btn.textContent = "Mettre en vente";
+  }
+
+  async function buyHomework(hwId, sellerUid, price) {
+    if(currentUser.email !== ADMIN_EMAIL && currentUserData.balance < price) return alert("Solde insuffisant.");
+    if(!confirm("Acheter pour " + price + " CC ?")) return;
+    if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - price });
+    const sDoc = await getDoc(doc(db, "users", sellerUid));
+    if(sDoc.exists() && sDoc.data().email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", sellerUid), { balance: sDoc.data().balance + price });
+    await updateDoc(doc(db, "homeworks", hwId), { buyers: arrayUnion(currentUser.uid) });
+  }
+
+  async function deleteHomework(id) { if(confirm("Supprimer ce devoir ?")) await deleteDoc(doc(db, "homeworks", id)); }
+  
+  function openImageModal(urlsStr) { 
+    const urls = urlsStr.split(',');
+    document.getElementById("modal-img-container").innerHTML = urls.map(u => `<img src="${u}" style="max-width:100%; border-radius:8px; margin-bottom:10px;" />`).join("");
+    document.getElementById("image-modal").style.display = "flex"; 
+  }
+  function closeImageModal() { document.getElementById("image-modal").style.display = "none"; }
+
+
   /* CASINO */
   const emojis = ['🍒', '🍋', '💎', '🍉', '🔔', '7️⃣'];
   async function playCasino() {
@@ -654,7 +789,6 @@
     const btn = document.getElementById("btn-spin");
     btn.disabled = true; btn.textContent = "🎰 Rotation...";
     
-    // Animation visuelle rapide
     let spinInterval = setInterval(() => {
       document.getElementById("slot-1").textContent = emojis[Math.floor(Math.random() * emojis.length)];
       document.getElementById("slot-2").textContent = emojis[Math.floor(Math.random() * emojis.length)];
@@ -664,21 +798,17 @@
     setTimeout(async () => {
       clearInterval(spinInterval);
       
-      // Logique mathématique stricte
       const roll = Math.random();
       let multiplier = 0;
       let symbol1, symbol2, symbol3;
 
       if (roll < 0.60) {
-        // 60% : Perdu x0 (3 symboles différents)
         multiplier = 0;
         symbol1 = emojis[0]; symbol2 = emojis[1]; symbol3 = emojis[2];
       } else if (roll < 0.95) {
-        // 35% : Gagné x2 (2 symboles pareils)
         multiplier = 2;
         symbol1 = emojis[3]; symbol2 = emojis[3]; symbol3 = emojis[1];
       } else {
-        // 5% : Jackpot x5 (3 symboles pareils - 💎)
         multiplier = 5;
         symbol1 = '💎'; symbol2 = '💎'; symbol3 = '💎';
       }
@@ -692,7 +822,6 @@
 
       await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + profit });
       
-      // Enregistrement transaction
       if (profit > 0) {
         await addDoc(collection(db, "transactions"), { fromUid: "casino", fromUsername: "🎰 Casino", toUid: currentUser.uid, toUsername: currentUserData.username, amount: profit, note: "Gains Machine à sous", participants: [currentUser.uid], type: "casino", createdAt: serverTimestamp() });
         document.getElementById("casino-msg").innerHTML = `<span style="color:var(--success); font-weight:bold; font-size:1.2rem;">Gagné ! +${profit} CC 🤑</span>`;
@@ -796,7 +925,7 @@
       let html = "";
       snap.forEach(d => {
         let u = d.data();
-        if(u.email === ADMIN_EMAIL) return; // Ne pas afficher l'admin
+        if(u.email === ADMIN_EMAIL) return; 
         let pfHTML = "";
         if(currentStocksData) {
           for(let k in currentStocksData.names) {
@@ -866,7 +995,7 @@
     alert("Utilisateur mis à jour !");
   }
 
-  async function adminCreateUser() {} // Placeholder si besoin futur
+  async function adminCreateUser() {} 
 
   function showPage(p, e) {
     document.querySelectorAll(".page, .nav-tab").forEach(el => el.classList.remove("active"));
