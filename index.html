@@ -259,7 +259,7 @@
         <div class="stock-grid" id="stocks-list">
           <div class="empty">Chargement du marché...</div>
         </div>
-        <div class="next-update" style="line-height: 1.4;">Les prix fluctuent de -9.7% à +10.3%.<br><span style="font-size:0.7rem;">(Croissance moyenne : +1.5% par heure. Événements extrêmes possibles 📈📉).</span></div>
+        <div class="next-update" style="line-height: 1.4;">Croissance moyenne : environ +0.25% par heure. <br><span style="font-size:0.7rem;">(Fluctuations de -5% à +5.04%, événements rares possibles 📈📉).</span></div>
         <div id="bourse-msg" class="msg" style="margin-top:10px;"></div>
       </div>
     </div>
@@ -581,7 +581,7 @@
       const last = currentStocksData.lastUpdate ? currentStocksData.lastUpdate.toDate() : new Date();
       const timePassedMs = new Date() - last;
       
-      const periodsMissed = Math.floor(timePassedMs / 300000); // 300000ms = 5 minutes
+      const periodsMissed = Math.floor(timePassedMs / 300000); 
       
       if (periodsMissed > 0 && !updatingStocks) {
         updatingStocks = true;
@@ -592,23 +592,24 @@
         for (let i = 0; i < maxCatchup; i++) {
           for(let k in newPrices) {
             
-            // MATHÉMATIQUES EXACTES :
-            // Pour contrer le "Geometric Drag" et viser +1.5% d'évolution par heure (sur 12 tics)
+            // NOUVELLE FORMULE pour atteindre très exactement ~0.25% par HEURE.
+            // On veut un multiplicateur moyen de 1.000208 par tic de 5 minutes.
+            
             const r = Math.random();
             let change;
             
             if (r < 0.0005) {
-              // 1 chance sur 2000 par tic de 5 minutes : CRASH (-50%)
-              // (Environ 0.6% de chance que ça arrive sur 1 heure)
+              // 1/2000 : Crash (-50%)
               change = 0.50; 
             } else if (r < 0.0010) {
-              // 1 chance sur 2000 par tic de 5 minutes : MOON (+50%)
+              // 1/2000 : Moon (+50%)
               change = 1.50;
             } else {
-              // 99.9% du temps : Fluctuation normale
-              // Pour avoir une espérance mathématique parfaite qui ne s'effondre pas, 
-              // la fourchette doit être très légèrement déséquilibrée vers le haut : de -9.69% à +10.31%
-              change = 1 + (Math.random() * 0.20 - 0.0969); 
+              // Fluctuation entre -5.00% et +5.04%
+              // La moyenne fait +0.02% (soit +0.25% sur les 12 tics de l'heure).
+              // Pourquoi une plage de 10% (-5 à +5) ? Pour éviter le problème des arrondis ! 
+              // Si la plage est trop petite, les petites actions (ex: 20 CC) s'arrondiront toujours au même chiffre et resteront bloquées.
+              change = 1 + (Math.random() * 0.1004 - 0.05); 
             }
             
             newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
