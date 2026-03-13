@@ -781,9 +781,10 @@
   function listenMarket() {
     onSnapshot(query(collection(db, "homeworks"), orderBy("createdAt", "desc")), (snap) => {
       const el = document.getElementById("hw-list");
-      let docs = []; snap.forEach(d => push({id: d.id, ...d.data()})); // minor fix
+      let docs = []; 
       snap.forEach(d => docs.push({id: d.id, ...d.data()}));
-      if(!docs.length) { el.innerHTML = '<div class="empty">Aucun devoir.</div>'; return; }
+      
+      if(!docs.length) { el.innerHTML = '<div class="empty">Aucun devoir en vente.</div>'; return; }
       
       el.innerHTML = docs.map(hw => {
         let urls = hw.photoURLs || (hw.photoURL ? [hw.photoURL] : []);
@@ -791,7 +792,7 @@
         
         let btn = hasAccess ? 
           (hw.sellerUid === currentUser.uid || currentUser.email === ADMIN_EMAIL ? 
-            `<button class="btn mini danger" onclick="deleteHomework('${hw.id}')">🗑️</button>` : 
+            `<button class="btn mini danger" onclick="deleteHomework('${hw.id}')">🗑️ Suppr.</button>` : 
             `<button class="btn mini" style="background:var(--success); color:white; border:none; pointer-events:none;">Acheté ✓</button>`) : 
           `<button class="btn mini blue" onclick="buyHomework('${hw.id}','${hw.sellerUid}',${hw.price})">Acheter</button>`;
         
