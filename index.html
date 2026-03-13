@@ -84,7 +84,7 @@
     .tx-item { background: var(--card); border-radius: 10px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
     .tx-item.sent { border-left-color: var(--danger); }
     .tx-item.received { border-left-color: var(--success); }
-    .tx-item.gov { border-left-color: #a78bfa; }
+    .tx-item.gov { border-left-color: #a78bfa; background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), #1a1a2e); }
     .tx-item.market { border-left-color: var(--blue); }
     .tx-item.bank { border-left-color: var(--bank); }
     .tx-item.casino { border-left-color: var(--purple); }
@@ -217,6 +217,7 @@
       <button class="nav-tab" onclick="showPage('casino', event)">🎰 Casino</button>
       <button class="nav-tab" onclick="showPage('tickets', event)">💸 Billets</button>
       <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin', event)">⚙️ Admin</button>
+      <button class="nav-tab" id="admin-tx-tab" style="display:none" onclick="showPage('admin-tx', event)">📜 Flux Global</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -365,7 +366,7 @@
       </div>
     </div>
 
-    <!-- ADMIN -->
+    <!-- ADMIN: GESTION -->
     <div id="page-admin" class="page">
       <div class="section">
         <div class="section-title">📈 Gérer la Bourse (Paramètres)</div>
@@ -397,6 +398,17 @@
         </div>
       </div>
     </div>
+
+    <!-- ADMIN: HISTORIQUE GLOBAL -->
+    <div id="page-admin-tx" class="page">
+      <div class="section">
+        <div class="section-title">📜 Historique détaillé de toutes les transactions</div>
+        <div class="tx-list" id="admin-global-txs">
+          <div class="empty">Chargement de l'historique...</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -452,6 +464,7 @@
       
       const isAdmin = (user.email === ADMIN_EMAIL);
       document.getElementById("admin-tab").style.display = isAdmin ? "block" : "none";
+      document.getElementById("admin-tx-tab").style.display = isAdmin ? "block" : "none";
       document.getElementById("my-tickets-title").textContent = isAdmin ? "Tous les billets actifs" : "Mes billets en attente";
 
       listenUserData();
@@ -460,7 +473,11 @@
       listenTickets();
       listenMarket();
       loadSendPage();
-      if (isAdmin) loadAdminPage();
+      
+      if (isAdmin) {
+        loadAdminPage();
+        listenAllTransactions();
+      }
     } else {
       currentUser = null;
       currentUserData = null;
@@ -851,6 +868,7 @@
         if (tx.type === "bank") cls = "bank";
         if (tx.type === "market") cls = "market";
         if (tx.type === "casino") cls = "casino";
+        if (tx.type === "gov" && !isSent) cls = "gov"; // Reception depuis le Gouvernement
         
         const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
         return `<div class="tx-item ${cls}"><div class="tx-left"><span class="tx-who">${who}</span>${tx.note ? `<span class="tx-note">"${tx.note}"</span>`:""}<span class="tx-date">${date}</span></div><span class="tx-amount ${cls}">${sign}${tx.amount} 🪙</span></div>`;
@@ -877,7 +895,21 @@
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amt });
     if(toData.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", toUid), { balance: toData.balance + amt });
     
-    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value, participants: [currentUser.uid, toUid], type: "transfer", createdAt: serverTimestamp() });
+    // Si l'admin envoie, on l'affiche sous forme de Gouvernement
+    const senderName = currentUser.email === ADMIN_EMAIL ? "🏛️ Gouvernement" : currentUserData.username;
+    const txType = currentUser.email === ADMIN_EMAIL ? "gov" : "transfer";
+    
+    await addDoc(collection(db, "transactions"), { 
+      fromUid: currentUser.uid, 
+      fromUsername: senderName, 
+      toUid: toUid, 
+      toUsername: toData.username, 
+      amount: amt, 
+      note: document.getElementById("send-note").value, 
+      participants: [currentUser.uid, toUid], 
+      type: txType, 
+      createdAt: serverTimestamp() 
+    });
     document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = "";
     showMsg("send-msg", "success", "Envoyé !");
   }
@@ -996,6 +1028,33 @@
   }
 
   async function adminCreateUser() {} 
+  
+  function listenAllTransactions() {
+    onSnapshot(query(collection(db, "transactions"), orderBy("createdAt", "desc")), (snap) => {
+      const txs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+      const el = document.getElementById("admin-global-txs");
+      if(!txs.length) { el.innerHTML = '<div class="empty">Aucune transaction</div>'; return; }
+      el.innerHTML = txs.map(tx => {
+        let cls = "received"; 
+        if (tx.type === "bank") cls = "bank";
+        if (tx.type === "market") cls = "market";
+        if (tx.type === "casino") cls = "casino";
+        if (tx.type === "gov") cls = "gov";
+        if (tx.type === "transfer") cls = "market";
+        
+        const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
+        return `
+          <div class="tx-item ${cls}">
+            <div class="tx-left">
+              <span class="tx-who">${tx.fromUsername} ➔ ${tx.toUsername}</span>
+              ${tx.note ? `<span class="tx-note">"${tx.note}"</span>`:""}
+              <span class="tx-date">${date}</span>
+            </div>
+            <span class="tx-amount ${cls}">${tx.amount} 🪙</span>
+          </div>`;
+      }).join("");
+    });
+  }
 
   function showPage(p, e) {
     document.querySelectorAll(".page, .nav-tab").forEach(el => el.classList.remove("active"));
