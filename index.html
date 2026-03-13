@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
@@ -85,6 +85,7 @@
     .tx-item.sent { border-left-color: var(--danger); }
     .tx-item.received { border-left-color: var(--success); }
     .tx-item.gov { border-left-color: #a78bfa; background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), #1a1a2e); }
+    .tx-item.gov-fine { border-left-color: #e74c3c; background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), #1a1a2e); }
     .tx-item.market { border-left-color: var(--blue); }
     .tx-item.bank { border-left-color: var(--bank); }
     .tx-item.casino { border-left-color: var(--purple); }
@@ -96,6 +97,7 @@
     .tx-amount.sent { color: var(--danger); }
     .tx-amount.received { color: var(--success); }
     .tx-amount.gov { color: #a78bfa; }
+    .tx-amount.gov-fine { color: #e74c3c; }
     .tx-amount.market { color: var(--blue); }
     .tx-amount.bank { color: var(--bank); }
     .tx-amount.casino { color: var(--purple); }
@@ -211,7 +213,7 @@
   <div class="content">
     <div class="nav-tabs" id="nav-tabs">
       <button class="nav-tab active" onclick="showPage('dashboard', event)">Accueil</button>
-      <button class="nav-tab" onclick="showPage('send', event)">Envoyer</button>
+      <button class="nav-tab" onclick="showPage('send', event)">Envoyer / Amende</button>
       <button class="nav-tab" onclick="showPage('bank', event)">🏦 Banque/Bourse</button>
       <button class="nav-tab" onclick="showPage('market', event)">📚 Devoirs</button>
       <button class="nav-tab" onclick="showPage('casino', event)">🎰 Casino</button>
@@ -354,13 +356,18 @@
       <div class="section">
         <div class="section-title">Envoyer des Cool Coins</div>
         <div class="form-card">
-          <label>Destinataire</label>
+          <label>Cible</label>
           <select id="send-to"></select>
           <label>Montant (CC)</label>
           <input type="number" id="send-amount" placeholder="Ex: 50" min="1" />
           <label>Note (optionnel)</label>
           <input type="text" id="send-note" placeholder="Ex: pour la pizza" />
-          <button class="btn" onclick="sendCoins()">Envoyer</button>
+          
+          <div style="display:flex; gap:10px;">
+             <button class="btn" onclick="sendCoins()">Envoyer l'argent</button>
+             <button class="btn danger" id="admin-fine-btn" style="display:none;" onclick="fineUser()">Infliger Amende</button>
+          </div>
+          
           <div id="send-msg" class="msg"></div>
         </div>
       </div>
@@ -443,7 +450,8 @@
   let currentUserData = null;
   let currentStocksData = null;
 
-  window.login = login; window.register = register; window.logout = logout; window.sendCoins = sendCoins;
+  window.login = login; window.register = register; window.logout = logout; 
+  window.sendCoins = sendCoins; window.fineUser = fineUser;
   window.switchAuthTab = switchAuthTab; window.showPage = showPage;
   window.borrowMoney = borrowMoney; window.repayMoney = repayMoney;
   window.buyStock = buyStock; window.sellStock = sellStock;
@@ -465,6 +473,7 @@
       const isAdmin = (user.email === ADMIN_EMAIL);
       document.getElementById("admin-tab").style.display = isAdmin ? "block" : "none";
       document.getElementById("admin-tx-tab").style.display = isAdmin ? "block" : "none";
+      document.getElementById("admin-fine-btn").style.display = isAdmin ? "block" : "none";
       document.getElementById("my-tickets-title").textContent = isAdmin ? "Tous les billets actifs" : "Mes billets en attente";
 
       listenUserData();
@@ -852,7 +861,7 @@
     }, 1500);
   }
 
-  /* TRANSACTIONS & SEND */
+  /* TRANSACTIONS, SEND & FINES */
   function listenTransactions() {
     onSnapshot(query(collection(db, "transactions"), where("participants", "array-contains", currentUser.uid), orderBy("createdAt", "desc")), (snap) => {
       const txs = snap.docs.map(d => ({id: d.id, ...d.data()}));
@@ -868,7 +877,12 @@
         if (tx.type === "bank") cls = "bank";
         if (tx.type === "market") cls = "market";
         if (tx.type === "casino") cls = "casino";
-        if (tx.type === "gov" && !isSent) cls = "gov"; // Reception depuis le Gouvernement
+        if (tx.type === "gov" && !isSent) cls = "gov"; 
+        if (tx.type === "gov-fine") {
+          cls = "gov-fine";
+          sign = "-";
+          if(!isSent) who = `Amende de ${tx.fromUsername}`;
+        }
         
         const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
         return `<div class="tx-item ${cls}"><div class="tx-left"><span class="tx-who">${who}</span>${tx.note ? `<span class="tx-note">"${tx.note}"</span>`:""}<span class="tx-date">${date}</span></div><span class="tx-amount ${cls}">${sign}${tx.amount} 🪙</span></div>`;
@@ -895,7 +909,6 @@
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amt });
     if(toData.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", toUid), { balance: toData.balance + amt });
     
-    // Si l'admin envoie, on l'affiche sous forme de Gouvernement
     const senderName = currentUser.email === ADMIN_EMAIL ? "🏛️ Gouvernement" : currentUserData.username;
     const txType = currentUser.email === ADMIN_EMAIL ? "gov" : "transfer";
     
@@ -912,6 +925,49 @@
     });
     document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = "";
     showMsg("send-msg", "success", "Envoyé !");
+  }
+
+  async function fineUser() {
+    if(currentUser.email !== ADMIN_EMAIL) return;
+    const toUid = document.getElementById("send-to").value; 
+    const amt = parseInt(document.getElementById("send-amount").value);
+    if (!toUid || !amt || amt <= 0) return;
+    
+    const toSnap = await getDoc(doc(db, "users", toUid)); 
+    if(!toSnap.exists()) return;
+    const toData = toSnap.data();
+    if(toData.email === ADMIN_EMAIL) return showMsg("send-msg", "error", "Pas d'amende au gouv.");
+    
+    let currentBalance = toData.balance;
+    let currentDebt = toData.debt || 0;
+    
+    // Logique d'amende : si pas assez de solde, le reste va dans la dette
+    if(currentBalance >= amt) {
+       currentBalance -= amt;
+    } else {
+       let rest = amt - currentBalance;
+       currentBalance = 0;
+       currentDebt += rest;
+    }
+    
+    await updateDoc(doc(db, "users", toUid), { balance: currentBalance, debt: currentDebt });
+    
+    const note = document.getElementById("send-note").value || "Saisie Gouvernementale";
+    
+    await addDoc(collection(db, "transactions"), { 
+      fromUid: currentUser.uid, 
+      fromUsername: "⚖️ Justice", 
+      toUid: toUid, 
+      toUsername: toData.username, 
+      amount: amt, 
+      note: note, 
+      participants: [toUid], 
+      type: "gov-fine", 
+      createdAt: serverTimestamp() 
+    });
+    
+    document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = "";
+    showMsg("send-msg", "success", `Amende de ${amt} infligée à ${toData.username}.`);
   }
 
   /* TICKETS */
@@ -1040,6 +1096,7 @@
         if (tx.type === "market") cls = "market";
         if (tx.type === "casino") cls = "casino";
         if (tx.type === "gov") cls = "gov";
+        if (tx.type === "gov-fine") cls = "gov-fine";
         if (tx.type === "transfer") cls = "market";
         
         const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
