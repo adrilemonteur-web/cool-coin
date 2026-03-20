@@ -6,84 +6,35 @@
   <title>Cool Coin 🪙</title>
   <meta name="theme-color" content="#0d0d0d" id="meta-theme-color">
   <style>
-    /* =========================================
-       PALETTES DE COULEURS (CLAIR / SOMBRE)
-       ========================================= */
     :root {
-      /* THEME SOMBRE (Défaut) */
-      --bg-color: #0d0d0d;
-      --card-bg: #1a1a2e;
-      --topbar-bg: rgba(26, 26, 46, 0.85);
-      --nav-bg: rgba(18, 18, 30, 0.92);
-      --border-color: #2a2a3e;
-      --text-main: #eaeaea;
-      --text-muted: #888888;
-      --input-bg: #0d0d0d;
-      --shadow-color: rgba(0, 0, 0, 0.4);
-
-      --primary: #f5c518; /* Or */
-      --primary-light: rgba(245, 197, 24, 0.15);
-      --primary-glow: rgba(245, 197, 24, 0.25);
-      --btn-text: #000000;
-
-      --success: #2ecc71;
-      --danger: #e74c3c;
-      --blue: #3498db;
-      --ticket: #27ae60;
-      --bank: #f39c12;
-      
-      --ease: cubic-bezier(0.25, 1, 0.5, 1);
-      --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --bg-color: #0d0d0d; --card-bg: #1a1a2e; --topbar-bg: rgba(26, 26, 46, 0.85); --nav-bg: rgba(18, 18, 30, 0.92);
+      --border-color: #2a2a3e; --text-main: #eaeaea; --text-muted: #888888; --input-bg: #0d0d0d; --shadow-color: rgba(0, 0, 0, 0.4);
+      --primary: #f5c518; --primary-light: rgba(245, 197, 24, 0.15); --primary-glow: rgba(245, 197, 24, 0.25); --btn-text: #000000;
+      --success: #2ecc71; --danger: #e74c3c; --blue: #3498db; --ticket: #27ae60; --bank: #f39c12;
+      --ease: cubic-bezier(0.25, 1, 0.5, 1); --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
     [data-theme="light"] {
-      --bg-color: #f3f4f6;
-      --card-bg: #ffffff;
-      --topbar-bg: rgba(255, 255, 255, 0.85);
-      --nav-bg: rgba(255, 255, 255, 0.92);
-      --border-color: #e5e7eb;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --input-bg: #f8fafc;
-      --shadow-color: rgba(0, 0, 0, 0.08);
-
-      --primary: #3b82f6; /* Bleu Moderne */
-      --primary-light: rgba(59, 130, 246, 0.15);
-      --primary-glow: rgba(59, 130, 246, 0.25);
-      --btn-text: #ffffff;
+      --bg-color: #f3f4f6; --card-bg: #ffffff; --topbar-bg: rgba(255, 255, 255, 0.85); --nav-bg: rgba(255, 255, 255, 0.92);
+      --border-color: #e5e7eb; --text-main: #0f172a; --text-muted: #64748b; --input-bg: #f8fafc; --shadow-color: rgba(0, 0, 0, 0.08);
+      --primary: #3b82f6; --primary-light: rgba(59, 130, 246, 0.15); --primary-glow: rgba(59, 130, 246, 0.25); --btn-text: #ffffff;
     }
-
     [data-theme="midnight"] {
-      --bg-color: #020617;
-      --card-bg: #0f172a;
-      --topbar-bg: rgba(15, 23, 42, 0.85);
-      --nav-bg: rgba(15, 23, 42, 0.92);
-      --border-color: #1e293b;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --input-bg: #020617;
-      --shadow-color: rgba(0, 0, 0, 0.5);
-
-      --primary: #8b5cf6; /* Violet Cyber */
-      --primary-light: rgba(139, 92, 246, 0.15);
-      --primary-glow: rgba(139, 92, 246, 0.25);
-      --btn-text: #ffffff;
+      --bg-color: #020617; --card-bg: #0f172a; --topbar-bg: rgba(15, 23, 42, 0.85); --nav-bg: rgba(15, 23, 42, 0.92);
+      --border-color: #1e293b; --text-main: #f8fafc; --text-muted: #94a3b8; --input-bg: #020617; --shadow-color: rgba(0, 0, 0, 0.5);
+      --primary: #8b5cf6; --primary-light: rgba(139, 92, 246, 0.15); --primary-glow: rgba(139, 92, 246, 0.25); --btn-text: #ffffff;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg-color); color: var(--text-main); min-height: 100vh; overflow-x: hidden; transition: background-color 0.3s, color 0.3s; }
     
-    /* ANIMATIONS OPTIMISÉES */
     @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 20px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
     @keyframes popIn { 0% { opacity: 0; transform: scale3d(0.8, 0.8, 1); } 70% { transform: scale3d(1.05, 1.05, 1); } 100% { opacity: 1; transform: scale3d(1, 1, 1); } }
     @keyframes bounceIcon { 0% { transform: scale3d(1, 1, 1); } 50% { transform: scale3d(1.35, 1.35, 1) translate3d(0, -3px, 0); } 100% { transform: scale3d(1, 1, 1) translate3d(0, 0, 0); } }
     
-    /* AUTH SCREEN */
     #auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; animation: fadeInUp 0.6s var(--ease); transform: translateZ(0); }
     .logo { font-size: 3.5rem; margin-bottom: 8px; animation: popIn 0.8s var(--ease-bounce); }
-    .logo-title { font-size: 2rem; font-weight: 900; color: var(--primary); margin-bottom: 4px; text-align: center; transition: color 0.3s;}
+    .logo-title { font-size: 2rem; font-weight: 900; color: var(--primary); margin-bottom: 4px; text-align: center; }
     .logo-sub { color: var(--text-muted); margin-bottom: 30px; font-size: 1rem; text-align: center; }
-    .auth-box { background: var(--card-bg); border-radius: 20px; padding: 32px 24px; width: 100%; max-width: 400px; box-shadow: 0 10px 40px var(--shadow-color); border: 1px solid var(--border-color); transition: background 0.3s, border 0.3s; }
+    .auth-box { background: var(--card-bg); border-radius: 20px; padding: 32px 24px; width: 100%; max-width: 400px; box-shadow: 0 10px 40px var(--shadow-color); border: 1px solid var(--border-color); }
     .auth-tabs { display: flex; margin-bottom: 24px; gap: 8px; background: var(--input-bg); padding: 6px; border-radius: 12px; border: 1px solid var(--border-color);}
     .auth-tab { flex: 1; padding: 12px; border: none; border-radius: 8px; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.3s var(--ease); }
     .auth-tab.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 4px 10px var(--shadow-color); transform: scale(1.02); }
@@ -95,8 +46,7 @@
     
     input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="file"] {
       width: 100%; padding: 14px 16px; background: var(--input-bg); border: 1px solid var(--border-color);
-      border-radius: 12px; color: var(--text-main); font-size: 16px; transition: all 0.3s var(--ease);
-      -webkit-appearance: none;
+      border-radius: 12px; color: var(--text-main); font-size: 16px; transition: all 0.3s var(--ease); -webkit-appearance: none;
     }
     input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); transform: translateY(-1px); }
     
@@ -112,38 +62,34 @@
     .btn.small { padding: 10px 16px; font-size: 0.9rem; margin-top: 0; width: auto; display: inline-block; border-radius: 10px; }
     .btn.mini { padding: 6px 12px; font-size: 0.85rem; margin-top: 0; width: auto; display: inline-block; border-radius: 8px; box-shadow: none;}
     
-    /* APP SCREEN */
     #app-screen { display: none; min-height: 100vh; }
-    .topbar { background: var(--topbar-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; transition: background 0.3s, border 0.3s; transform: translateZ(0); }
+    .topbar { background: var(--topbar-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; transform: translateZ(0); }
     .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .topbar-logo { font-size: 1.4rem; font-weight: 900; color: var(--primary); letter-spacing: -0.5px; transition: color 0.3s;}
+    .topbar-logo { font-size: 1.4rem; font-weight: 900; color: var(--primary); letter-spacing: -0.5px;}
     
-    /* TOPBAR USER & SETTINGS */
     .topbar-right { display: flex; align-items: center; gap: 8px; }
-    .topbar-user { font-size: 0.85rem; color: var(--text-main); font-weight: 600; background: var(--border-color); padding: 6px 12px; border-radius: 20px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;}
+    .topbar-user { font-size: 0.85rem; color: var(--text-main); font-weight: 600; background: var(--border-color); padding: 6px 12px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 6px;}
     .topbar-user:active { transform: scale(0.95); opacity: 0.8; }
     .settings-icon { font-size: 1rem; }
     
     .content { max-width: 600px; margin: 0 auto; padding: 20px 20px 100px 20px; }
     
-    /* Stats */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-    .balance-card { background: linear-gradient(135deg, var(--card-bg), var(--input-bg)); border: 1px solid var(--primary-glow); border-radius: 20px; padding: 28px 24px; text-align: center; grid-column: 1 / -1; box-shadow: 0 10px 30px var(--shadow-color); position: relative; overflow: hidden; transition: all 0.3s;}
-    .balance-card::after { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background: radial-gradient(circle, var(--primary-light) 0%, transparent 60%); pointer-events: none; transition: background 0.3s; }
-    .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 4px 12px var(--shadow-color); transition: all 0.3s; }
+    .balance-card { background: linear-gradient(135deg, var(--card-bg), var(--input-bg)); border: 1px solid var(--primary-glow); border-radius: 20px; padding: 28px 24px; text-align: center; grid-column: 1 / -1; box-shadow: 0 10px 30px var(--shadow-color); position: relative; overflow: hidden; }
+    .balance-card::after { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background: radial-gradient(circle, var(--primary-light) 0%, transparent 60%); pointer-events: none;}
+    .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 4px 12px var(--shadow-color); }
     .balance-label { color: var(--text-muted); font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;}
-    .balance-amount { font-size: 3.5rem; font-weight: 900; color: var(--primary); letter-spacing: -1px; line-height: 1; text-shadow: 0 4px 15px var(--primary-glow); transition: all 0.3s;}
+    .balance-amount { font-size: 3.5rem; font-weight: 900; color: var(--primary); letter-spacing: -1px; line-height: 1; text-shadow: 0 4px 15px var(--primary-glow);}
     .stat-amount { font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-top: 4px; }
     .stat-amount.debt { color: var(--danger); }
     .stat-amount.invest { color: var(--blue); }
     
     .section { margin-bottom: 28px; }
     .section-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.5px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;}
-    .form-card { background: var(--card-bg); border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 15px var(--shadow-color); border: 1px solid var(--border-color); transform: translateZ(0); transition: all 0.3s;}
+    .form-card { background: var(--card-bg); border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 15px var(--shadow-color); border: 1px solid var(--border-color); transform: translateZ(0);}
     
-    /* Transactions */
     .tx-list { display: flex; flex-direction: column; gap: 10px; }
-    .tx-item { background: var(--card-bg); border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid transparent; border-right: 1px solid var(--border-color); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 8px var(--shadow-color); transition: transform 0.2s, box-shadow 0.2s, background 0.3s; }
+    .tx-item { background: var(--card-bg); border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid transparent; border-right: 1px solid var(--border-color); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 8px var(--shadow-color); transition: transform 0.2s;}
     .tx-item:hover { transform: scale3d(1.01, 1.01, 1); box-shadow: 0 4px 15px var(--shadow-color); }
     .tx-item.sent { border-left-color: var(--danger); }
     .tx-item.received { border-left-color: var(--success); }
@@ -158,7 +104,6 @@
     .tx-amount.sent { color: var(--danger); }
     .tx-amount.received { color: var(--success); }
     
-    /* Bourse */
     .stock-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px var(--shadow-color); transition: transform 0.2s, border 0.3s;}
     .stock-card:hover { border-color: var(--primary); transform: translateY(-2px); }
     .stock-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -173,21 +118,18 @@
     .btn-icon.buy-icon { background: var(--success); box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2); }
     .btn-icon.sell-icon { background: var(--danger); box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2); }
 
-    /* Devoirs */
     .hw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     @media (max-width: 480px) { .hw-grid { grid-template-columns: 1fr; } }
-    .hw-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 12px var(--shadow-color); transform: translateZ(0); transition: all 0.3s;}
+    .hw-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 12px var(--shadow-color); transform: translateZ(0); }
     .hw-img-container { width: 100%; height: 160px; background: var(--input-bg); display: flex; align-items: center; justify-content: center; position: relative; overflow:hidden;}
     .hw-info { padding: 16px; flex: 1; display: flex; flex-direction: column; }
     .hw-title { font-weight: 800; font-size: 1.05rem; margin-bottom: 6px; line-height:1.2; color: var(--text-main);}
     .hw-price { font-weight: 900; color: var(--primary); font-size: 1.1rem;}
 
-    /* Casino (Refonte Premium) */
-    .casino-box { background: var(--card-bg); border-radius: 20px; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px var(--primary-glow); border: 2px solid var(--primary); transform: translateZ(0); transition: all 0.3s;}
+    .casino-box { background: var(--card-bg); border-radius: 20px; padding: 30px 20px; text-align: center; box-shadow: 0 10px 30px var(--primary-glow); border: 2px solid var(--primary); transform: translateZ(0);}
     .casino-title { font-size: 2.2rem; font-weight: 900; color: var(--text-main); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 2px; }
     .slot { width: 75px; height: 75px; background: var(--input-bg); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; border: 2px solid var(--border-color); box-shadow: inset 0 4px 10px var(--shadow-color); transition: transform 0.1s;}
 
-    /* Menu Select Custom (Transfert) */
     .custom-select { position: relative; width: 100%; }
     .select-display {
       width: 100%; padding: 14px 16px; background: var(--input-bg); border: 1px solid var(--border-color);
@@ -208,7 +150,6 @@
     .custom-option:last-child { border-bottom: none; }
     .custom-option:active { background: var(--primary-light); color: var(--primary); }
 
-    /* Navigation Base Desktop */
     .nav-tabs-wrapper { margin-bottom: 24px; border-bottom: 1px solid var(--border-color); }
     .nav-tabs { position: relative; display: flex; gap: 8px; flex-wrap: wrap; padding-bottom: 0;}
     .nav-tab { display: flex; align-items: center; gap: 8px; padding: 12px 20px; border: none; background: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.3s var(--ease); z-index: 2; position: relative; margin-bottom:-1px;}
@@ -219,7 +160,6 @@
     .page.active { display: block; animation: fadeInUp 0.4s var(--ease) forwards; }
     .empty { text-align: center; color: var(--text-muted); padding: 40px; font-size: 1rem; font-weight: 600; grid-column: 1 / -1; background: var(--input-bg); border-radius: 16px; border: 1px dashed var(--border-color);}
 
-    /* TOAST & OVERLAYS */
     #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;}
     .toast { background: var(--card-bg); border-left: 4px solid var(--success); box-shadow: 0 10px 30px var(--shadow-color); padding: 16px 20px; border-radius: 12px; display: flex; align-items: center; gap: 12px; transform: translate3d(120%, 0, 0); opacity: 0; transition: all 0.4s var(--ease-bounce); border-right: 1px solid var(--border-color); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);}
     .toast.show { transform: translate3d(0, 0, 0); opacity: 1; }
@@ -234,7 +174,6 @@
     #success-overlay.active .modal-box, #settings-modal-overlay.active .modal-box { transform: scale3d(1, 1, 1); }
     #success-overlay .modal-box { border-color: rgba(46, 204, 113, 0.5); }
 
-    /* Animated Checkmark */
     .checkmark-wrap { width: 80px; height: 80px; margin: 0 auto 20px auto; }
     .checkmark { width: 100%; height: 100%; border-radius: 50%; display: block; stroke-width: 4; stroke: var(--success); stroke-miterlimit: 10; animation: scale .3s ease-in-out .9s both; }
     .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 4; stroke-miterlimit: 10; stroke: var(--success); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
@@ -245,15 +184,11 @@
     .success-title { font-size: 1.5rem; font-weight: 900; color: var(--text-main); margin-bottom: 8px;}
     .success-sub { font-size: 1rem; color: var(--text-muted); font-weight: 600;}
 
-    /* Paramètres Menu */
     .setting-group { margin-bottom: 20px; text-align: left; }
     .theme-picker { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
     .theme-btn { padding: 12px; border-radius: 12px; border: 2px solid var(--border-color); background: var(--input-bg); color: var(--text-main); font-weight: 700; text-align: center; cursor: pointer; transition: all 0.2s; }
     .theme-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
 
-    /* =========================================
-       MOBILE OPTIMIZATION & DYNAMIC ISLAND
-       ========================================= */
     @media (max-width: 768px) {
       #toast-container { top: auto; bottom: 100px; left: 20px; right: 20px; align-items: center;}
       .toast { width: 100%; max-width: 400px; transform: translate3d(0, 100px, 0) scale(0.9); border-left:none; border-right:none; border-bottom: 4px solid var(--success); }
@@ -261,7 +196,6 @@
       .toast.error { border-bottom-color: var(--danger); }
       .toast.info { border-bottom-color: var(--blue); }
 
-      /* WRAPPER FIX FOR DYNAMIC ISLAND SCROLLING */
       .nav-tabs-wrapper {
         position: fixed; bottom: 0; left: 0; width: 100%;
         background: var(--nav-bg);
@@ -270,7 +204,6 @@
         z-index: 500; box-shadow: 0 -10px 30px var(--shadow-color);
         padding-bottom: env(safe-area-inset-bottom);
       }
-      
       .nav-tabs {
         display: flex; flex-wrap: nowrap; overflow-x: auto;
         -webkit-overflow-scrolling: touch; scrollbar-width: none;
@@ -278,16 +211,13 @@
       }
       .nav-tabs::-webkit-scrollbar { display: none; }
       
-      /* Dynamic Island Indicator correctly positioned inside the scrolling wrapper */
       .nav-indicator {
         display: block; position: absolute;
         top: 10px; bottom: 10px; left: 0; width: 70px;
-        background: var(--primary-light);
-        border-radius: 16px;
+        background: var(--primary-light); border-radius: 16px;
         transition: transform 0.4s var(--ease-bounce), width 0.3s var(--ease), background 0.3s;
         z-index: 1; pointer-events: none;
       }
-      
       .nav-tab {
         flex-direction: column; gap: 4px; padding: 10px 4px;
         font-size: 0.7rem; border: none !important; border-radius: 16px;
@@ -300,7 +230,7 @@
       .nav-tab.active .tab-text { color: var(--primary); }
       
       .topbar { padding: 14px 16px; }
-      .balance-amount { font-size: 3rem; }
+      .balance-amount { font-size: 2.8rem; }
       .form-card { padding: 20px; }
       .btn { padding: 18px; font-size: 1.1rem; }
       .custom-option { padding: 16px; font-size: 1rem; }
@@ -309,7 +239,6 @@
 </head>
 <body>
 
-<!-- OVERLAY SUCCES -->
 <div id="success-overlay">
   <div class="modal-box">
     <div class="checkmark-wrap">
@@ -323,13 +252,11 @@
   </div>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div id="settings-modal-overlay" onclick="closeSettings(event)">
   <div class="modal-box" style="text-align: left; max-width: 400px; padding: 24px;" onclick="event.stopPropagation()">
     <h2 style="font-weight:900; margin-bottom:20px; color:var(--text-main); display:flex; justify-content:space-between; align-items:center;">
       Paramètres <span style="cursor:pointer; color:var(--text-muted)" onclick="closeSettings()">✕</span>
     </h2>
-    
     <div class="setting-group">
       <label>Thème de l'application</label>
       <div class="theme-picker">
@@ -338,30 +265,30 @@
         <div class="theme-btn" onclick="setTheme('light')" id="theme-btn-light">☀️ Clair (Lumineux)</div>
       </div>
     </div>
-
     <div class="setting-group" style="margin-top:24px;">
       <label>Pseudo</label>
       <input type="text" id="set-username" placeholder="Ton pseudo" />
     </div>
-    
     <div class="setting-group">
-      <label>Email (Nécessite reco)</label>
+      <label>Email</label>
       <input type="email" id="set-email" placeholder="Ton email" />
     </div>
-    
     <div class="setting-group">
       <label>Nouveau Mot de Passe</label>
       <input type="password" id="set-password" placeholder="Laisser vide sinon" />
     </div>
-
-    <button class="btn" style="padding:16px; margin-top:10px;" onclick="saveSettings()">Sauvegarder</button>
+    <div id="admin-settings-section" style="display:none; margin-top:24px; padding-top:20px; border-top:1px solid var(--border-color);">
+      <h3 style="color:var(--primary); font-size:1.1rem; margin-bottom:12px;">⚙️ Paramètres Admin Bourse</h3>
+      <label>Clé API Finnhub (Actions)</label>
+      <input type="text" id="set-finnhub-key" placeholder="Optionnel" />
+      <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-top:4px;">Si vide, utilise Yahoo Finance (proxy) à la place.</span>
+    </div>
+    <button class="btn" style="padding:16px; margin-top:20px;" onclick="saveSettings()">Sauvegarder</button>
   </div>
 </div>
 
-<!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
 
-<!-- ===================== AUTH SCREEN ===================== -->
 <div id="auth-screen">
   <div class="logo">🪙</div>
   <div class="logo-title">Cool Coin</div>
@@ -390,7 +317,6 @@
   </div>
 </div>
 
-<!-- ===================== APP SCREEN ===================== -->
 <div id="app-screen">
   <div class="topbar">
     <div class="topbar-left">
@@ -407,11 +333,9 @@
 
   <div class="content">
     
-    <!-- BOTTOM / TOP NAV -->
     <div class="nav-tabs-wrapper">
       <div class="nav-tabs" id="nav-tabs">
         <div class="nav-indicator" id="nav-indicator"></div>
-        
         <button class="nav-tab active" onclick="showPage('dashboard', event)">
           <div class="tab-icon">🏠</div><div class="tab-text">Accueil</div>
         </button>
@@ -433,9 +357,6 @@
         <button class="nav-tab" id="admin-tab" style="display:none" onclick="showPage('admin', event)">
           <div class="tab-icon">⚙️</div><div class="tab-text">Admin</div>
         </button>
-        <button class="nav-tab" id="admin-tx-tab" style="display:none" onclick="showPage('admin-tx', event)">
-          <div class="tab-icon">📜</div><div class="tab-text">Flux</div>
-        </button>
       </div>
     </div>
 
@@ -444,19 +365,19 @@
       <div class="stats-grid">
         <div class="balance-card">
           <div class="balance-label">Ton solde</div>
-          <div class="balance-amount"><span id="balance-display">0</span> 🪙</div>
+          <div class="balance-amount"><span id="balance-display">0.00</span> 🪙</div>
+          <div style="font-size:0.9rem; color:var(--text-muted); font-weight:600; margin-top:8px;">1 🪙 = 1 $ USD</div>
           <div id="admin-infinite" style="display:none; background:var(--primary); color:var(--btn-text); padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:800; margin-top:12px; text-transform:uppercase; display:inline-block;">∞ Argent infini</div>
         </div>
         <div class="stat-card">
           <div class="balance-label">Dette Bancaire</div>
-          <div class="stat-amount debt" id="debt-display">0 🪙</div>
+          <div class="stat-amount debt" id="debt-display">0.00 🪙</div>
         </div>
         <div class="stat-card">
-          <div class="balance-label">Valeur Bourse</div>
-          <div class="stat-amount invest" id="invest-display">0 🪙</div>
+          <div class="balance-label">Valeur Portefeuille</div>
+          <div class="stat-amount invest" id="invest-display">0.00 🪙</div>
         </div>
       </div>
-
       <div class="section">
         <div class="section-title">📊 Dernières transactions</div>
         <div class="tx-list" id="dashboard-txs"><div class="empty">Chargement...</div></div>
@@ -471,8 +392,8 @@
           <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:8px; font-weight:600;">Capacité max : 200% de ta vraie richesse.</p>
           <span style="font-size: 0.8rem; color: var(--danger); font-weight: 800; display: block; margin-top: 6px;">⚠️ 5% d'intérêts s'ajoutent à ta dette chaque jour.</span>
           <br>
-          <label>Montant (CC) <span id="capacity-display" style="font-size: 0.9rem; font-weight: 800; color: var(--primary); display: block; margin-top: 6px;">Capacité restante : 0 CC</span></label>
-          <input type="number" id="bank-amount" placeholder="Ex: 100" min="1" />
+          <label>Montant (CC) <span id="capacity-display" style="font-size: 0.9rem; font-weight: 800; color: var(--primary); display: block; margin-top: 6px;">Capacité restante : 0.00 CC</span></label>
+          <input type="number" id="bank-amount" placeholder="Ex: 100" min="1" step="0.01" />
           <div style="display:flex; gap:10px; margin-top:16px;">
             <button class="btn" style="margin-top:0" onclick="borrowMoney()">Emprunter</button>
             <button class="btn secondary" style="margin-top:0" onclick="repayMoney()">Rembourser</button>
@@ -481,15 +402,32 @@
       </div>
 
       <div class="section">
-        <div class="section-title">📈 La Bourse</div>
-        <div class="stock-grid" id="stocks-list" style="display:flex; flex-direction:column; gap:14px;">
-          <div class="empty">Chargement du marché...</div>
+        <div class="section-title">🪙 Cryptomonnaies (Live API)</div>
+        <div class="stock-grid" id="crypto-list" style="display:flex; flex-direction:column; gap:14px;">
+          <div class="empty">Chargement des cryptos...</div>
         </div>
-        <div style="font-size: 0.85rem; text-align: center; color: var(--text-muted); margin-top: 14px; font-weight: 600;"><span id="bourse-info-text">Actualisation toutes les 5 minutes.</span></div>
+        
+        <div class="section-title" style="margin-top:32px;">📈 Actions (Live Bourse)</div>
+        <div class="stock-grid" id="stocks-list" style="display:flex; flex-direction:column; gap:14px;">
+          <div class="empty">Chargement des actions...</div>
+        </div>
+        <div style="font-size: 0.85rem; text-align: center; color: var(--text-muted); margin-top: 14px; font-weight: 600;"><span id="bourse-info-text">Actualisation temps réel. 1 🪙 = 1 USD.</span></div>
+
+        <!-- NEW SEARCH SECTION -->
+        <div class="section-title" style="margin-top:40px;">🔍 Ajouter une Action (Mondial)</div>
+        <div class="form-card" style="padding:16px;">
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; font-weight:600;">Recherche une entreprise (ex: LVMH, Nike, Netflix...) pour l'ajouter au marché pour tous les joueurs.</p>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="search-stock-input" placeholder="Ex: LVMH" style="margin:0; flex:1;" onkeypress="if(event.key==='Enter') searchStock()"/>
+            <button class="btn small" id="btn-search-stock" style="margin:0; padding:10px 16px;" onclick="searchStock()">Chercher</button>
+          </div>
+          <div id="search-results" style="margin-top:12px; display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
       </div>
     </div>
     
-    <!-- MARKET (DEVOIRS) -->
+    <!-- MARKET -->
     <div id="page-market" class="page">
       <div class="section">
         <div class="section-title">Vendre un devoir</div>
@@ -497,8 +435,8 @@
           <label>Titre</label>
           <input type="text" id="hw-title" placeholder="Ex: DM Maths Exo 3" />
           <label>Prix (CC)</label>
-          <input type="number" id="hw-price" placeholder="Ex: 20" min="1" />
-          <label>Photo(s) (Sélectionne plusieurs si besoin)</label>
+          <input type="number" id="hw-price" placeholder="Ex: 20" min="1" step="0.5" />
+          <label>Photo(s)</label>
           <input type="file" id="hw-file" accept="image/*" multiple />
           <button class="btn" id="btn-upload-hw" onclick="uploadHomework()">Mettre en vente</button>
         </div>
@@ -512,7 +450,6 @@
     <!-- CASINO -->
     <div id="page-casino" class="page">
       <div class="section">
-        <!-- Design Casino Premium -->
         <div class="casino-box">
           <div class="casino-title">Casino Royale</div>
           <div style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; font-weight: 700;">Tente ta chance et rafle le Jackpot</div>
@@ -524,15 +461,8 @@
           </div>
           
           <div style="display: flex; flex-direction: column; gap: 12px; max-width: 300px; margin: 0 auto;">
-            <input type="number" id="casino-bet" placeholder="Ta mise (CC)" min="1" style="text-align:center; font-size:1.4rem; padding:12px; font-weight:900;" />
+            <input type="number" id="casino-bet" placeholder="Ta mise (CC)" min="1" step="1" style="text-align:center; font-size:1.4rem; padding:12px; font-weight:900;" />
             <button class="btn" id="btn-spin" onclick="playCasino()">🎰 Lancer la machine</button>
-          </div>
-          
-          <div style="margin-top: 28px; font-size: 0.85rem; color: var(--text-muted); text-align: left; background: var(--input-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; line-height: 1.6;">
-            <strong>Règles & Probabilités :</strong><br>
-            • 60% : Perdu (x0)<br>
-            • 35% : Double (x2)<br>
-            • 5% : Jackpot (x5)<br>
           </div>
         </div>
       </div>
@@ -552,7 +482,7 @@
         <div class="section-title">Créer un billet</div>
         <div class="form-card">
           <label>Valeur du billet (CC)</label>
-          <input type="number" id="ticket-amount" placeholder="Ex: 10" min="1" />
+          <input type="number" id="ticket-amount" placeholder="Ex: 10" min="0.01" step="0.01" />
           <button class="btn" onclick="createTicket()">Générer le code</button>
         </div>
       </div>
@@ -568,20 +498,16 @@
         <div class="section-title">Envoyer des Cool Coins</div>
         <div class="form-card">
           <label>Cible</label>
-          
-          <!-- Menu Select Custom -->
           <div class="custom-select" id="send-target-select">
             <div class="select-display" onclick="toggleSelect()" id="select-display-box">
               <span id="select-display-text">-- Choisir un destinataire --</span>
             </div>
             <div class="select-options" id="send-target-options"></div>
           </div>
-
           <label>Montant (CC)</label>
-          <input type="number" id="send-amount" placeholder="Ex: 50" min="1" />
+          <input type="number" id="send-amount" placeholder="Ex: 50.5" min="0.01" step="0.01" />
           <label>Note (optionnel)</label>
           <input type="text" id="send-note" placeholder="Ex: pour la pizza" />
-          
           <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px;">
              <button class="btn" style="margin-top:0" onclick="sendCoins()">Envoyer l'argent</button>
              <button class="btn danger" style="margin-top:0; display:none;" id="admin-fine-btn" onclick="fineUser()">Infliger Amende</button>
@@ -593,31 +519,9 @@
     <!-- ADMIN -->
     <div id="page-admin" class="page">
       <div class="section">
-        <div class="section-title">📈 Gérer la Bourse</div>
-        <div class="form-card">
-          <label>Fluctuation Min (%) - Ex: -5</label>
-          <input type="number" id="admin-config-min" step="0.01" />
-          <label>Fluctuation Max (%) - Ex: 5.04</label>
-          <input type="number" id="admin-config-max" step="0.01" />
-          <button class="btn small" style="margin-top:16px; width:100%" onclick="adminSaveStockConfig()">Sauvegarder</button>
-          <hr style="border:0; border-top:1px solid var(--border-color); margin: 20px 0;">
-          <div id="admin-stocks-prices-list" style="display:flex; flex-direction:column; gap:8px;"></div>
-        </div>
-      </div>
-      <div class="section">
         <div class="section-title">👥 Gérer les Membres</div>
         <div id="admin-users-advanced-list" style="display:flex; flex-direction:column; gap:14px;">
            <div class="empty">Chargement...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ADMIN TX -->
-    <div id="page-admin-tx" class="page">
-      <div class="section">
-        <div class="section-title">📜 Historique Global</div>
-        <div class="tx-list" id="admin-global-txs">
-          <div class="empty">Chargement...</div>
         </div>
       </div>
     </div>
@@ -653,6 +557,22 @@
   const db = getFirestore(app);
 
   let currentUser = null; let currentUserData = null; let currentStocksData = null; let selectedTargetUid = "";
+  let globalFinnhubKey = ""; // Chargée depuis la DB system
+
+  const MARKET_ASSETS = {
+    BTC: { name: "Bitcoin", type: "crypto" },
+    ETH: { name: "Ethereum", type: "crypto" },
+    SOL: { name: "Solana", type: "crypto" },
+    AAPL: { name: "Apple Inc.", type: "stock" },
+    TSLA: { name: "Tesla", type: "stock" },
+    GOOGL: { name: "Alphabet (Google)", type: "stock" },
+    MSFT: { name: "Microsoft", type: "stock" }
+  };
+
+  function getAllAssets() {
+     if(!currentStocksData) return MARKET_ASSETS;
+     return { ...MARKET_ASSETS, ...(currentStocksData.customAssets || {}) };
+  }
 
   window.login = login; window.register = register; window.logout = logout; 
   window.sendCoins = sendCoins; window.fineUser = fineUser;
@@ -660,33 +580,31 @@
   window.borrowMoney = borrowMoney; window.repayMoney = repayMoney;
   window.buyStock = buyStock; window.sellStock = sellStock;
   window.createTicket = createTicket; window.redeemTicket = redeemTicket; window.cancelTicket = cancelTicket;
-  window.playCasino = playCasino;
-  window.adminSaveStockConfig = adminSaveStockConfig; window.adminSaveStockPrice = adminSaveStockPrice; window.adminSaveUser = adminSaveUser;
+  window.playCasino = playCasino; window.adminSaveUser = adminSaveUser;
   window.uploadHomework = uploadHomework; window.promptBuyHomework = promptBuyHomework; window.cancelBuyHomework = cancelBuyHomework; window.confirmBuyHomework = confirmBuyHomework; window.deleteHomework = deleteHomework;
   window.openImageModal = openImageModal; window.closeImageModal = closeImageModal;
   window.toggleSelect = toggleSelect; window.selectSendTarget = selectSendTarget;
   window.openSettings = openSettings; window.closeSettings = closeSettings; window.saveSettings = saveSettings; window.setTheme = setTheme;
+  
+  window.searchStock = searchStock; window.addCustomStock = addCustomStock;
 
-  // THEME INIT (Palettes)
+  function fmtMoney(val) { return parseFloat(val || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function fmtQty(val) { return parseFloat(val || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 6 }); }
+
   const savedTheme = localStorage.getItem('coolcoin-theme-v2') || 'dark';
   setTheme(savedTheme, false);
 
   function setTheme(color, save = true) {
     document.documentElement.setAttribute('data-theme', color);
     if(save) localStorage.setItem('coolcoin-theme-v2', color);
-    
-    // Update Meta Theme Color for Safari
     const metaColor = color === 'light' ? '#f3f4f6' : (color === 'midnight' ? '#020617' : '#0d0d0d');
     document.getElementById("meta-theme-color").setAttribute("content", metaColor);
-
     document.querySelectorAll('.theme-btn').forEach(el => el.classList.remove('active'));
     let activeBtn = document.getElementById('theme-btn-' + color);
     if(activeBtn) activeBtn.classList.add('active');
-    
     setTimeout(updateNavIndicator, 100);
   }
 
-  // CLOSE CUSTOM SELECT ON OUTSIDE CLICK
   document.addEventListener('click', (e) => {
     const selectWrap = document.getElementById("send-target-select");
     if(selectWrap && !selectWrap.contains(e.target)) {
@@ -695,7 +613,6 @@
     }
   });
 
-  // TOAST & OVERLAY SYSTEM
   window.showToast = function(type, text) {
     const container = document.getElementById("toast-container");
     const toast = document.createElement("div");
@@ -712,7 +629,7 @@
     document.getElementById("overlay-title").textContent = title;
     document.getElementById("overlay-sub").textContent = sub;
     const checkmarkWrap = document.querySelector(".checkmark-wrap");
-    checkmarkWrap.innerHTML = checkmarkWrap.innerHTML; // trigger animation reset
+    checkmarkWrap.innerHTML = checkmarkWrap.innerHTML;
     overlay.style.display = "flex";
     setTimeout(() => overlay.classList.add("active"), 10);
     setTimeout(() => { overlay.classList.remove("active"); setTimeout(() => overlay.style.display = "none", 400); }, 2200);
@@ -723,18 +640,15 @@
       currentUser = user;
       document.getElementById("auth-screen").style.display = "none";
       document.getElementById("app-screen").style.display = "block";
-      
       const isAdmin = (user.email === ADMIN_EMAIL);
       document.getElementById("admin-tab").style.display = isAdmin ? "flex" : "none";
-      document.getElementById("admin-tx-tab").style.display = isAdmin ? "flex" : "none";
       document.getElementById("admin-fine-btn").style.display = isAdmin ? "block" : "none";
+      document.getElementById("admin-settings-section").style.display = isAdmin ? "block" : "none";
       document.getElementById("my-tickets-title").textContent = isAdmin ? "Tous les billets actifs" : "Mes billets en attente";
-      
       document.getElementById("admin-infinite").style.display = isAdmin ? "inline-block" : "none";
 
       listenUserData(); listenTransactions(); listenStocks(); listenTickets(); listenMarket(); loadSendPage();
-      if (isAdmin) { loadAdminPage(); listenAllTransactions(); }
-      
+      if (isAdmin) { loadAdminPage(); }
       setTimeout(() => { updateNavIndicator(); }, 150);
     } else {
       currentUser = null; currentUserData = null;
@@ -757,7 +671,7 @@
     onSnapshot(doc(db, "users", currentUser.uid), (snap) => {
       if (snap.exists()) {
         currentUserData = snap.data();
-        if(!currentUserData.debt) currentUserData.debt = 0; if(!currentUserData.portfolio) currentUserData.portfolio = {};
+        if(currentUserData.debt === undefined) currentUserData.debt = 0; if(!currentUserData.portfolio) currentUserData.portfolio = {};
         document.getElementById("topbar-username").textContent = currentUserData.username || currentUser.email;
         document.getElementById("set-username").value = currentUserData.username || "";
         document.getElementById("set-email").value = currentUserData.email || currentUser.email;
@@ -771,19 +685,23 @@
     const isAdmin = currentUser.email === ADMIN_EMAIL;
     if (isAdmin) {
       document.getElementById("balance-display").textContent = "∞";
-      document.getElementById("debt-display").textContent = "0 🪙"; document.getElementById("invest-display").textContent = "0 🪙";
+      document.getElementById("debt-display").textContent = "0.00 🪙"; document.getElementById("invest-display").textContent = "0.00 🪙";
     } else {
-      document.getElementById("balance-display").textContent = currentUserData.balance ?? 0;
-      document.getElementById("debt-display").textContent = currentUserData.debt + " 🪙";
+      document.getElementById("balance-display").textContent = fmtMoney(currentUserData.balance);
+      document.getElementById("debt-display").textContent = fmtMoney(currentUserData.debt) + " 🪙";
       let totalInvest = 0;
-      if (currentStocksData && currentUserData.portfolio) {
-        for (let stockId in currentUserData.portfolio) { totalInvest += (currentUserData.portfolio[stockId] * (currentStocksData.prices[stockId] || 0)); }
+      const allAss = getAllAssets();
+      if (currentStocksData && currentStocksData.prices && currentUserData.portfolio) {
+        for (let stockId in currentUserData.portfolio) { 
+           if(allAss[stockId]) {
+             totalInvest += (currentUserData.portfolio[stockId] * (currentStocksData.prices[stockId] || 0)); 
+           }
+        }
       }
-      document.getElementById("invest-display").textContent = totalInvest + " 🪙";
-      
+      document.getElementById("invest-display").textContent = fmtMoney(totalInvest) + " 🪙";
       const cap = Math.max(0, (((currentUserData.balance || 0) - (currentUserData.debt || 0)) * 2) - (currentUserData.debt || 0));
       const capEl = document.getElementById("capacity-display");
-      capEl.textContent = cap > 0 ? `Capacité : ${cap} CC` : "Capacité atteinte";
+      capEl.textContent = cap > 0 ? `Capacité : ${fmtMoney(cap)} CC` : "Capacité atteinte";
       capEl.style.color = cap > 0 ? "var(--primary)" : "var(--danger)";
     }
   }
@@ -792,7 +710,7 @@
     if (currentUser.email === ADMIN_EMAIL || currentUserData.debt <= 0) return;
     const today = new Date().toISOString().split('T')[0];
     if (currentUserData.lastInterestDate !== today) {
-      let interest = Math.max(1, Math.ceil(currentUserData.debt * 0.05));
+      let interest = Math.max(0.01, currentUserData.debt * 0.05);
       try {
         await updateDoc(doc(db, "users", currentUser.uid), { debt: currentUserData.debt + interest, lastInterestDate: today });
         await addDoc(collection(db, "transactions"), { fromUid: "system", fromUsername: "🏦 Pénalité Bancaire", toUid: currentUser.uid, toUsername: currentUserData.username, amount: interest, note: "Intérêts de la dette (5%)", participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp() });
@@ -800,8 +718,11 @@
     }
   }
 
-  /* SETTINGS */
-  function openSettings() { document.getElementById("settings-modal-overlay").style.display = "flex"; setTimeout(()=> document.getElementById("settings-modal-overlay").classList.add("active"), 10); }
+  function openSettings() { 
+    document.getElementById("set-finnhub-key").value = globalFinnhubKey;
+    document.getElementById("settings-modal-overlay").style.display = "flex"; 
+    setTimeout(()=> document.getElementById("settings-modal-overlay").classList.add("active"), 10); 
+  }
   function closeSettings(e) {
     if(e && e.target.id !== "settings-modal-overlay" && e.target.tagName !== "SPAN") return;
     document.getElementById("settings-modal-overlay").classList.remove("active"); setTimeout(()=> document.getElementById("settings-modal-overlay").style.display = "none", 300);
@@ -813,88 +734,254 @@
       if(newName && newName !== currentUserData.username) { await updateDoc(doc(db, "users", currentUser.uid), { username: newName }); changes = true; }
       if(newEmail && newEmail !== currentUser.email) { await updateEmail(currentUser, newEmail); await updateDoc(doc(db, "users", currentUser.uid), { email: newEmail }); changes = true; }
       if(newPass.length >= 6) { await updatePassword(currentUser, newPass); document.getElementById("set-password").value = ""; changes = true; }
+      
+      if(currentUser.email === ADMIN_EMAIL) {
+         const newKey = document.getElementById("set-finnhub-key").value.trim();
+         if(newKey !== globalFinnhubKey) {
+            await setDoc(doc(db, "system", "config"), { finnhubKey: newKey }, {merge:true});
+            changes = true;
+         }
+      }
       if(changes) showToast("success", "Profil mis à jour !");
       closeSettings();
     } catch(err) { showToast("error", err.code === 'auth/requires-recent-login' ? "Reconnexion nécessaire" : "Erreur lors de la mise à jour"); }
   }
 
-  /* BANK */
   async function borrowMoney() {
-    const amt = parseInt(document.getElementById("bank-amount").value); if (!amt || amt <= 0) return;
+    const amt = parseFloat(document.getElementById("bank-amount").value); if (!amt || amt <= 0) return;
     if (currentUser.email === ADMIN_EMAIL) return showToast("error", "L'admin a argent infini.");
     let cap = Math.max(0, (((currentUserData.balance || 0) - (currentUserData.debt || 0)) * 2) - (currentUserData.debt || 0));
-    if (amt > cap) return showToast("error", `Refusé. Capacité Max: ${cap} CC`);
+    if (amt > cap) return showToast("error", `Refusé. Capacité Max: ${fmtMoney(cap)} CC`);
     await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + amt, debt: currentUserData.debt + amt });
     await addDoc(collection(db, "transactions"), { fromUid: "bank", fromUsername: "🏦 Banque", toUid: currentUser.uid, toUsername: currentUserData.username, amount: amt, note: "Emprunt bancaire", participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp() });
-    document.getElementById("bank-amount").value = ""; showSuccessOverlay("Emprunt validé", `+${amt} CC crédités`);
+    document.getElementById("bank-amount").value = ""; showSuccessOverlay("Emprunt validé", `+${fmtMoney(amt)} CC crédités`);
   }
   async function repayMoney() {
-    const amt = parseInt(document.getElementById("bank-amount").value); if (!amt || amt <= 0 || currentUser.email === ADMIN_EMAIL) return;
+    const amt = parseFloat(document.getElementById("bank-amount").value); if (!amt || amt <= 0 || currentUser.email === ADMIN_EMAIL) return;
     if (currentUserData.debt === 0) return showToast("info", "Aucune dette.");
     if (amt > currentUserData.debt) return showToast("error", "Montant supérieur à la dette.");
     if (amt > currentUserData.balance) return showToast("error", "Solde insuffisant.");
     await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amt, debt: currentUserData.debt - amt });
     await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bank", toUsername: "🏦 Banque", amount: amt, note: "Remboursement", participants: [currentUser.uid], type: "bank", createdAt: serverTimestamp() });
-    document.getElementById("bank-amount").value = ""; showSuccessOverlay("Remboursement validé", `Dette réduite de ${amt} CC`);
+    document.getElementById("bank-amount").value = ""; showSuccessOverlay("Remboursement validé", `Dette réduite de ${fmtMoney(amt)} CC`);
   }
 
-  /* BOURSE */
-  let updatingStocks = false;
+  let updatingMarket = false;
   function listenStocks() {
+    onSnapshot(doc(db, "system", "config"), (snap) => {
+      if(snap.exists() && snap.data().finnhubKey) {
+         globalFinnhubKey = snap.data().finnhubKey;
+      } else {
+         globalFinnhubKey = ""; 
+      }
+    });
+
     onSnapshot(doc(db, "system", "stocks"), async (snap) => {
       if (!snap.exists()) {
         if(currentUser.email === ADMIN_EMAIL){
-          setDoc(doc(db, "system", "stocks"), { prices: { coolcorp: 100, devoirsinc: 50, crypto: 200, gold: 150, snack: 20 }, names: { coolcorp: "CoolCorp Inc.", devoirsinc: "Devoirs Ltd", crypto: "Cool Crypto", gold: "Or Virtuel", snack: "Snack Index" }, config: { min: -5.00, max: 5.04 }, lastUpdate: serverTimestamp() });
+          setDoc(doc(db, "system", "stocks"), { 
+            prices: { AAPL: 0, TSLA: 0, GOOGL: 0, MSFT: 0, BTC: 0, ETH: 0, SOL: 0 }, 
+            customAssets: {},
+            lastUpdate: serverTimestamp() 
+          });
         } return;
       }
-      currentStocksData = snap.data(); if(!currentStocksData.config) currentStocksData.config = { min: -5.00, max: 5.04 };
-      document.getElementById("bourse-info-text").textContent = `Fluctuations : ${currentStocksData.config.min}% à +${currentStocksData.config.max}% (5min)`;
-      renderDashboard(); renderBourse(); if(currentUser.email === ADMIN_EMAIL) renderAdminStocks();
+      currentStocksData = snap.data();
+      if(!currentStocksData.prices) currentStocksData.prices = {};
+      renderDashboard(); renderBourse();
+      if (currentUser.email === ADMIN_EMAIL) loadAdminPage();
       
-      const last = currentStocksData.lastUpdate ? currentStocksData.lastUpdate.toDate() : new Date();
-      const periodsMissed = Math.floor((new Date() - last) / 300000); 
-      if (periodsMissed > 0 && !updatingStocks) {
-        updatingStocks = true; let newPrices = {...currentStocksData.prices}; const conf = currentStocksData.config;
-        for (let i = 0; i < Math.min(periodsMissed, 288); i++) {
-          for(let k in newPrices) {
-            const r = Math.random(); let change = r < 0.0005 ? 0.50 : (r < 0.0010 ? 1.50 : (1 + (conf.min/100) + Math.random() * ((conf.max - conf.min)/100)));
-            newPrices[k] = Math.max(1, Math.round(newPrices[k] * change));
-          }
-        }
-        try { await updateDoc(doc(db, "system", "stocks"), { prices: newPrices, lastUpdate: serverTimestamp() }); setTimeout(() => updatingStocks = false, 5000); } catch(e) { updatingStocks = false; }
+      const last = currentStocksData.lastUpdate ? currentStocksData.lastUpdate.toDate() : new Date(0);
+      const timePassedMs = new Date() - last;
+      
+      if (timePassedMs > 60000 && !updatingMarket) {
+        updatingMarket = true;
+        await fetchLiveMarketData();
       }
     });
   }
 
+  async function fetchLiveMarketData() {
+    let newPrices = { ...currentStocksData.prices };
+    
+    // BINANCE (Crypto)
+    try {
+      const res = await fetch("https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22%5D");
+      if(res.ok) {
+        const data = await res.json();
+        data.forEach(d => {
+          if(d.symbol === 'BTCUSDT') newPrices.BTC = parseFloat(d.price);
+          if(d.symbol === 'ETHUSDT') newPrices.ETH = parseFloat(d.price);
+          if(d.symbol === 'SOLUSDT') newPrices.SOL = parseFloat(d.price);
+        });
+      }
+    } catch(e) { console.error("Erreur Binance API"); }
+
+    // ACTIONS (Global)
+    const allAss = getAllAssets();
+    const stockSymbols = Object.keys(allAss).filter(k => allAss[k].type === "stock");
+
+    for(let s of stockSymbols) {
+      let priceFound = false;
+      // 1. Tente Finnhub si clé présente
+      if (globalFinnhubKey) {
+         try {
+           let res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${s}&token=${globalFinnhubKey}`);
+           if(res.ok) {
+              let data = await res.json();
+              if(data.c && data.c > 0) {
+                 newPrices[s] = parseFloat(data.c);
+                 priceFound = true;
+              }
+           }
+         } catch(e) {}
+      }
+      
+      // 2. Si Finnhub rate (ou pas de clé ou action hors US), Fallback Yahoo Proxy
+      if(!priceFound) {
+         try {
+           const proxy = "https://api.allorigins.win/get?url=";
+           const targetUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${s}?t=${Date.now()}`;
+           let res = await fetch(proxy + encodeURIComponent(targetUrl));
+           if(res.ok) {
+              let json = await res.json();
+              let parsed = JSON.parse(json.contents);
+              let price = parsed.chart.result[0].meta.regularMarketPrice;
+              if(price) newPrices[s] = parseFloat(price);
+           }
+         } catch(e) {}
+      }
+    }
+
+    try {
+      await updateDoc(doc(db, "system", "stocks"), { prices: newPrices, lastUpdate: serverTimestamp() });
+    } catch(e) { console.error("Erreur écriture BDD"); }
+    setTimeout(() => updatingMarket = false, 5000);
+  }
+
   function renderBourse() {
     if(!currentStocksData) return;
-    const el = document.getElementById("stocks-list"); let html = "";
-    for(let k in currentStocksData.prices) {
+    const cryptoEl = document.getElementById("crypto-list");
+    const stocksEl = document.getElementById("stocks-list");
+    let cryptoHtml = ""; let stocksHtml = "";
+
+    const allAss = getAllAssets();
+
+    for(let k in allAss) {
+      let asset = allAss[k];
+      let isCrypto = asset.type === "crypto";
       let owned = (currentUserData && currentUserData.portfolio) ? (currentUserData.portfolio[k] || 0) : 0;
-      html += `<div class="stock-card"><div class="stock-header"><span class="stock-name">${currentStocksData.names[k]}</span><span class="stock-price">${currentStocksData.prices[k]} 🪙</span></div><div class="stock-owned">Possédé : <strong style="color:var(--text-main); font-size:1.1rem">${owned}</strong></div><div class="stock-actions"><input type="number" id="qty-${k}" placeholder="Qté" min="1" /><button class="btn-icon buy-icon" onclick="buyStock('${k}')" aria-label="Acheter"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button><button class="btn-icon sell-icon" onclick="sellStock('${k}')" aria-label="Vendre"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></button></div></div>`;
+      
+      let p = currentStocksData.prices[k] || 0;
+      let priceDisplay = p > 0 ? `${fmtMoney(p)} $` : `<span style="font-size:0.9rem; color:var(--text-muted)">Chargement...</span>`;
+      let disableBtns = p <= 0 ? "disabled" : "";
+
+      let html = `<div class="stock-card">
+          <div class="stock-header">
+            <span class="stock-name">${asset.name}</span>
+            <span class="stock-price">${priceDisplay}</span>
+          </div>
+          <div class="stock-owned">Possédé : <strong style="color:var(--text-main); font-size:1.1rem">${fmtQty(owned)}</strong></div>
+          <div class="stock-actions">
+            <input type="number" id="qty-${k}" placeholder="Qté" min="0.0001" step="0.0001" ${disableBtns} />
+            <button class="btn-icon buy-icon" onclick="buyStock('${k}')" aria-label="Acheter" ${disableBtns}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+            <button class="btn-icon sell-icon" onclick="sellStock('${k}')" aria-label="Vendre" ${disableBtns}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></button>
+          </div>
+        </div>`;
+      if(isCrypto) cryptoHtml += html; else stocksHtml += html;
     }
-    el.innerHTML = html;
+    cryptoEl.innerHTML = cryptoHtml || "<div class='empty'>Indisponible</div>";
+    stocksEl.innerHTML = stocksHtml || "<div class='empty'>Indisponible</div>";
   }
+
+  // --- NOUVEAU : SYSTEME DE RECHERCHE YAHOO FINANCE ---
+  async function searchStock() {
+     const q = document.getElementById("search-stock-input").value.trim();
+     if(!q) return;
+     const btn = document.getElementById("btn-search-stock");
+     btn.disabled = true; btn.textContent = "⏳...";
+     const resDiv = document.getElementById("search-results");
+     resDiv.innerHTML = '<div class="empty" style="padding:16px;">Recherche sur Yahoo Finance...</div>';
+
+     try {
+        const url = encodeURIComponent(`https://query2.finance.yahoo.com/v1/finance/search?q=${q}&quotesCount=6`);
+        const res = await fetch(`https://api.allorigins.win/get?url=${url}`);
+        const json = await res.json();
+        const parsed = JSON.parse(json.contents);
+        
+        if(!parsed.quotes || parsed.quotes.length === 0) {
+           resDiv.innerHTML = '<div class="empty" style="padding:16px;">Aucune entreprise trouvée.</div>';
+           btn.disabled = false; btn.textContent = "Chercher";
+           return;
+        }
+
+        let html = `<div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:4px; margin-top:8px;">Résultats pour "${q}" :</div>`;
+        let foundCount = 0;
+        for(let quote of parsed.quotes) {
+           if(quote.quoteType !== 'EQUITY' && quote.quoteType !== 'ETF') continue;
+           
+           const symbol = quote.symbol;
+           const name = quote.shortname || quote.longname || symbol;
+           const exch = quote.exchDisp || '';
+           
+           html += `<div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-color); padding:12px; border-radius:12px; border:1px solid var(--border-color);">
+              <div style="flex:1; overflow:hidden;">
+                 <div style="font-weight:bold; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${name}</div>
+                 <div style="font-size:0.75rem; color:var(--text-muted);">${symbol} • ${exch}</div>
+              </div>
+              <button class="btn mini" style="margin:0; margin-left:10px; background:var(--primary); color:var(--btn-text);" onclick="addCustomStock('${symbol}', '${name.replace(/'/g,"\\'")}')">Ajouter</button>
+           </div>`;
+           foundCount++;
+        }
+        if(foundCount === 0) html = '<div class="empty" style="padding:16px;">Aucune action trouvée (les cryptos/devises sont ignorées ici).</div>';
+        resDiv.innerHTML = html;
+     } catch(e) {
+        resDiv.innerHTML = '<div class="empty" style="padding:16px;">Erreur de connexion au marché.</div>';
+     }
+     btn.disabled = false; btn.textContent = "Chercher";
+  }
+
+  async function addCustomStock(symbol, name) {
+     if(!currentStocksData) return;
+     let custom = currentStocksData.customAssets || {};
+     const allAss = getAllAssets();
+     if(allAss[symbol]) {
+        return showToast("info", "Cette action est déjà sur le marché !");
+     }
+     custom[symbol] = { name: name, type: "stock" };
+     
+     await updateDoc(doc(db, "system", "stocks"), { customAssets: custom });
+     showToast("success", `${name} a été ajouté au marché global !`);
+     document.getElementById("search-results").innerHTML = "";
+     document.getElementById("search-stock-input").value = "";
+     
+     updatingMarket = true;
+     await fetchLiveMarketData();
+  }
+  // ----------------------------------------------------
 
   async function buyStock(k) {
-    const qty = parseInt(document.getElementById(`qty-${k}`).value); if (!qty || qty<=0 || currentUser.email===ADMIN_EMAIL) return;
+    const qty = parseFloat(document.getElementById(`qty-${k}`).value); if (!qty || qty<=0 || currentUser.email===ADMIN_EMAIL) return;
+    if (currentStocksData.prices[k] <= 0) return showToast("error", "Prix indisponible");
     const cost = qty * currentStocksData.prices[k]; if (currentUserData.balance < cost) return showToast("error", "Fonds insuffisants");
     let pf = {...currentUserData.portfolio}; pf[k] = (pf[k]||0) + qty;
+    const allAss = getAllAssets();
     await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - cost, portfolio: pf });
-    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bourse", toUsername: "📈 Bourse", amount: cost, note: `Achat ${qty} ${currentStocksData.names[k]}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
-    showToast("success", `Achat : ${qty} ${currentStocksData.names[k]}`); document.getElementById(`qty-${k}`).value = "";
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bourse", toUsername: "📈 Marché", amount: cost, note: `Achat ${fmtQty(qty)} ${allAss[k].name}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
+    showToast("success", `Achat : ${fmtQty(qty)} ${allAss[k].name}`); document.getElementById(`qty-${k}`).value = "";
   }
   async function sellStock(k) {
-    const qty = parseInt(document.getElementById(`qty-${k}`).value); if (!qty || qty<=0 || currentUser.email===ADMIN_EMAIL) return;
-    let owned = currentUserData.portfolio[k] || 0; if (qty > owned) return showToast("error", "Pas assez d'actions possédées");
+    const qty = parseFloat(document.getElementById(`qty-${k}`).value); if (!qty || qty<=0 || currentUser.email===ADMIN_EMAIL) return;
+    if (currentStocksData.prices[k] <= 0) return showToast("error", "Prix indisponible");
+    let owned = currentUserData.portfolio[k] || 0; if (qty > owned) return showToast("error", "Pas assez d'actifs possédés");
     const gain = qty * currentStocksData.prices[k];
     let pf = {...currentUserData.portfolio}; pf[k] -= qty;
+    const allAss = getAllAssets();
     await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + gain, portfolio: pf });
-    await addDoc(collection(db, "transactions"), { fromUid: "bourse", fromUsername: "📈 Bourse", toUid: currentUser.uid, toUsername: currentUserData.username, amount: gain, note: `Vente ${qty} ${currentStocksData.names[k]}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
-    showToast("success", `Vente : +${gain} CC`); document.getElementById(`qty-${k}`).value = "";
+    await addDoc(collection(db, "transactions"), { fromUid: "bourse", fromUsername: "📈 Marché", toUid: currentUser.uid, toUsername: currentUserData.username, amount: gain, note: `Vente ${fmtQty(qty)} ${allAss[k].name}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
+    showToast("success", `Vente : +${fmtMoney(gain)} CC`); document.getElementById(`qty-${k}`).value = "";
   }
 
-  /* MARKET (DEVOIRS) */
   function listenMarket() {
     onSnapshot(query(collection(db, "homeworks"), orderBy("createdAt", "desc")), (snap) => {
       const el = document.getElementById("hw-list"); let docs = []; snap.forEach(d => docs.push({id: d.id, ...d.data()}));
@@ -902,7 +989,6 @@
       el.innerHTML = docs.map(hw => {
         let urls = hw.photoURLs || (hw.photoURL ? [hw.photoURL] : []);
         const hasAccess = hw.sellerUid === currentUser.uid || currentUser.email === ADMIN_EMAIL || (hw.buyers && hw.buyers.includes(currentUser.uid));
-        
         let btn = "";
         if(hasAccess) {
            btn = (hw.sellerUid === currentUser.uid || currentUser.email === ADMIN_EMAIL) ? 
@@ -911,10 +997,8 @@
         } else {
            btn = `<div id="hw-action-${hw.id}"><button class="btn mini" style="background:var(--primary); color:var(--btn-text)" onclick="promptBuyHomework('${hw.id}','${hw.sellerUid}',${hw.price}, '${hw.title.replace(/'/g, "\\'")}')">Acheter</button></div>`;
         }
-        
         let imgHtml = hasAccess ? `<img src="${urls[0]}" onclick="openImageModal('${urls.join(',')}')" style="cursor:pointer; width:100%; height:100%; object-fit:cover;" />${urls.length > 1 ? `<div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.8); padding:4px 8px; border-radius:6px; font-size:0.8rem; font-weight:bold; color:white;">1/${urls.length}</div>`:''}` : `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='400' height='300' fill='transparent'/><text x='50%' y='50%' font-size='40' fill='%23888' text-anchor='middle' alignment-baseline='middle'>🔒</text></svg>" style="width:100%; height:100%; object-fit:cover;" />`;
-        
-        return `<div class="hw-card"><div class="hw-img-container">${imgHtml}</div><div class="hw-info"><div class="hw-title">${hw.title}</div><div style="font-size:0.8rem; color:var(--text-muted); font-weight:600; margin-bottom:12px;">par ${hw.sellerUsername}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:12px; border-top:1px solid var(--border-color);"><span class="hw-price">${hw.price} 🪙</span>${btn}</div></div></div>`;
+        return `<div class="hw-card"><div class="hw-img-container">${imgHtml}</div><div class="hw-info"><div class="hw-title">${hw.title}</div><div style="font-size:0.8rem; color:var(--text-muted); font-weight:600; margin-bottom:12px;">par ${hw.sellerUsername}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:12px; border-top:1px solid var(--border-color);"><span class="hw-price">${fmtMoney(hw.price)} 🪙</span>${btn}</div></div></div>`;
       }).join("");
     });
   }
@@ -931,7 +1015,7 @@
     await updateDoc(doc(db, "homeworks", hwId), { buyers: arrayUnion(currentUser.uid) }); showSuccessOverlay("Devoir Débloqué", title);
   }
   async function uploadHomework() {
-    const title = document.getElementById("hw-title").value, price = parseInt(document.getElementById("hw-price").value), files = document.getElementById("hw-file").files;
+    const title = document.getElementById("hw-title").value, price = parseFloat(document.getElementById("hw-price").value), files = document.getElementById("hw-file").files;
     if(!title || !price || files.length === 0) return;
     const btn = document.getElementById("btn-upload-hw"); btn.disabled = true; btn.textContent = "Upload...";
     try {
@@ -950,10 +1034,9 @@
   function openImageModal(urlsStr) { document.getElementById("modal-img-container").innerHTML = urlsStr.split(',').map(u => `<img src="${u}" style="max-width:100%; border-radius:12px; margin-bottom:15px; box-shadow:0 4px 15px rgba(0,0,0,0.5);" />`).join(""); document.getElementById("image-modal").style.display = "flex"; }
   function closeImageModal() { document.getElementById("image-modal").style.display = "none"; }
 
-  /* CASINO */
   const emojis = ['🍒', '🍋', '💎', '🍉', '🔔', '7️⃣'];
   async function playCasino() {
-    const bet = parseInt(document.getElementById("casino-bet").value); if (!bet || bet <= 0) return;
+    const bet = parseFloat(document.getElementById("casino-bet").value); if (!bet || bet <= 0) return;
     if (currentUser.email === ADMIN_EMAIL) return showToast("error", "L'admin ne joue pas.");
     if (currentUserData.balance < bet) return showToast("error", "Solde insuffisant !");
     
@@ -968,21 +1051,20 @@
       if (roll < 0.60) { multiplier = 0; s1 = emojis[0]; s2 = emojis[1]; s3 = emojis[2]; } else if (roll < 0.95) { multiplier = 2; s1 = emojis[3]; s2 = emojis[3]; s3 = emojis[1]; } else { multiplier = 5; s1 = '💎'; s2 = '💎'; s3 = '💎'; }
       slots[0].textContent = s1; slots[1].textContent = s2; slots[2].textContent = s3;
 
-      const profit = Math.floor(bet * multiplier) - bet; 
+      const profit = (bet * multiplier) - bet; 
       await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + profit });
       
       if (profit > 0) {
         await addDoc(collection(db, "transactions"), { fromUid: "casino", fromUsername: "🎰 Casino", toUid: currentUser.uid, toUsername: currentUserData.username, amount: profit, note: "Gains Machine à sous", participants: [currentUser.uid], type: "casino", createdAt: serverTimestamp() });
-        showToast("success", `Jackpot ! +${profit} CC 🤑`);
+        showToast("success", `Jackpot ! +${fmtMoney(profit)} CC 🤑`);
       } else {
         await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "casino", toUsername: "🎰 Casino", amount: Math.abs(profit), note: "Pertes Machine à sous", participants: [currentUser.uid], type: "casino", createdAt: serverTimestamp() });
-        showToast("error", `Perdu ! -${bet} CC 💸`);
+        showToast("error", `Perdu ! -${fmtMoney(bet)} CC 💸`);
       }
       btn.disabled = false; btn.textContent = "🎰 Lancer la machine";
     }, 1000);
   }
 
-  /* TRANSACTIONS & SEND */
   function listenTransactions() {
     onSnapshot(query(collection(db, "transactions"), where("participants", "array-contains", currentUser.uid), orderBy("createdAt", "desc")), (snap) => {
       const txs = snap.docs.map(d => ({id: d.id, ...d.data()})); const el = document.getElementById("dashboard-txs");
@@ -994,7 +1076,7 @@
         if (tx.type === "bank") cls = "bank"; if (tx.type === "market") cls = "market"; if (tx.type === "casino") cls = "casino";
         if (tx.type === "gov" && !isSent) cls = "gov"; if (tx.type === "gov-fine") { cls = "gov-fine"; sign = "-"; if(!isSent) who = `Amende de ${tx.fromUsername}`; }
         const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
-        return `<div class="tx-item ${cls}"><div class="tx-left"><span class="tx-who">${who}</span>${tx.note ? `<span class="tx-note">${tx.note}</span>`:""}<span class="tx-date">${date}</span></div><span class="tx-amount ${cls}">${sign}${tx.amount} 🪙</span></div>`;
+        return `<div class="tx-item ${cls}"><div class="tx-left"><span class="tx-who">${who}</span>${tx.note ? `<span class="tx-note">${tx.note}</span>`:""}<span class="tx-date">${date}</span></div><span class="tx-amount ${cls}">${sign}${fmtMoney(tx.amount)} 🪙</span></div>`;
       }).join("");
     });
   }
@@ -1011,7 +1093,7 @@
   function selectSendTarget(uid, name) { selectedTargetUid = uid; document.getElementById("select-display-text").textContent = name; document.getElementById("send-target-options").classList.remove("show"); document.getElementById("send-target-select").classList.remove("open"); }
 
   async function sendCoins() {
-    const toUid = selectedTargetUid; const amt = parseInt(document.getElementById("send-amount").value);
+    const toUid = selectedTargetUid; const amt = parseFloat(document.getElementById("send-amount").value);
     if (!toUid || !amt || amt <= 0) return showToast("info", "Informations manquantes");
     if (currentUser.email !== ADMIN_EMAIL && currentUserData.balance < amt) return showToast("error", "Solde insuffisant");
     const toSnap = await getDoc(doc(db, "users", toUid)); const toData = toSnap.data();
@@ -1019,28 +1101,27 @@
     if(toData.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", toUid), { balance: toData.balance + amt });
     const senderName = currentUser.email === ADMIN_EMAIL ? "🏛️ Gouvernement" : currentUserData.username;
     await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: senderName, toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value, participants: [currentUser.uid, toUid], type: currentUser.email === ADMIN_EMAIL ? "gov" : "transfer", createdAt: serverTimestamp() });
-    document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = ""; showSuccessOverlay("Transfert Réussi", `${amt} CC envoyés à ${toData.username}`);
+    document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = ""; showSuccessOverlay("Transfert Réussi", `${fmtMoney(amt)} CC envoyés à ${toData.username}`);
   }
   async function fineUser() {
-    if(currentUser.email !== ADMIN_EMAIL) return; const toUid = selectedTargetUid; const amt = parseInt(document.getElementById("send-amount").value); if (!toUid || !amt || amt <= 0) return;
+    if(currentUser.email !== ADMIN_EMAIL) return; const toUid = selectedTargetUid; const amt = parseFloat(document.getElementById("send-amount").value); if (!toUid || !amt || amt <= 0) return;
     const toSnap = await getDoc(doc(db, "users", toUid)); if(!toSnap.exists()) return; const toData = toSnap.data(); if(toData.email === ADMIN_EMAIL) return showToast("error", "Pas d'amende au gouv.");
     let bal = toData.balance; let debt = toData.debt || 0; if(bal >= amt) { bal -= amt; } else { let rest = amt - bal; bal = 0; debt += rest; }
     await updateDoc(doc(db, "users", toUid), { balance: bal, debt: debt });
     await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: "⚖️ Justice", toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value || "Saisie Gouvernementale", participants: [toUid], type: "gov-fine", createdAt: serverTimestamp() });
-    document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = ""; showSuccessOverlay("Amende Appliquée", `Saisie de ${amt} CC sur ${toData.username}`);
+    document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = ""; showSuccessOverlay("Amende Appliquée", `Saisie de ${fmtMoney(amt)} CC sur ${toData.username}`);
   }
 
-  /* TICKETS */
   function listenTickets() {
     const isAdmin = currentUser.email === ADMIN_EMAIL;
     onSnapshot(collection(db, "tickets"), (snap) => {
       let tickets = []; snap.forEach(d => { let t = d.data(); if(isAdmin || t.creatorUid === currentUser.uid) tickets.push({id: d.id, ...t}); });
       const el = document.getElementById("active-tickets-list"); if(!tickets.length) { el.innerHTML = '<div class="empty">Aucun billet.</div>'; return; }
-      el.innerHTML = tickets.map(t => `<div class="tx-item market"><div class="tx-left"><span class="tx-who" style="font-family:monospace; font-size:1.2rem; letter-spacing:2px; color:var(--text-main);">${t.code}</span><span class="tx-date">${isAdmin ? `Par ${t.creatorUsername}` : "En attente"}</span></div><div style="display:flex; align-items:center; gap:10px;"><span class="tx-amount market">${t.amount} 🪙</span><button class="btn mini danger" onclick="cancelTicket('${t.id}','${t.creatorUid}',${t.amount})">X</button></div></div>`).join("");
+      el.innerHTML = tickets.map(t => `<div class="tx-item market"><div class="tx-left"><span class="tx-who" style="font-family:monospace; font-size:1.2rem; letter-spacing:2px; color:var(--text-main);">${t.code}</span><span class="tx-date">${isAdmin ? `Par ${t.creatorUsername}` : "En attente"}</span></div><div style="display:flex; align-items:center; gap:10px;"><span class="tx-amount market">${fmtMoney(t.amount)} 🪙</span><button class="btn mini danger" onclick="cancelTicket('${t.id}','${t.creatorUid}',${t.amount})">X</button></div></div>`).join("");
     });
   }
   async function createTicket() {
-    const amt = parseInt(document.getElementById("ticket-amount").value); if(!amt || amt <= 0) return;
+    const amt = parseFloat(document.getElementById("ticket-amount").value); if(!amt || amt <= 0) return;
     if(currentUser.email !== ADMIN_EMAIL && currentUserData.balance < amt) return showToast("error", "Solde insuffisant");
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amt });
@@ -1054,7 +1135,7 @@
     const tDoc = snap.docs[0]; const t = tDoc.data();
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + t.amount });
     await addDoc(collection(db, "transactions"), { fromUid: "system", fromUsername: "Billet", toUid: currentUser.uid, toUsername: currentUserData.username, amount: t.amount, note: "Encaissé", participants: [currentUser.uid], type: "ticket", createdAt: serverTimestamp() });
-    await deleteDoc(tDoc.ref); document.getElementById("redeem-code").value = ""; showSuccessOverlay("Billet Encaissé", `+${t.amount} CC ajoutés`);
+    await deleteDoc(tDoc.ref); document.getElementById("redeem-code").value = ""; showSuccessOverlay("Billet Encaissé", `+${fmtMoney(t.amount)} CC ajoutés`);
   }
   async function cancelTicket(id, creatorUid, amt) {
     if(!confirm("Annuler ce billet ?")) return; await deleteDoc(doc(db, "tickets", id));
@@ -1063,76 +1144,45 @@
     showToast("success", "Billet annulé.");
   }
 
-  /* ADMIN */
   function loadAdminPage() {
     onSnapshot(collection(db, "users"), (snap) => {
       let html = "";
+      const allAss = getAllAssets();
       snap.forEach(d => {
         let u = d.data(); if(u.email === ADMIN_EMAIL) return; let pfHTML = "";
-        if(currentStocksData) { for(let k in currentStocksData.names) { let qty = (u.portfolio && u.portfolio[k]) ? u.portfolio[k] : 0; pfHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; background:var(--input-bg); padding:8px; border-radius:8px; border:1px solid var(--border-color);"><span style="font-size:0.8rem">${currentStocksData.names[k]}</span><input type="number" id="adm-pf-${d.id}-${k}" value="${qty}" style="width:70px; padding:4px; margin:0;" /></div>`; } }
-        html += `<div class="form-card" style="padding:15px"><div style="font-weight:800; color:var(--primary); font-size:1.1rem; margin-bottom:10px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">${u.username} <span style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">(${u.email})</span></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span>💰 Solde:</span> <input type="number" id="adm-bal-${d.id}" value="${u.balance}" style="width:100px; padding:5px; margin:0;"/></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span>🏦 Dette:</span> <input type="number" id="adm-debt-${d.id}" value="${u.debt||0}" style="width:100px; padding:5px; margin:0;"/></div><div style="font-size:0.85rem; color:var(--text-muted); margin-top:12px; margin-bottom:6px;">📈 Actions possédées :</div><div style="display:grid; grid-template-columns:1fr; gap:5px;">${pfHTML}</div><button class="btn small" style="width:100%; margin-top:12px;" onclick="adminSaveUser('${d.id}')">💾 Sauvegarder</button></div>`;
+        if(currentStocksData) { 
+          for(let k in allAss) { 
+            let qty = (u.portfolio && u.portfolio[k]) ? u.portfolio[k] : 0; 
+            pfHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; background:var(--input-bg); padding:8px; border-radius:8px; border:1px solid var(--border-color);"><span style="font-size:0.8rem; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:10px;">${allAss[k].name}</span><input type="number" id="adm-pf-${d.id}-${k}" value="${qty}" style="width:90px; padding:4px; margin:0;" step="0.0001" /></div>`; 
+          } 
+        }
+        html += `<div class="form-card" style="padding:15px"><div style="font-weight:800; color:var(--primary); font-size:1.1rem; margin-bottom:10px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">${u.username} <span style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">(${u.email})</span></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span>💰 Solde:</span> <input type="number" id="adm-bal-${d.id}" value="${u.balance}" style="width:100px; padding:5px; margin:0;" step="0.01"/></div><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px"><span>🏦 Dette:</span> <input type="number" id="adm-debt-${d.id}" value="${u.debt||0}" style="width:100px; padding:5px; margin:0;" step="0.01"/></div><div style="font-size:0.85rem; color:var(--text-muted); margin-top:12px; margin-bottom:6px;">📈 Actions/Crypto :</div><div style="display:grid; grid-template-columns:1fr; gap:5px;">${pfHTML}</div><button class="btn small" style="width:100%; margin-top:12px;" onclick="adminSaveUser('${d.id}')">💾 Sauvegarder</button></div>`;
       });
       document.getElementById("admin-users-advanced-list").innerHTML = html;
     });
   }
-  function renderAdminStocks() {
-    if(!currentStocksData) return;
-    if(document.getElementById("admin-config-min").value === "") { document.getElementById("admin-config-min").value = currentStocksData.config.min; document.getElementById("admin-config-max").value = currentStocksData.config.max; }
-    let html = "<div style='font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;'>Modifier directement les prix :</div>";
-    for(let k in currentStocksData.prices) { html += `<div style="display:flex; justify-content:space-between; align-items:center; background:var(--input-bg); padding:10px; border-radius:12px; margin-bottom:8px; border:1px solid var(--border-color);"><span style="font-weight:bold; font-size:0.9rem">${currentStocksData.names[k]}</span><div style="display:flex; gap:8px;"><input type="number" id="adm-price-${k}" value="${currentStocksData.prices[k]}" style="width:80px; padding:6px; margin:0; text-align:center;"><button class="btn mini" style="margin:0" onclick="adminSaveStockPrice('${k}')">✓</button></div></div>`; }
-    document.getElementById("admin-stocks-prices-list").innerHTML = html;
-  }
-  async function adminSaveStockConfig() { await updateDoc(doc(db, "system", "stocks"), { "config.min": parseFloat(document.getElementById("admin-config-min").value), "config.max": parseFloat(document.getElementById("admin-config-max").value) }); showToast("success", "Mis à jour !"); }
-  async function adminSaveStockPrice(k) { const val = parseInt(document.getElementById(`adm-price-${k}`).value); if(val > 0) { await updateDoc(doc(db, "system", "stocks"), { [`prices.${k}`]: val }); showToast("success", "Prix modifié !"); } }
   async function adminSaveUser(uid) {
-    let newPf = {}; if(currentStocksData) { for(let k in currentStocksData.names) { newPf[k] = parseInt(document.getElementById(`adm-pf-${uid}-${k}`).value) || 0; } }
-    await updateDoc(doc(db, "users", uid), { balance: parseInt(document.getElementById(`adm-bal-${uid}`).value), debt: parseInt(document.getElementById(`adm-debt-${uid}`).value), portfolio: newPf }); showToast("success", "Membre mis à jour !");
-  }
-  function listenAllTransactions() {
-    onSnapshot(query(collection(db, "transactions"), orderBy("createdAt", "desc")), (snap) => {
-      const txs = snap.docs.map(d => ({id: d.id, ...d.data()})); const el = document.getElementById("admin-global-txs");
-      if(!txs.length) { el.innerHTML = '<div class="empty">Aucune transaction</div>'; return; }
-      el.innerHTML = txs.map(tx => {
-        let cls = "received"; if (tx.type === "bank") cls = "bank"; if (tx.type === "market") cls = "market"; if (tx.type === "casino") cls = "casino"; if (tx.type === "gov") cls = "gov"; if (tx.type === "gov-fine") cls = "gov-fine"; if (tx.type === "transfer") cls = "market";
-        const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
-        return `<div class="tx-item ${cls}"><div class="tx-left"><span class="tx-who">${tx.fromUsername} ➔ ${tx.toUsername}</span>${tx.note ? `<span class="tx-note">${tx.note}</span>`:""}<span class="tx-date">${date}</span></div><span class="tx-amount ${cls}">${tx.amount} 🪙</span></div>`;
-      }).join("");
-    });
-  }
-
-  /* NAVIGATION & UI */
-  function updateNavIndicator() {
-    const indicator = document.getElementById("nav-indicator");
-    const activeTab = document.querySelector(".nav-tab.active");
-    if(!indicator || !activeTab) return;
-    
-    // Calculate position within the scrollable container
-    const left = activeTab.offsetLeft;
-    const width = activeTab.offsetWidth;
-    
-    indicator.style.transform = `translate3d(${left}px, 0, 0)`;
-    indicator.style.width = `${width}px`;
-  }
-
-  function showPage(p, e) {
-    document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
-    document.querySelectorAll(".nav-tab").forEach(el => el.classList.remove("active"));
-    
-    document.getElementById("page-" + p).classList.add("active");
-    if(e) {
-      let target = e.target.closest('.nav-tab');
-      if(target) target.classList.add("active");
+    let newPf = {}; 
+    const allAss = getAllAssets();
+    for(let k in allAss) { 
+      let val = parseFloat(document.getElementById(`adm-pf-${uid}-${k}`).value);
+      if(val && val > 0) newPf[k] = val; 
     }
+    await updateDoc(doc(db, "users", uid), { balance: parseFloat(document.getElementById(`adm-bal-${uid}`).value), debt: parseFloat(document.getElementById(`adm-debt-${uid}`).value), portfolio: newPf }); showToast("success", "Membre mis à jour !");
+  }
+
+  function updateNavIndicator() {
+    const indicator = document.getElementById("nav-indicator"); const activeTab = document.querySelector(".nav-tab.active");
+    if(!indicator || !activeTab) return;
+    indicator.style.transform = `translate3d(${activeTab.offsetLeft}px, 0, 0)`; indicator.style.width = `${activeTab.offsetWidth}px`;
+  }
+  function showPage(p, e) {
+    document.querySelectorAll(".page").forEach(el => el.classList.remove("active")); document.querySelectorAll(".nav-tab").forEach(el => el.classList.remove("active"));
+    document.getElementById("page-" + p).classList.add("active");
+    if(e) { let target = e.target.closest('.nav-tab'); if(target) target.classList.add("active"); }
     updateNavIndicator();
   }
-  
   function switchAuthTab(t) { document.querySelectorAll(".auth-tab, .tab-content").forEach(el => el.classList.remove("active")); document.getElementById("tab-" + t).classList.add("active"); event.target.classList.add("active"); }
-
-  // Listen to container scroll to ensure absolute indicator looks correct (if layout requires it)
-  document.getElementById('nav-tabs').addEventListener('scroll', () => {
-     // No action needed as the indicator is absolute inside the scrolling container
-  });
-
   window.addEventListener('resize', updateNavIndicator);
 </script>
 </body>
