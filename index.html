@@ -827,7 +827,7 @@
          let addedAt = asset.addedAt || 0; // Si pas de date, considéré très vieux par défaut
          
          // Si personne n'en possède ET que l'action a été ajoutée il y a plus de 60s
-         if(owned <= 0 && (now - addedAt) > 60000) {
+         if(owned <= 0 && (now - addedAt) > 600000) {
             delete currentCustomAssets[k];
             delete newPrices[k];
             changedCustomAssets = true;
