@@ -518,7 +518,13 @@
 
     <!-- ADMIN -->
     <div id="page-admin" class="page">
+      <!-- FLUX DES TRANSACTIONS ADMIN -->
       <div class="section">
+        <div class="section-title">🌍 Flux Global (Toutes les transactions)</div>
+        <div class="tx-list" id="admin-global-txs"><div class="empty">Chargement du flux...</div></div>
+      </div>
+
+      <div class="section" style="margin-top:32px;">
         <div class="section-title">👥 Gérer les Membres</div>
         <div id="admin-users-advanced-list" style="display:flex; flex-direction:column; gap:14px;">
            <div class="empty">Chargement...</div>
@@ -538,7 +544,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc, getDoc, getDocs, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc, getDoc, getDocs, arrayUnion, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBUkRD8mgeE6Yo1rL1eJF8BJAdQWx-jCJ0",
@@ -648,7 +654,7 @@
       document.getElementById("admin-infinite").style.display = isAdmin ? "inline-block" : "none";
 
       listenUserData(); listenTransactions(); listenStocks(); listenTickets(); listenMarket(); loadSendPage();
-      if (isAdmin) { loadAdminPage(); }
+      if (isAdmin) { loadAdminPage(); listenAdminGlobalTransactions(); }
       setTimeout(() => { updateNavIndicator(); }, 150);
     } else {
       currentUser = null; currentUserData = null;
@@ -894,7 +900,6 @@
     stocksEl.innerHTML = stocksHtml || "<div class='empty'>Indisponible</div>";
   }
 
-  // --- NOUVEAU : SYSTEME DE RECHERCHE YAHOO FINANCE ---
   async function searchStock() {
      const q = document.getElementById("search-stock-input").value.trim();
      if(!q) return;
@@ -958,7 +963,6 @@
      updatingMarket = true;
      await fetchLiveMarketData();
   }
-  // ----------------------------------------------------
 
   async function buyStock(k) {
     const qty = parseFloat(document.getElementById(`qty-${k}`).value); if (!qty || qty<=0 || currentUser.email===ADMIN_EMAIL) return;
@@ -967,7 +971,7 @@
     let pf = {...currentUserData.portfolio}; pf[k] = (pf[k]||0) + qty;
     const allAss = getAllAssets();
     await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - cost, portfolio: pf });
-    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bourse", toUsername: "📈 Marché", amount: cost, note: `Achat ${fmtQty(qty)} ${allAss[k].name}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "bourse", toUsername: "📈 Marché", amount: cost, note: `Achat ${fmtQty(qty)} ${allAss[k].name}`, participants: [currentUser.uid, "ADMIN_GLOBAL"], type: "market", createdAt: serverTimestamp() });
     showToast("success", `Achat : ${fmtQty(qty)} ${allAss[k].name}`); document.getElementById(`qty-${k}`).value = "";
   }
   async function sellStock(k) {
@@ -978,7 +982,7 @@
     let pf = {...currentUserData.portfolio}; pf[k] -= qty;
     const allAss = getAllAssets();
     await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + gain, portfolio: pf });
-    await addDoc(collection(db, "transactions"), { fromUid: "bourse", fromUsername: "📈 Marché", toUid: currentUser.uid, toUsername: currentUserData.username, amount: gain, note: `Vente ${fmtQty(qty)} ${allAss[k].name}`, participants: [currentUser.uid], type: "market", createdAt: serverTimestamp() });
+    await addDoc(collection(db, "transactions"), { fromUid: "bourse", fromUsername: "📈 Marché", toUid: currentUser.uid, toUsername: currentUserData.username, amount: gain, note: `Vente ${fmtQty(qty)} ${allAss[k].name}`, participants: [currentUser.uid, "ADMIN_GLOBAL"], type: "market", createdAt: serverTimestamp() });
     showToast("success", `Vente : +${fmtMoney(gain)} CC`); document.getElementById(`qty-${k}`).value = "";
   }
 
@@ -1012,7 +1016,10 @@
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - price });
     const sDoc = await getDoc(doc(db, "users", sellerUid));
     if(sDoc.exists() && sDoc.data().email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", sellerUid), { balance: sDoc.data().balance + price });
-    await updateDoc(doc(db, "homeworks", hwId), { buyers: arrayUnion(currentUser.uid) }); showSuccessOverlay("Devoir Débloqué", title);
+    await updateDoc(doc(db, "homeworks", hwId), { buyers: arrayUnion(currentUser.uid) }); 
+    // Log transaction pour le vendeur/acheteur (et admin)
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: sellerUid, toUsername: sDoc.data().username, amount: price, note: `Achat devoir: ${title}`, participants: [currentUser.uid, sellerUid, "ADMIN_GLOBAL"], type: "market", createdAt: serverTimestamp() });
+    showSuccessOverlay("Devoir Débloqué", title);
   }
   async function uploadHomework() {
     const title = document.getElementById("hw-title").value, price = parseFloat(document.getElementById("hw-price").value), files = document.getElementById("hw-file").files;
@@ -1055,10 +1062,10 @@
       await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + profit });
       
       if (profit > 0) {
-        await addDoc(collection(db, "transactions"), { fromUid: "casino", fromUsername: "🎰 Casino", toUid: currentUser.uid, toUsername: currentUserData.username, amount: profit, note: "Gains Machine à sous", participants: [currentUser.uid], type: "casino", createdAt: serverTimestamp() });
+        await addDoc(collection(db, "transactions"), { fromUid: "casino", fromUsername: "🎰 Casino", toUid: currentUser.uid, toUsername: currentUserData.username, amount: profit, note: "Gains Machine à sous", participants: [currentUser.uid, "ADMIN_GLOBAL"], type: "casino", createdAt: serverTimestamp() });
         showToast("success", `Jackpot ! +${fmtMoney(profit)} CC 🤑`);
       } else {
-        await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "casino", toUsername: "🎰 Casino", amount: Math.abs(profit), note: "Pertes Machine à sous", participants: [currentUser.uid], type: "casino", createdAt: serverTimestamp() });
+        await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: currentUserData.username, toUid: "casino", toUsername: "🎰 Casino", amount: Math.abs(profit), note: "Pertes Machine à sous", participants: [currentUser.uid, "ADMIN_GLOBAL"], type: "casino", createdAt: serverTimestamp() });
         showToast("error", `Perdu ! -${fmtMoney(bet)} CC 💸`);
       }
       btn.disabled = false; btn.textContent = "🎰 Lancer la machine";
@@ -1066,10 +1073,10 @@
   }
 
   function listenTransactions() {
-    onSnapshot(query(collection(db, "transactions"), where("participants", "array-contains", currentUser.uid), orderBy("createdAt", "desc")), (snap) => {
+    onSnapshot(query(collection(db, "transactions"), where("participants", "array-contains", currentUser.uid), orderBy("createdAt", "desc"), limit(20)), (snap) => {
       const txs = snap.docs.map(d => ({id: d.id, ...d.data()})); const el = document.getElementById("dashboard-txs");
       if(!txs.length) { el.innerHTML = '<div class="empty">Aucune transaction</div>'; return; }
-      el.innerHTML = txs.slice(0, 10).map(tx => {
+      el.innerHTML = txs.map(tx => {
         let isSent = tx.fromUid === currentUser.uid; let sign = isSent ? "-" : "+";
         if (!isSent && tx.note && tx.note.includes("Pénalité")) sign = "-"; 
         let who = isSent ? `À ${tx.toUsername}` : `De ${tx.fromUsername}`; let cls = isSent ? "sent" : "received";
@@ -1077,6 +1084,24 @@
         if (tx.type === "gov" && !isSent) cls = "gov"; if (tx.type === "gov-fine") { cls = "gov-fine"; sign = "-"; if(!isSent) who = `Amende de ${tx.fromUsername}`; }
         const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
         return `<div class="tx-item ${cls}"><div class="tx-left"><span class="tx-who">${who}</span>${tx.note ? `<span class="tx-note">${tx.note}</span>`:""}<span class="tx-date">${date}</span></div><span class="tx-amount ${cls}">${sign}${fmtMoney(tx.amount)} 🪙</span></div>`;
+      }).join("");
+    });
+  }
+
+  // NOUVEAU: Écoute pour le flux global de l'admin
+  function listenAdminGlobalTransactions() {
+    onSnapshot(query(collection(db, "transactions"), orderBy("createdAt", "desc"), limit(40)), (snap) => {
+      const txs = snap.docs.map(d => ({id: d.id, ...d.data()})); 
+      const el = document.getElementById("admin-global-txs");
+      if(!txs.length) { el.innerHTML = '<div class="empty">Aucune transaction sur le serveur.</div>'; return; }
+      
+      el.innerHTML = txs.map(tx => {
+        let sign = (tx.type === 'casino' && tx.toUid === 'casino') || (tx.type === 'market' && tx.fromUid !== 'bourse') ? "-" : "+";
+        let cls = "received";
+        if (tx.type === "bank") cls = "bank"; if (tx.type === "market") cls = "market"; if (tx.type === "casino") cls = "casino";
+        
+        const date = tx.createdAt?.toDate ? tx.createdAt.toDate().toLocaleDateString("fr-FR", {day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "";
+        return `<div class="tx-item ${cls}"><div class="tx-left"><span class="tx-who">${tx.fromUsername} ➔ ${tx.toUsername}</span>${tx.note ? `<span class="tx-note">${tx.note}</span>`:""}<span class="tx-date">${date}</span></div><span class="tx-amount ${cls}">${fmtMoney(tx.amount)} 🪙</span></div>`;
       }).join("");
     });
   }
@@ -1100,7 +1125,8 @@
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amt });
     if(toData.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", toUid), { balance: toData.balance + amt });
     const senderName = currentUser.email === ADMIN_EMAIL ? "🏛️ Gouvernement" : currentUserData.username;
-    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: senderName, toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value, participants: [currentUser.uid, toUid], type: currentUser.email === ADMIN_EMAIL ? "gov" : "transfer", createdAt: serverTimestamp() });
+    // Ajout tag ADMIN_GLOBAL
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: senderName, toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value, participants: [currentUser.uid, toUid, "ADMIN_GLOBAL"], type: currentUser.email === ADMIN_EMAIL ? "gov" : "transfer", createdAt: serverTimestamp() });
     document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = ""; showSuccessOverlay("Transfert Réussi", `${fmtMoney(amt)} CC envoyés à ${toData.username}`);
   }
   async function fineUser() {
@@ -1108,7 +1134,7 @@
     const toSnap = await getDoc(doc(db, "users", toUid)); if(!toSnap.exists()) return; const toData = toSnap.data(); if(toData.email === ADMIN_EMAIL) return showToast("error", "Pas d'amende au gouv.");
     let bal = toData.balance; let debt = toData.debt || 0; if(bal >= amt) { bal -= amt; } else { let rest = amt - bal; bal = 0; debt += rest; }
     await updateDoc(doc(db, "users", toUid), { balance: bal, debt: debt });
-    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: "⚖️ Justice", toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value || "Saisie Gouvernementale", participants: [toUid], type: "gov-fine", createdAt: serverTimestamp() });
+    await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: "⚖️ Justice", toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value || "Saisie Gouvernementale", participants: [toUid, "ADMIN_GLOBAL"], type: "gov-fine", createdAt: serverTimestamp() });
     document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = ""; showSuccessOverlay("Amende Appliquée", `Saisie de ${fmtMoney(amt)} CC sur ${toData.username}`);
   }
 
@@ -1134,7 +1160,7 @@
     if(snap.empty) return showToast("error", "Billet introuvable.");
     const tDoc = snap.docs[0]; const t = tDoc.data();
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance + t.amount });
-    await addDoc(collection(db, "transactions"), { fromUid: "system", fromUsername: "Billet", toUid: currentUser.uid, toUsername: currentUserData.username, amount: t.amount, note: "Encaissé", participants: [currentUser.uid], type: "ticket", createdAt: serverTimestamp() });
+    await addDoc(collection(db, "transactions"), { fromUid: "system", fromUsername: "Billet", toUid: currentUser.uid, toUsername: currentUserData.username, amount: t.amount, note: "Encaissé", participants: [currentUser.uid, "ADMIN_GLOBAL"], type: "ticket", createdAt: serverTimestamp() });
     await deleteDoc(tDoc.ref); document.getElementById("redeem-code").value = ""; showSuccessOverlay("Billet Encaissé", `+${fmtMoney(t.amount)} CC ajoutés`);
   }
   async function cancelTicket(id, creatorUid, amt) {
