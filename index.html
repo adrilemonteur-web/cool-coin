@@ -411,12 +411,12 @@
         <div class="stock-grid" id="stocks-list" style="display:flex; flex-direction:column; gap:14px;">
           <div class="empty">Chargement des actions...</div>
         </div>
-        <div style="font-size: 0.85rem; text-align: center; color: var(--text-muted); margin-top: 14px; font-weight: 600;"><span id="bourse-info-text">Actualisation temps réel. 1 🪙 = 1 USD.</span></div>
+        <div style="font-size: 0.85rem; text-align: center; color: var(--text-muted); margin-top: 14px; font-weight: 600;"><span id="bourse-info-text">Actualisation temps réel (converti en USD).</span></div>
 
         <!-- NEW SEARCH SECTION -->
         <div class="section-title" style="margin-top:40px;">🔍 Ajouter une Action (Mondial)</div>
         <div class="form-card" style="padding:16px;">
-          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; font-weight:600;">Recherche une entreprise (ex: LVMH, Nike, Netflix...) pour l'ajouter au marché pour tous les joueurs.</p>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; font-weight:600;">Recherche une entreprise (ex: LVMH, Nike, Samsung...) pour l'ajouter au marché pour tous les joueurs.</p>
           <div style="display:flex; gap:10px;">
             <input type="text" id="search-stock-input" placeholder="Ex: LVMH" style="margin:0; flex:1;" onkeypress="if(event.key==='Enter') searchStock()"/>
             <button class="btn small" id="btn-search-stock" style="margin:0; padding:10px 16px;" onclick="searchStock()">Chercher</button>
@@ -563,7 +563,7 @@
   const db = getFirestore(app);
 
   let currentUser = null; let currentUserData = null; let currentStocksData = null; let selectedTargetUid = "";
-  let globalFinnhubKey = ""; // Chargée depuis la DB system
+  let globalFinnhubKey = ""; 
 
   const MARKET_ASSETS = {
     BTC: { name: "Bitcoin", type: "crypto" },
@@ -591,7 +591,6 @@
   window.openImageModal = openImageModal; window.closeImageModal = closeImageModal;
   window.toggleSelect = toggleSelect; window.selectSendTarget = selectSendTarget;
   window.openSettings = openSettings; window.closeSettings = closeSettings; window.saveSettings = saveSettings; window.setTheme = setTheme;
-  
   window.searchStock = searchStock; window.addCustomStock = addCustomStock;
 
   function fmtMoney(val) { return parseFloat(val || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
@@ -823,14 +822,25 @@
       }
     } catch(e) { console.error("Erreur Binance API"); }
 
+    // FETCH EXCHANGE RATES POUR CONVERSION DE DEVISES (1 USD = 1 CC)
+    let exchangeRates = {};
+    try {
+       let fxRes = await fetch("https://open.er-api.com/v6/latest/USD");
+       if(fxRes.ok) {
+          let fxData = await fxRes.json();
+          exchangeRates = fxData.rates || {};
+       }
+    } catch(e) { console.error("Erreur récupération des devises"); }
+
     // ACTIONS (Global)
     const allAss = getAllAssets();
     const stockSymbols = Object.keys(allAss).filter(k => allAss[k].type === "stock");
 
     for(let s of stockSymbols) {
       let priceFound = false;
-      // 1. Tente Finnhub si clé présente
-      if (globalFinnhubKey) {
+      
+      // 1. Tente Finnhub UNIQUEMENT pour les actions sans point (actions US qui sont en USD)
+      if (globalFinnhubKey && !s.includes('.')) {
          try {
            let res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${s}&token=${globalFinnhubKey}`);
            if(res.ok) {
@@ -843,7 +853,7 @@
          } catch(e) {}
       }
       
-      // 2. Si Finnhub rate (ou pas de clé ou action hors US), Fallback Yahoo Proxy
+      // 2. Si Finnhub rate ou action internationale, Fallback Yahoo Proxy (qui nous donne la devise)
       if(!priceFound) {
          try {
            const proxy = "https://api.allorigins.win/get?url=";
@@ -852,7 +862,19 @@
            if(res.ok) {
               let json = await res.json();
               let parsed = JSON.parse(json.contents);
-              let price = parsed.chart.result[0].meta.regularMarketPrice;
+              let meta = parsed.chart.result[0].meta;
+              let price = meta.regularMarketPrice;
+              let currency = meta.currency || "USD";
+              
+              // CONVERSION DE DEVISE (KRW, EUR, JPY -> USD)
+              if(price && currency !== "USD") {
+                 if(exchangeRates[currency]) {
+                    price = price / exchangeRates[currency]; // Ex: 50,000 KRW / 1330.5 = 37.5 USD
+                 } else {
+                    price = null; // Sécurité : On ne met pas à jour si on ne peut pas convertir pour éviter l'explosion du prix !
+                 }
+              }
+              
               if(price) newPrices[s] = parseFloat(price);
            }
          } catch(e) {}
@@ -1088,7 +1110,6 @@
     });
   }
 
-  // NOUVEAU: Écoute pour le flux global de l'admin
   function listenAdminGlobalTransactions() {
     onSnapshot(query(collection(db, "transactions"), orderBy("createdAt", "desc"), limit(40)), (snap) => {
       const txs = snap.docs.map(d => ({id: d.id, ...d.data()})); 
@@ -1125,7 +1146,6 @@
     if(currentUser.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", currentUser.uid), { balance: currentUserData.balance - amt });
     if(toData.email !== ADMIN_EMAIL) await updateDoc(doc(db, "users", toUid), { balance: toData.balance + amt });
     const senderName = currentUser.email === ADMIN_EMAIL ? "🏛️ Gouvernement" : currentUserData.username;
-    // Ajout tag ADMIN_GLOBAL
     await addDoc(collection(db, "transactions"), { fromUid: currentUser.uid, fromUsername: senderName, toUid: toUid, toUsername: toData.username, amount: amt, note: document.getElementById("send-note").value, participants: [currentUser.uid, toUid, "ADMIN_GLOBAL"], type: currentUser.email === ADMIN_EMAIL ? "gov" : "transfer", createdAt: serverTimestamp() });
     document.getElementById("send-amount").value = ""; document.getElementById("send-note").value = ""; showSuccessOverlay("Transfert Réussi", `${fmtMoney(amt)} CC envoyés à ${toData.username}`);
   }
