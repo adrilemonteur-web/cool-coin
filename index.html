@@ -808,7 +808,34 @@
 
   async function fetchLiveMarketData() {
     let newPrices = { ...currentStocksData.prices };
-    
+    let currentCustomAssets = { ...(currentStocksData.customAssets || {}) };
+    let changedCustomAssets = false;
+    const now = Date.now();
+
+    // NETTOYAGE DES ACTIONS NON UTILISÉES
+    try {
+      const usersSnap = await getDocs(collection(db, "users"));
+      let ownership = {};
+      usersSnap.forEach(d => {
+        let pf = d.data().portfolio || {};
+        for(let k in pf) ownership[k] = (ownership[k] || 0) + (parseFloat(pf[k]) || 0);
+      });
+
+      for(let k in currentCustomAssets) {
+         let asset = currentCustomAssets[k];
+         let owned = ownership[k] || 0;
+         let addedAt = asset.addedAt || 0; // Si pas de date, considéré très vieux par défaut
+         
+         // Si personne n'en possède ET que l'action a été ajoutée il y a plus de 60s
+         if(owned <= 0 && (now - addedAt) > 60000) {
+            delete currentCustomAssets[k];
+            delete newPrices[k];
+            changedCustomAssets = true;
+         }
+      }
+    } catch(e) { console.error("Erreur check ownership"); }
+
+
     // BINANCE (Crypto)
     try {
       const res = await fetch("https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22%5D");
@@ -832,8 +859,8 @@
        }
     } catch(e) { console.error("Erreur récupération des devises"); }
 
-    // ACTIONS (Global)
-    const allAss = getAllAssets();
+    // ACTIONS (Global) - on utilise le dictionnaire nettoyé !
+    const allAss = { ...MARKET_ASSETS, ...currentCustomAssets };
     const stockSymbols = Object.keys(allAss).filter(k => allAss[k].type === "stock");
 
     for(let s of stockSymbols) {
@@ -881,8 +908,13 @@
       }
     }
 
+    let updatePayload = { prices: newPrices, lastUpdate: serverTimestamp() };
+    if(changedCustomAssets) {
+        updatePayload.customAssets = currentCustomAssets;
+    }
+
     try {
-      await updateDoc(doc(db, "system", "stocks"), { prices: newPrices, lastUpdate: serverTimestamp() });
+      await updateDoc(doc(db, "system", "stocks"), updatePayload);
     } catch(e) { console.error("Erreur écriture BDD"); }
     setTimeout(() => updatingMarket = false, 5000);
   }
@@ -975,7 +1007,7 @@
      if(allAss[symbol]) {
         return showToast("info", "Cette action est déjà sur le marché !");
      }
-     custom[symbol] = { name: name, type: "stock" };
+     custom[symbol] = { name: name, type: "stock", addedAt: Date.now() }; // Ajout du Timer
      
      await updateDoc(doc(db, "system", "stocks"), { customAssets: custom });
      showToast("success", `${name} a été ajouté au marché global !`);
